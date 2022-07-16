@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: checkout
-      uses: actions/checkout@master
+      uses: actions/checkout@main
 
     - name: create env file
       run: |
@@ -15,7 +15,7 @@ jobs:
         echo "${{ secrets.ENV_VARS }}" >> .env
 
     - name: create remote directory
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@main
       with:
         host: ${{ secrets.HOST }}
         username: ubuntu
@@ -32,7 +32,7 @@ jobs:
         remote_key: ${{ secrets.KEY }}
 
     - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@main
       with:
         host: ${{ secrets.HOST }}
         username: ubuntu
