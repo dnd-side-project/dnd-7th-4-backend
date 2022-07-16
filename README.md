@@ -4,7 +4,7 @@
 
 ## 👩🏻‍💻 Developer
 
-|      | 이수진 @ssssujini99  |이채영 @chea-young|
+|      | 이수진 [@ssssujini99](https://github.com/ssssujini99)  | 이채영 [@chea-young](https://github.com/chea-young)|
 |------|------|---|
 
 
