@@ -1,6 +1,7 @@
-asgiref==3.5.2
-backports.zoneinfo==0.2.1
-Django==4.0.6
-django-environ==0.9.0
-mysqlclient==2.1.1
-sqlparse==0.4.2
+asgiref==3.2.10
+Django==3.0.8
+django-environ==0.4.5
+gunicorn==20.0.4
+pytz==2020.1
+sqlparse==0.3.1
+mysqlclient==2.1.0
