@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 패키지
+    'rest_framework',
+
+    # 앱
     'main',
 ]
 
