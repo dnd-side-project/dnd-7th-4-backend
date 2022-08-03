@@ -45,6 +45,9 @@ INSTALLED_APPS = [
 
     # 앱
     'main',
+
+    # Swagger
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
