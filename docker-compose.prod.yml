@@ -31,6 +31,44 @@ services:
     depends_on:
       - web
 
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.7-alpine
+    environment:
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    ports:
+      - "5672:5672" # Default Port
+      - "15672:15672" # For UI
+    expose:
+      - "15672"
+
+
+  celery_worker:
+    container_name: celery_worker
+    build:
+      context: ./
+      dockerfile: Dockerfile.prod
+    ports: []
+    depends_on:
+      - web
+      - rabbitmq
+    command: sh -c "celery -A dnd_7th_4_backend worker --loglevel=info"
+
+  celery_beat:
+    container_name: celery_beat
+    build:
+      context: ./
+      dockerfile: Dockerfile.prod
+    ports: []
+    depends_on:
+        - web
+        - rabbitmq
+        - celery_worker
+    command: sh -c "celery -A dnd_7th_4_backend beat --loglevel=info"
+
+
 volumes:
   static:
   media:
