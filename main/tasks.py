@@ -1,9 +1,9 @@
-from celery import shared_task, Celery
+from __future__ import absolute_import, unicode_literals
+from celery import shared_task
 
-celery = Celery(__name__)
-celery.config_from_object(__name__)
+from dnd_7th_4_backend.celery import app
 
-@celery.task
-def say_hello():
-    print("hello, world")
-    return 'say_hello'
+
+@shared_task
+def hello(name):
+    print(f'my name is {name}')
