@@ -2,6 +2,22 @@ from django.db import models
 
 # Create your models here.
 
+# API6 -시도별 실시간 측정정보
+class Api_6(models.Model):
+    fcst_date = models.DateField() # 예측 일자
+    fcst_time = models.TimeField() # 예측 시각
+
+    sidoName = models.CharField(max_length=2) # 시도명
+    stationName = models.CharField(max_length=10) # 측정소명
+
+    pm10Grade1h = models.IntegerField() # 미세먼지 등급
+    pm25Grade1h = models.IntegerField() # 고농도 미세먼지 등급
+    
+    pm10Value24 = models.IntegerField() # 미세먼지 24시간 예측 등급
+    pm24Value24 = models.IntegerField() # 고농도 24시간 예측 미세먼지 등급
+
+    def __str__(self):
+        return (self.sidoName, self.stationName)
 
 #  행정구역
 class Region(models.Model):
@@ -26,8 +42,12 @@ class Region(models.Model):
 
     api4_code = models.CharField(max_length=20)  # 중기육상예보 api code
     api5_code = models.CharField(max_length=20)  # 중기기온예보 api code
-    api6_code = models.CharField(max_length=20)  # 대기오염정보 api code
+    api6_code = models.CharField(max_length=20)  # 시도별 실시간 측정정보 api code
+    api6_station = models.CharField(max_length=20, null=True, default='') # 측정소 데이터
     api10_code = models.IntegerField()  # 종관관측예보 api code
+
+    # FK
+    api6_id = models.ForeignKey(Api_6, on_delete=models.CASCADE,null=True, default='')
 
     def __str__(self):
         return self.div_code  # 행정 구역 코드값을 대표값으로
