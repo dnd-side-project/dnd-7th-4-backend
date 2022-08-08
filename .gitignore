@@ -262,3 +262,11 @@ fabric.properties
 
 # private file
 lchy_record.md
+
+
+# extra
+*.DS_Store
+*.csv
+*.docx
+*.pdf
+*.xlsx
