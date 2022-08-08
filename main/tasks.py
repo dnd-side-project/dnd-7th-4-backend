@@ -5,5 +5,5 @@ from dnd_7th_4_backend.celery import app
 
 
 @shared_task
-def hello(name):
+def printName(name):
     print(f'my name is {name}')
