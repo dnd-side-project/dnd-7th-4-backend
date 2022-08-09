@@ -18,5 +18,10 @@ app.conf.beat_schedule = {
           		'schedule': crontab(minute='*/60'),
 
           	},
+          	'add-every-24-hour-api7': {
+          		'task': 'main.tasks.api_7',
+          		'schedule': crontab(minute=0, hour=0),
+
+          	},
 
           }
