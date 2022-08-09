@@ -7,6 +7,10 @@ from datetime import date, datetime
 from dnd_7th_4_backend.celery import app
 from main.api_callback_directory.api_1 import func1, func2
 
+from main.api_callback_directory.api_6 import call_api_6, update_api_6
+from main.api_callback_directory.api_7 import call_api_7, update_api_7
+from main.models import Api_6, Api_7, Region
+
 
 # test 용 함수
 @shared_task
@@ -18,10 +22,6 @@ def printName():
 @shared_task
 def api1_create():
     func1()
-
-from main.api_callback_directory.api_6 import call_api_6, update_api_6
-from main.api_callback_directory.api_7 import call_api_7, update_api_7
-from main.models import Api_6, Api_7, Region
 
 # api1 재호출 시 필요한 함수 -> update
 @shared_task
