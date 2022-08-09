@@ -4,15 +4,6 @@ from celery import shared_task
 
 from main.models import Api_6, Region
 
-@shared_task
-def api_6(request):
-    if not len(Api_6.objects.all()): # Api_6 가 비어있는 경우
-        print('api_6: save -----------------------------')
-        call_api_6()
-    else:
-        print('api_6: update -----------------------------')
-        update_api_6()
-
 # api_6 데이터 저장을 위한 데이터 요청
 def call_api_6():
     url = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"
@@ -68,9 +59,6 @@ def call_api_6():
 
 # 1시간 주기로 api_6 데이터 업데이트
 def update_api_6():
-    import requests
-    from datetime import datetime
-    from .models import Api_6
 
     url = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"
     search_date = datetime.today().strftime("YYYY-mm-dd")

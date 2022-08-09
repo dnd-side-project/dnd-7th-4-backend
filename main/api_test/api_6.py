@@ -15,7 +15,7 @@ def api_6(request):
         print('api_6: update -----------------------------')
         update_api_6()
         
-    return HttpResponse("api_7: Success  -----------------------------")
+    return HttpResponse("api_6: Success  -----------------------------")
 
 # api_6 데이터 저장을 위한 데이터 요청
 def call_api_6():
