@@ -31,3 +31,23 @@ class Region(models.Model):
 
     def __str__(self):
         return self.div_code  # 행정 구역 코드값을 대표값으로
+
+
+class Base(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)  # 최초 생성일
+    updated_at = models.DateTimeField(auto_now=True)  # 최초 수정일
+
+
+class Api1(Base):
+    base_date = models.CharField(max_length=10)
+    base_time = models.CharField(max_length=10)
+    PTY = models.CharField(max_length=10)  # 강수형태
+    REH = models.CharField(max_length=10)  # 습도
+    RN1 = models.CharField(max_length=10)  # 1시간 강수량
+    T1H = models.CharField(max_length=10)  # 기온
+    UUU = models.CharField(max_length=10)  # 동서바람성분
+    VEC = models.CharField(max_length=10)  # 풍향
+    VVV = models.CharField(max_length=10)  # 남북바람성분
+    WSD = models.CharField(max_length=10)  # 풍속
+
+    region = models.OneToOneField(Region, on_delete=models.CASCADE)
