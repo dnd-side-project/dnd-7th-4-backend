@@ -18,10 +18,10 @@ app.conf.beat_schedule = {
     #     'task' : 'main.tasks.api1_update',  # 수행할 task 설정
     #     'schedule': crontab(minute=22, hour=1),  # 수행할 시간 설정
     # },
-     'printTime': {
-         'task' : 'main.tasks.printName',
-         'schedule': crontab(),
-     }
+    #  'printTime': {
+    #      'task' : 'main.tasks.printName',
+    #      'schedule': crontab(),
+    #  }
     #'add-every-60-minutes-api6': {
     #    'task': 'main.tasks.api_6',
     #    'schedule': crontab(minute='*/60'),
