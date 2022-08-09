@@ -103,6 +103,8 @@ def func2():
     m = now.strftime("%M")
     base_time = str(h) + str(m)
 
+    print(base_date, base_time)
+
 
     for i in range(1, 251):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
