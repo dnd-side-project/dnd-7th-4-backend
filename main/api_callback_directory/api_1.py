@@ -12,6 +12,7 @@ def func1():
     d = str(date.today())
     now = datetime.now()
     base_date = d.replace("-", "")
+    base_date = "20220810"
 
     h = now.strftime("%H")
     m = now.strftime("%M")
@@ -19,7 +20,7 @@ def func1():
     base_time = "0300"
 
     print(base_date, base_time)
-    for i in range(1, 10):  # region id: 1 ~ 250 까지 정보 업데이트
+    for i in range(1, 251):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
         nx = region.cor_x
         ny = region.cor_y
