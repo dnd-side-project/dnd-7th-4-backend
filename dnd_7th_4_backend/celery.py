@@ -16,7 +16,7 @@ app.conf.beat_schedule = {
 
     'api1' : {  # 스케쥴링 이름
         'task' : 'main.tasks.api1_update',  # 수행할 task 설정
-        'schedule': crontab(minute=40, hour=4),  # 수행할 시간 설정
+        'schedule': crontab(minute=46, hour=19),  # 수행할 시간 설정
     },
     #  'printTime': {
     #      'task' : 'main.tasks.printName',
