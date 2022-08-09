@@ -46,8 +46,11 @@ def func1():
             print(response)
             # 결과 상태코드 정의
             rescode = response.status_code
+            print(rescode)
 
             if (rescode == 200):
+                print("pass")
+                print(rescode)
                 response = response.json()
                 items = response['response']['body']['items']['item']
                 print(rescode, items)
