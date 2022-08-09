@@ -263,6 +263,7 @@ fabric.properties
 # private file
 lchy_record.md
 
+celerybeat-schedule.*
 
 # extra
 *.DS_Store
