@@ -51,3 +51,17 @@ class Region(models.Model):
 
     def __str__(self):
         return self.div_code  # 행정 구역 코드값을 대표값으로
+
+# API7 -일몰 일출 데이터
+class Api_7(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    sunrise = models.IntegerField() # 일출
+    sunset = models.IntegerField() # 일몰
+
+    # FK
+    region_id = models.OneToOneField(Region, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.id)

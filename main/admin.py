@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Region, Api_6
+from .models import Region, Api_6, Api_7
 
 # Register your models here.
 
@@ -12,3 +12,7 @@ class RegionAdmin(admin.ModelAdmin):
 class Api6Admin(admin.ModelAdmin):
     #list_display = [field.name for field in Api_6._meta.get_fields()]
     list_display = ('id', 'created_at', 'updated_at', 'sidoName', 'stationName', 'pm10Grade1h', 'pm25Grade1h', 'pm10Value24', 'pm25Value24')
+
+@admin.register(Api_7)
+class RegionAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Api_7._meta.get_fields()]
