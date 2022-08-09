@@ -4,8 +4,8 @@ from django.db import models
 
 # API6 -시도별 실시간 측정정보
 class Api_6(models.Model):
-    fcst_date = models.DateField() # 예측 일자
-    fcst_time = models.TimeField() # 예측 시각
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     sidoName = models.CharField(max_length=2) # 시도명
     stationName = models.CharField(max_length=10) # 측정소명
@@ -14,7 +14,7 @@ class Api_6(models.Model):
     pm25Grade1h = models.IntegerField() # 고농도 미세먼지 등급
     
     pm10Value24 = models.IntegerField() # 미세먼지 24시간 예측 등급
-    pm24Value24 = models.IntegerField() # 고농도 24시간 예측 미세먼지 등급
+    pm25Value24 = models.IntegerField() # 고농도 24시간 예측 미세먼지 등급
 
     def __str__(self):
         return (self.sidoName, self.stationName)
