@@ -1,20 +1,11 @@
+from celery import shared_task
+
 import requests
 from datetime import datetime
 import xmltodict
 import json
 
 from main.models import Api_7, Region
-
-@shared_task
-def api_7(request):
-    print('in')
-    if not len(Api_7.objects.all()): # api_7 가 비어있는 경우
-        print('api_7: save -----------------------------')
-        call_api_7()
-
-    else:
-        print('api_7: update -----------------------------')
-        update_api_7()
 
 # api_7 데이터 저장을 위한 데이터 요청
 def call_api_7():
@@ -54,9 +45,9 @@ def call_api_7():
                 get_api_error(str(response.status_code), response.text)
 
         except requests.Timeout:
-            print(f'api_6: Timeout: {local}-----------------------------')
+            print(f'api_7: Timeout: {local}-----------------------------')
         except requests.ConnectionError:
-            print(f'api_6: ConnectionError: {local}-----------------------------')
+            print(f'api_7: ConnectionError: {local}-----------------------------')
 
 # 1시간 주기로 api_7 데이터 업데이트
 def update_api_7():
@@ -98,6 +89,6 @@ def update_api_7():
                 get_api_error(str(response.status_code), response.text)
 
         except requests.Timeout:
-            print(f'api_6: Timeout: {local}-----------------------------')
+            print(f'api_7: Timeout: {local}-----------------------------')
         except requests.ConnectionError:
-            print(f'api_6: ConnectionError: {local}-----------------------------')
+            print(f'api_7: ConnectionError: {local}-----------------------------')

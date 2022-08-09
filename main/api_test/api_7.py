@@ -56,9 +56,9 @@ def call_api_7():
                 get_api_error(str(response.status_code), response.text)
 
         except requests.Timeout:
-            print(f'api_6: Timeout: {local}-----------------------------')
+            print(f'api_7: Timeout: {local}-----------------------------')
         except requests.ConnectionError:
-            print(f'api_6: ConnectionError: {local}-----------------------------')
+            print(f'api_7: ConnectionError: {local}-----------------------------')
 
 # 1시간 주기로 api_7 데이터 업데이트
 def update_api_7():
@@ -100,6 +100,6 @@ def update_api_7():
                 get_api_error(str(response.status_code), response.text)
 
         except requests.Timeout:
-            print(f'api_6: Timeout: {local}-----------------------------')
+            print(f'api_7: Timeout: {local}-----------------------------')
         except requests.ConnectionError:
-            print(f'api_6: ConnectionError: {local}-----------------------------')
+            print(f'api_7: ConnectionError: {local}-----------------------------')
