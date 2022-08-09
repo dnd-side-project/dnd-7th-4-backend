@@ -18,6 +18,7 @@ def func1():
     # base_time = str(h) + str(m)
     base_time = "0300"
 
+    print(base_date, base_time)
     for i in range(1, 10):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
         nx = region.cor_x
