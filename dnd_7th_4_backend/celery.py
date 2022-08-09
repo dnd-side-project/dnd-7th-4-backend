@@ -13,15 +13,24 @@ app.autodiscover_tasks()
 
 # task 함수 주기 설정
 app.conf.beat_schedule = {
-          	'add-every-60-minutes-api6': {
-          		'task': 'main.tasks.api_6',
-          		'schedule': crontab(minute='*/60'),
 
-          	},
-          	'add-every-24-hour-api7': {
-          		'task': 'main.tasks.api_7',
-          		'schedule': crontab(minute=0, hour=0),
+    # 'api1' : {  # 스케쥴링 이름
+    #     'task' : 'main.tasks.api1_update',  # 수행할 task 설정
+    #     'schedule': crontab(minute=22, hour=1),  # 수행할 시간 설정
+    # },
+    # 'printTime': {
+    #     'task' : 'main.tasks.printName',
+    #     'schedule': crontab(),
+    # }
+    'add-every-60-minutes-api6': {
+        'task': 'main.tasks.api_6',
+        'schedule': crontab(minute='*/60'),
 
-          	},
+    },
+    'add-every-24-hour-api7': {
+        'task': 'main.tasks.api_7',
+        'schedule': crontab(minute=0, hour=0),
+
+    },
 
           } 
