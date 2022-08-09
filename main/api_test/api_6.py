@@ -1,11 +1,12 @@
+from django.http import HttpResponse
+
 import requests
 from datetime import datetime
 
 from main.models import Api_6, Region
 
+
 def api_6(request):
-    
-    print('in')
     if not len(Api_6.objects.all()): # Api_6 가 비어있는 경우
         print('api_6: save -----------------------------')
         call_api_6()
@@ -13,6 +14,8 @@ def api_6(request):
     else:
         print('api_6: update -----------------------------')
         update_api_6()
+        
+    return HttpResponse("api_7: Success  -----------------------------")
 
 # api_6 데이터 저장을 위한 데이터 요청
 def call_api_6():
@@ -58,6 +61,9 @@ def call_api_6():
                         print(f'api_6: connect fk {region} {api6.id} -----------------------------')
                         region.api6_id = api6
                         region.save()
+            else:
+                get_api_error(str(response.status_code), response.text)
+
         except requests.Timeout:
             print(f'api_6: Timeout: {local}-----------------------------')
         except requests.ConnectionError:
@@ -106,7 +112,20 @@ def update_api_6():
                         api6.pm10Value24 = pm_data[2]
                         api6.pm25Value24 = pm_data[3]
                         api6.save()
+            else:
+                get_api_error(str(response.status_code), response.text)
+
         except requests.Timeout:
             print(f'api_6: Timeout: {local}-----------------------------')
         except requests.ConnectionError:
             print(f'api_6: ConnectionError: {local}-----------------------------')
+
+# OpenAPI 에러 처리
+def get_api_error(code, text):
+    if code == '01':
+        print('api_6: Application Error: Application 서비스 제공 상태 원활하지 않음-----------------------------')
+    elif code == '02':
+        print('api_6: DB Error: DB 서비스 제공 상태 원활하지 않음-----------------------------')
+    else:
+        print(text)
+    
