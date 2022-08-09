@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Region
+from .models import Region, Api1, Api_6, Api_7
 
 # Register your models here.
 
