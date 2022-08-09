@@ -10,14 +10,14 @@ class Api_6(models.Model):
     sidoName = models.CharField(max_length=2) # 시도명
     stationName = models.CharField(max_length=10) # 측정소명
 
-    pm10Grade1h = models.IntegerField() # 미세먼지 등급
-    pm25Grade1h = models.IntegerField() # 고농도 미세먼지 등급
+    pm10Grade1h = models.IntegerField(null=True, default=0) # 미세먼지 등급
+    pm25Grade1h = models.IntegerField(null=True, default=0) # 고농도 미세먼지 등급
     
-    pm10Value24 = models.IntegerField() # 미세먼지 24시간 예측 등급
-    pm25Value24 = models.IntegerField() # 고농도 24시간 예측 미세먼지 등급
+    pm10Value24 = models.IntegerField(null=True, default=0) # 미세먼지 24시간 예측 등급
+    pm25Value24 = models.IntegerField(null=True, default=0) # 고농도 24시간 예측 미세먼지 등급
 
     def __str__(self):
-        return (self.sidoName, self.stationName)
+        return str(self.id)
 
 #  행정구역
 class Region(models.Model):
