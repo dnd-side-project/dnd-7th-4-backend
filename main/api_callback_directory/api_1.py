@@ -49,6 +49,7 @@ def func1():
             if (rescode == 200):
                 response = response.json()
                 items = response['response']['body']['items']['item']
+                print(rescode, items)
 
                 for item in items:
                     if item['category'] == 'PTY':
@@ -81,7 +82,6 @@ def func1():
             print("Connection Error")
             pass
         except:
-            print("Extra Error")
             pass
 
 
@@ -125,7 +125,7 @@ def func2():
             rescode = response.status_code
 
             obj = Api1.objects.get(region=region)
-            print(obj)
+            print(rescode, obj)
             if (rescode == 200 and obj is not None):
                 response = response.json()
                 items = response['response']['body']['items']['item']
