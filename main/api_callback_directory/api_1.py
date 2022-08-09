@@ -18,7 +18,7 @@ def func1():
     # base_time = str(h) + str(m)
     base_time = "0100"
 
-    for i in range(1, 251):  # region id: 1 ~ 250 까지 정보 업데이트
+    for i in range(1, 10):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
         nx = region.cor_x
         ny = region.cor_y
@@ -46,14 +46,16 @@ def func1():
             print(response)
             # 결과 상태코드 정의
             rescode = response.status_code
-            print(rescode)
 
             if (rescode == 200):
-                print("pass")
+                print("rescode")
                 print(rescode)
                 response = response.json()
+                print("response", response)
                 items = response['response']['body']['items']['item']
-                print(rescode, items)
+                print("items", items)
+
+                print("pass")
 
                 for item in items:
                     if item['category'] == 'PTY':
