@@ -25,11 +25,9 @@ def api1_create():
 
 # api1 재호출 시 필요한 함수 -> update
 @shared_task
-def printName():
-    print('my name is ')
-
 def api1_update():
     func2()
+
 
 @shared_task
 def api_6():
