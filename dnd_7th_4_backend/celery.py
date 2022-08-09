@@ -10,3 +10,13 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 #등록된 장고 앱 설정에서 task 불러오기
 app.autodiscover_tasks()
+
+# task 함수 주기 설정
+app.conf.beat_schedule = {
+          	'add-every-60-minutes-api6': {
+          		'task': 'main.tasks.api_6',
+          		'schedule': crontab(minute='*/60'),
+
+          	},
+
+          }
