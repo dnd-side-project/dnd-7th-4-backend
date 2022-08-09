@@ -5,7 +5,7 @@ from .models import *
 from dnd_7th_4_backend.settings.base import env
 from datetime import date, datetime
 from dnd_7th_4_backend.celery import app
-from api_callback_directory.api_1 import func1, func2
+from main.api_callback_directory.api_1 import func1, func2
 
 
 # test 용 함수
