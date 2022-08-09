@@ -43,6 +43,7 @@ def func1():
         try:
             # request 요청
             response = requests.get(url, params=params)
+            print(response)
             # 결과 상태코드 정의
             rescode = response.status_code
 
