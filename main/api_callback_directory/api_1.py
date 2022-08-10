@@ -3,29 +3,20 @@ from celery import shared_task
 import requests
 from main.models import *
 from dnd_7th_4_backend.settings.base import env
-from datetime import date, datetime
+import datetime
 from dnd_7th_4_backend.celery import app
 
 
 # api1 처음 호출 시 필요한 함수 -> create
 def func1():
-    d = str(date.today())
-    now = datetime.now()
-    base_date = d.replace("-", "")
-    base_date = "20220810"
+    current = datetime.datetime.now() + datetime.timedelta(hours=9)
+    base_date = current.strftime("%Y%m%d")
+    base_time = current.strftime("%H%M")
 
-    h = now.strftime("%H")
-    m = now.strftime("%M")
-    # base_time = str(h) + str(m)
-    base_time = "0300"
-
-    print(base_date, base_time)
     for i in range(1, 251):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
         nx = region.cor_x
         ny = region.cor_y
-
-        print(region.id, nx, ny)
 
         # request url 정의
         url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst"
@@ -45,19 +36,12 @@ def func1():
         try:
             # request 요청
             response = requests.get(url, params=params)
-            print(response)
             # 결과 상태코드 정의
             rescode = response.status_code
 
             if (rescode == 200):
-                print("rescode")
-                print(rescode)
                 response = response.json()
-                print("response", response)
                 items = response['response']['body']['items']['item']
-                print("items", items)
-
-                print("pass")
 
                 for item in items:
                     if item['category'] == 'PTY':
@@ -90,23 +74,15 @@ def func1():
             print("Connection Error")
             pass
         except:
+            print("Extra Error")
             pass
 
 
 # api1 재호출 시 필요한 함수 -> update
 def func2():
-    d = str(date.today())
-    now = datetime.now()
-    base_date = d.replace("-", "")
-
-    h = now.strftime("%H")
-    m = now.strftime("%M")
-    base_time = str(h) + str(m)
-
-    base_date = "20220810"
-    base_time = "0300"
-
-
+    current = datetime.datetime.now() + datetime.timedelta(hours=9)
+    base_date = current.strftime("%Y%m%d")
+    base_time = current.strftime("%H%M")
 
     for i in range(1, 251):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
@@ -137,7 +113,7 @@ def func2():
             rescode = response.status_code
 
             obj = Api1.objects.get(region=region)
-            print(rescode, obj)
+
             if (rescode == 200 and obj is not None):
                 response = response.json()
                 items = response['response']['body']['items']['item']
