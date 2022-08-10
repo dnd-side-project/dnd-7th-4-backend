@@ -14,14 +14,14 @@ app.autodiscover_tasks()
 # task 함수 주기 설정
 app.conf.beat_schedule = {
 
-    'api1' : {  # 스케쥴링 이름
-        'task' : 'main.tasks.api1_update',  # 수행할 task 설정
-        'schedule': crontab(minute=53, hour=19),  # 수행할 시간 설정
-    },
-     'printTime': {
-         'task' : 'main.tasks.printName', # 테스트용
-         'schedule': crontab(minute=5, hour='*'), # 매 시간 5분마다 실행 0005, 0105, 0205, ...
-     }
+    # 'api1' : {  # 스케쥴링 이름
+    #     'task' : 'main.tasks.api1_update',  # 수행할 task 설정
+    #     'schedule': crontab(minute=53, hour=19),  # 수행할 시간 설정
+    # },
+    #  'printTime': {
+    #      'task' : 'main.tasks.printName', # 테스트용
+    #      'schedule': crontab(minute=5, hour='*'), # 매 시간 5분마다 실행 0005, 0105, 0205, ...
+    #  }
     #'add-every-60-minutes-api6': {
     #    'task': 'main.tasks.api_6',
     #    'schedule': crontab(minute='*/60'),
