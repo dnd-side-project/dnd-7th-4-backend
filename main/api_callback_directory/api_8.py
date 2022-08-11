@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 from dnd_7th_4_backend.settings.base import env
@@ -12,7 +12,12 @@ def call_api_8():
     url = "http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2"
     #serviceKey = env('API_SERVICEKEY1')
     serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
-    search_date = datetime.today().strftime("%Y%m%d%H")
+    search_date = datetime.today()
+
+    # 오전 6시 이전인 경우
+    now_hour = datetime.today().strftime("%H")
+    if int(now_hour) <= 6:
+        search_date = (datetime.today() - timedelta(days=1))
     print(f'api_8: get request: -----------------------------')
 
     region_data = Region.objects.all()
@@ -21,13 +26,15 @@ def call_api_8():
             "serviceKey": serviceKey,
             "areaNo": region.div_code,
             "dataType": "JSON",
-            "time": ""
+            "time": search_date.strftime("%Y%m%d")+"06"
         }
         try:
             # api 요청
             response = requests.get(url, params=params)
-            code = response.json()['response']['header']['resultCode']
+            print(response.text)
+
             # 데이터 받기가 성공일 경우
+            code = response.json()['response']['header']['resultCode']
             if code == '00':
                 # API 8 데이터 저장
                 today = response.json()['response']['body']['items']['item'][0]['today']
@@ -48,9 +55,15 @@ def call_api_8():
 # 오전 6시마다 api_8 데이터 업데이트
 def update_api_8():
     url = "http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2"
-    search_date = datetime.today().strftime("%Y%m%d%H")
+
     #serviceKey = env('API_SERVICEKEY1')
     serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
+    search_date = datetime.today()
+
+    # 오전 6시 이전인 경우
+    now_hour = datetime.today().strftime("%H")
+    if int(now_hour) <= 6:
+        search_date = (datetime.today() - timedelta(days=1))
     print(f'api_8: get request: -----------------------------')
 
     api8_data = Api8.objects.all()
@@ -60,13 +73,15 @@ def update_api_8():
             "serviceKey": serviceKey,
             "areaNo": region,
             "dataType": "JSON",
-            "time": ""
+            "time": search_date.strftime("%Y%m%d")+"06"
         }
         try:
             # api 요청
             response = requests.get(url, params=params)
-            code = response.json()['response']['header']['resultCode']
+            print('a')
             # 데이터 받기가 성공일 경우
+            code = response.json()['response']['header']['resultCode']
+            print(response.text)
             if code == '00':
                 # API 8 데이터 저장
                 today = response.json()['response']['body']['items']['item'][0]['today']
