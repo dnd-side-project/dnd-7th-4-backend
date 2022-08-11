@@ -1,6 +1,8 @@
 from django.db import models
 
-# Create your models here.
+class Base(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)  # 최초 생성일
+    updated_at = models.DateTimeField(auto_now=True)  # 최초 수정일
 
 # API6 -시도별 실시간 측정정보
 class Api_6(models.Model):
@@ -52,11 +54,6 @@ class Region(models.Model):
     def __str__(self):
         return self.div_code  # 행정 구역 코드값을 대표값으로
 
-class Base(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)  # 최초 생성일
-    updated_at = models.DateTimeField(auto_now=True)  # 최초 수정일
-
-
 class Api1(Base):
     base_date = models.CharField(max_length=10)
     base_time = models.CharField(max_length=10)
@@ -84,3 +81,13 @@ class Api_7(models.Model):
 
     def __str__(self):
         return self.div_code  # 행정 구역 코드값을 대표값으로
+
+#API8 - 자외선 지수 API
+class Api8(Base):
+    base_date = models.CharField(max_length=10)
+    base_time = models.CharField(max_length=10)
+
+    today = models.IntegerField()  # 강수형태
+    tomorrow = models.IntegerField()  # 내일 예측값
+
+    div_code = models.CharField(max_length=10)  # 행정구역 코드
