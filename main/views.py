@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from .api_test.api_6 import api_6
 from .api_test.api_7 import api_7
 from .api_test.api_8 import api_8
+from .api_test.api_9 import api_9
 
 # Swagger test용 - 이후 삭제
 class TestView(APIView):
