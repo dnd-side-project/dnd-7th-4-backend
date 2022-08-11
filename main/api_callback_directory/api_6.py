@@ -2,7 +2,7 @@ import requests
 from datetime import datetime
 from celery import shared_task
 
-from main.models import Api_6, Region
+from main.models import Api6, Region
 
 # api_6 데이터 저장을 위한 데이터 요청
 def call_api_6():
@@ -43,7 +43,7 @@ def call_api_6():
                     if len(region_data) > 0:
 
                         print(f'api_6: {sido_name} {station_name} -----------------------------')
-                        api6 = Api_6(sidoName = sido_name, stationName = station_name, pm10Grade1h = pm_data[0], pm25Grade1h = pm_data[1],
+                        api6 = Api6(sidoName = sido_name, stationName = station_name, pm10Grade1h = pm_data[0], pm25Grade1h = pm_data[1],
                                     pm10Value24 = pm_data[2], pm25Value24 = pm_data[3])
                         api6.save()
                         
@@ -96,7 +96,7 @@ def update_api_6():
                             pm_data[i] = 0
 
                     # api 데이터 찾아서 업데이트
-                    api6_data = Api_6.objects.filter(stationName = station_name)
+                    api6_data = Api6.objects.filter(stationName = station_name)
                     for api6 in api6_data:
                         print(f'api_6: {sido_name} {station_name} -----------------------------')
                         api6.pm10Grade1h = pm_data[0]

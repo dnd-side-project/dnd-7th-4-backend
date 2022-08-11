@@ -5,7 +5,7 @@ class Base(models.Model):
     updated_at = models.DateTimeField(auto_now=True)  # 최초 수정일
 
 # API6 -시도별 실시간 측정정보
-class Api_6(models.Model):
+class Api6(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -49,7 +49,7 @@ class Region(models.Model):
     api10_code = models.IntegerField()  # 종관관측예보 api code
 
     # FK
-    api6_id = models.ForeignKey(Api_6, on_delete=models.CASCADE,null=True, default='')
+    api6_id = models.ForeignKey(Api6, on_delete=models.CASCADE,null=True, default='')
 
     def __str__(self):
         return self.div_code  # 행정 구역 코드값을 대표값으로
@@ -69,7 +69,7 @@ class Api1(Base):
     region = models.OneToOneField(Region, on_delete=models.CASCADE)
 
 # API7 -일몰 일출 데이터
-class Api_7(models.Model):
+class Api7(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -90,7 +90,7 @@ class Api8(Base):
 
     div_code = models.CharField(max_length=10)  # 행정구역 코드
 
-#API8 - 체감온도 API
+#API9 - 체감온도 API
 class Api9(Base):
 
     today = models.IntegerField()  # 오늘 예측값

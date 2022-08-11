@@ -5,11 +5,11 @@ from datetime import datetime
 import xmltodict
 import json
 
-from main.models import Api_7, Region
+from main.models import Api7, Region
 
 def api_7(request):
     print('in')
-    if not len(Api_7.objects.all()): # api_7 가 비어있는 경우
+    if not len(Api7.objects.all()): # api_7 가 비어있는 경우
         print('api_7: save -----------------------------')
         call_api_7()
 
@@ -48,7 +48,7 @@ def call_api_7():
                 # API 7 데이터 저장
                 sunrise = response_json['response']['body']['items']['item']['sunrise']
                 sunset = response_json['response']['body']['items']['item']['sunset']
-                api_7 = Api_7(sunrise = sunrise, sunset = sunset, region_id = region)
+                api_7 = Api7(sunrise = sunrise, sunset = sunset, region_id = region)
                 api_7.save()
                 print(f'api_7: {region} {sunrise} {sunset} -----------------------------')
 
@@ -67,7 +67,7 @@ def update_api_7():
     serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     print(f'api_7: get request: -----------------------------')
 
-    api7_data = Api_7.objects.all()
+    api7_data = Api7.objects.all()
     for api7 in api7_data:
         region = api7.region_id
         params = {
