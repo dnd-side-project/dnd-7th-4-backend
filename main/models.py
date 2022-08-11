@@ -84,8 +84,6 @@ class Api_7(models.Model):
 
 #API8 - 자외선 지수 API
 class Api8(Base):
-    base_date = models.CharField(max_length=10)
-    base_time = models.CharField(max_length=10)
 
     today = models.IntegerField()  # 강수형태
     tomorrow = models.IntegerField()  # 내일 예측값
