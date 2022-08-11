@@ -9,7 +9,8 @@ from main.api_callback_directory.api_1 import func1, func2
 
 from main.api_callback_directory.api_6 import call_api_6, update_api_6
 from main.api_callback_directory.api_7 import call_api_7, update_api_7
-from main.models import Api_6, Api_7, Region
+from main.api_callback_directory.api_8 import call_api_8, update_api_8
+from main.models import Region, Api_6, Api_7, Api8
 
 
 # test 용 함수
@@ -47,3 +48,13 @@ def api_7():
     else:
         print('api_7: update -----------------------------')
         update_api_7()
+
+@shared_task
+def api_8():
+    if not len(Api8.objects.all()): # api_8 가 비어있는 경우
+        print('api_8: save -----------------------------')
+        call_api_8()
+
+    else:
+        print('api_8: update -----------------------------')
+        update_api_8()
