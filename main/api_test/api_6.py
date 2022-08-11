@@ -7,7 +7,7 @@ from main.models import Api6, Region
 
 
 def api_6(request):
-    if not len(Api_6.objects.all()): # Api_6 가 비어있는 경우
+    if not len(Api6.objects.all()): # Api_6 가 비어있는 경우
         print('api_6: save -----------------------------')
         call_api_6()
 
