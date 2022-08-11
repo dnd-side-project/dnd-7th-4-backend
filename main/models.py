@@ -85,7 +85,15 @@ class Api_7(models.Model):
 #API8 - 자외선 지수 API
 class Api8(Base):
 
-    today = models.IntegerField()  # 강수형태
+    today = models.IntegerField()  # 오늘 예측값
+    tomorrow = models.IntegerField()  # 내일 예측값
+
+    div_code = models.CharField(max_length=10)  # 행정구역 코드
+
+#API8 - 체감온도 API
+class Api9(Base):
+
+    today = models.IntegerField()  # 오늘 예측값
     tomorrow = models.IntegerField()  # 내일 예측값
 
     div_code = models.CharField(max_length=10)  # 행정구역 코드
