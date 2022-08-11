@@ -92,8 +92,8 @@ class Api8(Base):
 
 #API9 - 체감온도 API
 class Api9(Base):
+    temperature = models.CharField(max_length=1500, null=True, default='')
 
-    today = models.IntegerField()  # 오늘 예측값
-    tomorrow = models.IntegerField()  # 내일 예측값
+    base_time = models.CharField(max_length=10, null=True, default='')
 
     div_code = models.CharField(max_length=10)  # 행정구역 코드

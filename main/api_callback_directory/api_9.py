@@ -16,7 +16,6 @@ def call_api_9():
     search_date = datetime.today().strftime("%Y%m%d%H")
     print(f'api_9: get request: -----------------------------')
 
-    now_hour = datetime.today().strftime("%H")
     region_data = Region.objects.all()
     for region in region_data:
         params = {
@@ -32,16 +31,18 @@ def call_api_9():
             code = response.json()['response']['header']['resultCode']
             # 데이터 받기가 성공일 경우
             if code == '00':
-                # API 9 데이터 저장
-                today_num = "h"+str(int(now_hour)-6)
-                tomorrow_num = "h"+str(int(now_hour)-6+24)
-                today = response.json()['response']['body']['items']['item'][0][today_num]
-                tomorrow = response.json()['response']['body']['items']['item'][0][tomorrow_num]
-                div_code = response.json()['response']['body']['items']['item'][0]['areaNo']
-                api_9 = Api9(today = today, tomorrow = tomorrow, div_code = div_code)
-                api_9.save()
-                print(f'api_9: {div_code} {today} {tomorrow} -----------------------------')
+                # 시간에 대한 리스트 만들기
+                data = ""
+                for i in range(48):
+                    data += response.json()['response']['body']['items']['item'][0]["h"+str(i+1)]+"/"
+                base_time = response.json()['response']['body']['items']['item'][0]['date'][-2:]
 
+                div_code = response.json()['response']['body']['items']['item'][0]['areaNo']
+
+                # API 9 데이터 저장
+                api_9 = Api9(temperature = data, base_time = base_time, div_code = div_code)
+                api_9.save()
+                print(f'api_9: {div_code} {base_time} {data} -----------------------------')
             else:
                 get_api_error(str(response.status_code), response.text)
 
@@ -75,16 +76,20 @@ def update_api_9():
             code = response.json()['response']['header']['resultCode']
             # 데이터 받기가 성공일 경우
             if code == '00':
-                # API 9 데이터 저장
-                today_num = "h"+str(now_hour-6)
-                tomorrow_num = "h"+str(now_hour-6+24)
-                today = response.json()['response']['body']['items']['item'][0][today_num]
-                tomorrow = response.json()['response']['body']['items']['item'][0][tomorrow_num]
-                api9.today = today
-                api9.tomorrow = tomorrow
-                api9.save()
-                print(f'api_9: {region} {today} {tomorrow} -----------------------------')
 
+                # 시간에 대한 리스트 만들기
+                data = ""
+                for i in range(48):
+                    data += response.json()['response']['body']['items']['item'][0]["h"+str(i+1)]+"/"
+                base_time = response.json()['response']['body']['items']['item'][0]['date'][-2:]
+
+                div_code = response.json()['response']['body']['items']['item'][0]['areaNo']
+
+                # API 9 데이터 저장
+                api9.temperature = data
+                api9.base_time = base_time
+                api9.save()
+                print(f'api_9: {div_code} {base_time} {data} -----------------------------')
             else:
                 get_api_error(str(response.status_code), response.text)
 
