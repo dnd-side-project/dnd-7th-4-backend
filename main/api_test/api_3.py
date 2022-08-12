@@ -22,7 +22,7 @@ def func3():
     # base_time = current.strftime("%H%M") ## 배포용
     base_time = "2015"  # 테스트용
 
-    for i in range(1, 3):  # region id: 1 ~ 250 까지 정보 업데이트
+    for i in range(1, 251):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
         nx = region.cor_x
         ny = region.cor_y
