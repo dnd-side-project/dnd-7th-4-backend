@@ -79,7 +79,7 @@ def func1():
 
 
 # api1 재호출 시 필요한 함수 -> update
-def func2():
+def func1_update():
     current = datetime.datetime.now() + datetime.timedelta(hours=9)
     base_date = current.strftime("%Y%m%d")
     base_time = current.strftime("%H%M")
