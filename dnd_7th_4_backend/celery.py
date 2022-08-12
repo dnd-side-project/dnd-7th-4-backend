@@ -22,15 +22,25 @@ app.conf.beat_schedule = {
     #      'task' : 'main.tasks.printName', # 테스트용
     #      'schedule': crontab(minute=5, hour='*'), # 매 시간 5분마다 실행 0005, 0105, 0205, ...
     #  }
-    #'add-every-60-minutes-api6': {
-    #    'task': 'main.tasks.api_6',
-    #    'schedule': crontab(minute='*/60'),
 
-    #},
-    #'add-every-24-hour-api7': {
-    #    'task': 'main.tasks.api_7',
-    #    'schedule': crontab(minute=0, hour=0),
+    'add-every-60-minutes-api6': {
+        'task': 'main.tasks.api_6',
+        'schedule': crontab(minute='*/60'),
 
-    #},
+    },
+    'add-every-24-hour-api7': {
+        'task': 'main.tasks.api_7',
+        'schedule': crontab(minute=0, hour=0),
 
-          } 
+    },
+    'add-every-at-06-api8': {
+        'task': 'main.tasks.api_8',
+        'schedule': crontab(hour='6'),
+    },
+    
+    'add-every-at-06-18-api9': {
+        'task': 'main.tasks.api_9',
+        'schedule': crontab(hour='6, 18'),
+    },
+
+} 
