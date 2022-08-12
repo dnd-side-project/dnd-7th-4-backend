@@ -211,3 +211,29 @@ class Api4(Base):
     wf8 = models.CharField(max_length=20)      # 8일 후 날씨 예보
     wf9 = models.CharField(max_length=20)      # 9일 후 날씨 예보
     wf10 = models.CharField(max_length=20)     # 10일 후 날씨 예보
+
+
+# API5 - 중기기온조회
+class Api5(Base):
+    regId = models.CharField(max_length=20)   # 중기기온지역코드
+    tmFc = models.CharField(max_length=20)  # 관측된 날짜 + 시간
+
+    taMin3 = models.CharField(max_length=10)  # 3일 후 예상 최저 기온
+    taMax3 = models.CharField(max_length=10)  # 3일 후 예상 최고 기온
+    taMin4 = models.CharField(max_length=10)  # 4일 후 예상 최저 기온
+    taMax4 = models.CharField(max_length=10)  # 4일 후 예상 최고 기온
+    taMin5 = models.CharField(max_length=10)  # 5일 후 예상 최저 기온
+    taMax5 = models.CharField(max_length=10)  # 5일 후 예상 최고 기온
+    taMin6 = models.CharField(max_length=10)  # 6일 후 예상 최저 기온
+    taMax6 = models.CharField(max_length=10)  # 6일 후 예상 최고 기온
+    taMin7 = models.CharField(max_length=10)  # 7일 후 예상 최저 기온
+    taMax7 = models.CharField(max_length=10)  # 7일 후 예상 최고 기온
+    taMin8 = models.CharField(max_length=10)  # 8일 후 예상 최저 기온
+    taMax8 = models.CharField(max_length=10)  # 8일 후 예상 최고 기온
+    taMin9 = models.CharField(max_length=10)  # 9일 후 예상 최저 기온
+    taMax9 = models.CharField(max_length=10)  # 9일 후 예상 최고 기온
+    taMin10 = models.CharField(max_length=10)  # 10일 후 예상 최저 기온
+    taMax10 = models.CharField(max_length=10)  # 10일 후 예상 최고 기온
+
+    # 중기기온코드 지역이 거의 x,y 지역좌표랑 개수가 같아서 1:1로 매핑시킴
+    region = models.OneToOneField(Region, on_delete=models.CASCADE)
