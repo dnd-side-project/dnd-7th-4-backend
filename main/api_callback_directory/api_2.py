@@ -149,4 +149,3 @@ def func2():
             pass
 
 
-func2()

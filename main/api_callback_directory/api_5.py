@@ -167,4 +167,3 @@ def test():
             pass
 
 
-func5()
