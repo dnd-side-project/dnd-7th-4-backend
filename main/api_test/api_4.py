@@ -14,8 +14,8 @@ def func4():
     # current = datetime.datetime.now() + datetime.timedelta(hours=9)  # 배포용
     current = datetime.datetime.now()  # 테스트용
     base_date = current.strftime("%Y%m%d")
-    base_time = current.strftime("%H%M")
-    # tmFc = str(base_date) + str(base_time)
+    base_time = current.strftime("%H")
+    # tmFc = str(base_date) + str(base_time) + "00"  # 배포용
     tmFc = "202208121800"  # 테스트용
 
     districtCode = ["11B00000", "11D10000", "11D20000", "11C20000", "11C10000",
