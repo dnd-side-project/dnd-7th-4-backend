@@ -5,11 +5,11 @@ from .models import *
 from dnd_7th_4_backend.settings.base import env
 from datetime import date, datetime
 from dnd_7th_4_backend.celery import app
-from main.api_callback_directory.api_1 import *
-from main.api_callback_directory.api_2 import *
-from main.api_callback_directory.api_3 import *
-from main.api_callback_directory.api_4 import *
-from main.api_callback_directory.api_5 import *
+from main.api_callback_directory.api_1 import func1, func1_update
+from main.api_callback_directory.api_2 import func2
+from main.api_callback_directory.api_3 import func3
+from main.api_callback_directory.api_4 import func4
+from main.api_callback_directory.api_5 import func5
 
 from main.api_callback_directory.api_6 import call_api_6, update_api_6
 from main.api_callback_directory.api_7 import call_api_7, update_api_7
