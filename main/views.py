@@ -45,9 +45,12 @@ class MainView(APIView):
     
     def today(self, region) :
         data = {}
-        print(region.api6_id)
+        
         # api6
         data['finddust'] = MainApi6TodaySerializer(region.api6_id).data
+
+        # api7
+        data['sun'] = MainApi7TodaySerializer(region.api7).data
 
         return data
 
@@ -56,6 +59,9 @@ class MainView(APIView):
 
         # api6
         data['finddust'] = MainApi6TomorrowSerializer(region.api6_id).data
+
+        # api7
+        data['sun'] = MainApi7TomorrowSerializer(region.api7).data
 
         return data
 
