@@ -114,3 +114,66 @@ class Api2(Base):
     info_23 = models.TextField()
 
     region = models.OneToOneField(Region, on_delete=models.CASCADE)  # x,y 좌표랑 1:1 mapping
+
+
+# API2 - 단기예보조회
+class Api3(Base):
+    info_0 = models.TextField()  # 00시에 대한 (기온)/ (하늘상태)/ (강수형태)/ (1시간 강수량) 정보
+    info_1 = models.TextField()
+    info_2 = models.TextField()
+    info_3 = models.TextField()
+    info_4 = models.TextField()
+    info_5 = models.TextField()
+    info_6 = models.TextField()
+    info_7 = models.TextField()
+    info_8 = models.TextField()
+    info_9 = models.TextField()
+    info_10 = models.TextField()
+    info_11 = models.TextField()
+    info_12 = models.TextField()
+    info_13 = models.TextField()
+    info_14 = models.TextField()
+    info_15 = models.TextField()
+    info_16 = models.TextField()
+    info_17 = models.TextField()
+    info_18 = models.TextField()
+    info_19 = models.TextField()
+    info_20 = models.TextField()
+    info_21 = models.TextField()
+    info_22 = models.TextField()
+    info_23 = models.TextField()
+    info_24 = models.TextField()
+    info_25 = models.TextField()
+    info_26 = models.TextField()
+    info_27 = models.TextField()
+    info_28 = models.TextField()
+    info_29 = models.TextField()
+    info_30 = models.TextField()
+    info_31 = models.TextField()
+    info_32 = models.TextField()
+    info_33 = models.TextField()
+    info_34 = models.TextField()
+    info_35 = models.TextField()
+    info_36 = models.TextField()
+    info_37 = models.TextField()
+    info_38 = models.TextField()
+    info_39 = models.TextField()
+    info_40 = models.TextField()
+    info_41 = models.TextField()
+    info_42 = models.TextField()
+    info_43 = models.TextField()
+    info_44 = models.TextField()
+    info_45 = models.TextField()
+    info_46 = models.TextField()
+    info_47 = models.TextField()
+
+    info_day0_MAX = models.TextField(null=True, default='')  # 오늘 최고기온
+    info_day0_MIN = models.TextField(null=True, default='')  # 오늘 최저기온
+    info_day1_MAX = models.TextField(null=True, default='')  # 내일 최고기온
+    info_day1_MIN = models.TextField(null=True, default='')  # 내일 최저기온
+    info_day2_MAX = models.TextField(null=True, default='')  # 모래 최고기온
+    info_day2_MIN = models.TextField(null=True, default='')  # 모래 최저기온
+    info_day3_MAX = models.TextField(null=True, default='')  # 글피 최고기온
+    info_day3_MIN = models.TextField(null=True, default='')  # 글피 최저기온
+
+    region = models.OneToOneField(Region, on_delete=models.CASCADE)
