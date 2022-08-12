@@ -13,11 +13,10 @@ def func2():
     sky = {'1': '맑음', '3': '구름많음', '4': '흐림'}  # 하늘상태코드
     pty = {'0': '없음', '1': '비', '2': '비/눈', '5': '빗방울',  # 강수형태코드
            '6': '빗방울눈날림', '7': '눈날림'}
-    # current = datetime.datetime.now() + datetime.timedelta(hours=9)  # 최종 배포용
     current = datetime.datetime.now()  # 매 시각 45분 이후부터 호출 가능 --> task에는 45분으로 등록
     base_date = current.strftime("%Y%m%d")
-    # base_time = current.strftime("%H%M")  # 배포용
-    base_time = "2000"  # 테스트용
+    base_time = current.strftime("%H%M")  # 배포용
+    # base_time = "2000"  # 테스트용
 
     for i in range(1, 251):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
