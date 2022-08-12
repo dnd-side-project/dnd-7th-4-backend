@@ -9,6 +9,7 @@ services:
     command: gunicorn dnd_7th_4_backend.wsgi:application --bind 0.0.0.0:8000
     environment:
       DJANGO_SETTINGS_MODULE: dnd_7th_4_backend.settings.prod
+      TZ: "Asia/Seoul"
     env_file:
       - .env
     volumes:
@@ -23,6 +24,8 @@ services:
   nginx:
     container_name: nginx
     build: ./config/nginx
+    environment:
+      TZ: "Asia/Seoul"
     volumes:
       - static:/home/app/web/static
       - media:/home/app/web/media
@@ -38,6 +41,7 @@ services:
     environment:
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
+      - TZ=Asia/Seoul
     ports:
       - "5672:5672" # Default Port
       - "15672:15672" # For UI
@@ -51,6 +55,8 @@ services:
       context: ./
       dockerfile: Dockerfile.prod
     ports: []
+    environment:
+      TZ: "Asia/Seoul"
     depends_on:
       - web
       - rabbitmq
@@ -62,6 +68,8 @@ services:
       context: ./
       dockerfile: Dockerfile.prod
     ports: []
+    environment:
+      TZ: "Asia/Seoul"
     depends_on:
         - web
         - rabbitmq
