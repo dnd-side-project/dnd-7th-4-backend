@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/api7/', views.api_7),
     path('api/api8/', views.api_8),
     path('api/api9/', views.api_9),
+    path('api/main/', views.MainView.as_view(), name='main')
 ]
