@@ -53,3 +53,26 @@ class MainApi8TomorrowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Api8
         fields = ['ultraviolet']
+
+# API9 오늘 데이터
+class MainApi9TodaySerializer(serializers.ModelSerializer):
+    apparent_tem = serializers.IntegerField(source="today")
+
+    class Meta:
+        model = Api8
+        fields = ['apparent_tem']
+
+# API9 내일 데이터
+class MainApi9TomorrowSerializer(serializers.ModelSerializer):
+    apparent_tem = serializers.IntegerField(source="tomorrow")
+
+    class Meta:
+        model = Api8
+        fields = ['apparent_tem']
+
+# API3
+class Api3Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Api3
+        fields = [field.name for field in Api3._meta.get_fields()]

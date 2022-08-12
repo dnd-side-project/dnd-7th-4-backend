@@ -70,6 +70,11 @@ class MainView(APIView):
             index = int(now_hour) + 6
         data['apparent_tem'] = api9_temperature[index]
 
+        # api10
+        today_tem = region.api1.T1H
+        yesterdat_tem = api_10()
+        data['previous_tem'] = float(today_tem) - float(yesterdat_tem)
+
         return data
 
     def tomorrow(self, region) :
@@ -97,9 +102,14 @@ class MainView(APIView):
             index = int(now_hour) + 6
         data['apparent_tem'] = api9_temperature[index+24]
 
+        # api10
+        ## 현재 시간 데이터 찾기
+        api3_data = Api3Serializer(region.api3).data
+        now_hour = int(now.strftime("%H"))
+        today_data = Api3Serializer(region.api3).data['info_'+str(now_hour+24)]
+        today_tem = today_data.split('/')[0]
+
+        yesterdat_tem = region.api1.T1H
+        data['previous_tem'] = float(today_tem) - float(yesterdat_tem)
+
         return data
-
-
-
-
-        
