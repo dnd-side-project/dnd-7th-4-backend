@@ -23,6 +23,27 @@ app.conf.beat_schedule = {
     #      'schedule': crontab(minute=5, hour='*'), # 매 시간 5분마다 실행 0005, 0105, 0205, ...
     #  }
 
+    'api1': {  # 스케쥴링 이름
+        'task': 'main.tasks.api1_update',  # 수행할 task 설정
+        'schedule': crontab(minute=41, hour='*'),  # 매 시각 41분마다 호출
+    },
+    'api2': {  # 스케쥴링 이름
+        'task': 'main.tasks.api2',  # 수행할 task 설정
+        'schedule': crontab(minute=50, hour='*'),  # 매 시각 50분마다 호출
+    },
+    'api3': {  # 스케쥴링 이름
+        'task': 'main.tasks.api3',  # 수행할 task 설정
+        'schedule': crontab(minute=15, hour='2,5,8,11,14,17,20,23'),  # 3시간 주기로 해당 시간 15분에 호출
+    },
+    'api4': {  # 스케쥴링 이름
+        'task': 'main.tasks.api4',  # 수행할 task 설정
+        'schedule': crontab(minute=0, hour='6,18'),  # 6시, 18시에 호출
+    },
+    'api5': {  # 스케쥴링 이름
+        'task': 'main.tasks.api5',  # 수행할 task 설정
+        'schedule': crontab(minute=0, hour='6,18'),  # 6시, 18시에 호출
+    },
+
     'add-every-60-minutes-api6': {
         'task': 'main.tasks.api_6',
         'schedule': crontab(minute='*/60'),
