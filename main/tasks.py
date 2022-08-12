@@ -15,7 +15,7 @@ from main.api_callback_directory.api_6 import call_api_6, update_api_6
 from main.api_callback_directory.api_7 import call_api_7, update_api_7
 from main.api_callback_directory.api_8 import call_api_8, update_api_8
 from main.api_callback_directory.api_9 import call_api_9, update_api_9
-from main.models import Region, Api_6, Api_7, Api8, Api9
+from main.models import Region, Api6, Api7, Api8, Api9
 
 
 # test 용 함수
