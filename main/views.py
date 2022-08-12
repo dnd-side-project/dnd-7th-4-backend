@@ -52,6 +52,10 @@ class MainView(APIView):
         # api7
         data['sun'] = MainApi7TodaySerializer(region.api7).data
 
+        # api8
+        api8 = get_object_or_404(Api8, div_code = region.div_code)
+        data['ultraviolet'] = MainApi8TodaySerializer(api8).data['ultraviolet']
+
         return data
 
     def tomorrow(self, region) :
@@ -62,6 +66,10 @@ class MainView(APIView):
 
         # api7
         data['sun'] = MainApi7TomorrowSerializer(region.api7).data
+
+        # api8
+        api8 = get_object_or_404(Api8, div_code = region.div_code)
+        data['ultraviolet'] = MainApi8TomorrowSerializer(api8).data['ultraviolet']
 
         return data
 
