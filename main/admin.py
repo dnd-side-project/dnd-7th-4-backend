@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Region, Api1, Api_6, Api_7
+from .models import *
 
 # Register your models here.
 
@@ -22,3 +22,8 @@ class Api6Admin(admin.ModelAdmin):
 @admin.register(Api_7)
 class RegionAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Api_7._meta.get_fields()]
+
+
+@admin.register(Api2)
+class Api2Admin(admin.ModelAdmin):
+    list_display = [field.name for field in Api2._meta.get_fields()]

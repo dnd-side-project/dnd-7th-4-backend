@@ -71,7 +71,7 @@ class Api1(Base):
 
     region = models.OneToOneField(Region, on_delete=models.CASCADE)
 
-# API7 -일몰 일출 데이터
+# API7 - 일몰 일출 데이터
 class Api_7(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -84,3 +84,33 @@ class Api_7(models.Model):
 
     def __str__(self):
         return self.div_code  # 행정 구역 코드값을 대표값으로
+
+
+# API2 - 초단기 예보 조회
+class Api2(Base):
+    info_0 = models.TextField()  # 00시에 대한 (기온)/ (하늘상태)/ (강수형태)/ (1시간 강수량) 정보
+    info_1 = models.TextField()  # 01시에 대한 (기온)/ (하늘상태)/ (강수형태)/ (1시간 강수량) 정보
+    info_2 = models.TextField()
+    info_3 = models.TextField()
+    info_4 = models.TextField()
+    info_5 = models.TextField()
+    info_6 = models.TextField()
+    info_7 = models.TextField()
+    info_8 = models.TextField()
+    info_9 = models.TextField()
+    info_10 = models.TextField()
+    info_11 = models.TextField()
+    info_12 = models.TextField()
+    info_13 = models.TextField()
+    info_14 = models.TextField()
+    info_15 = models.TextField()
+    info_16 = models.TextField()
+    info_17 = models.TextField()
+    info_18 = models.TextField()
+    info_19 = models.TextField()
+    info_20 = models.TextField()
+    info_21 = models.TextField()
+    info_22 = models.TextField()
+    info_23 = models.TextField()
+
+    region = models.OneToOneField(Region, on_delete=models.CASCADE)  # x,y 좌표랑 1:1 mapping
