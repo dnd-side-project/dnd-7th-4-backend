@@ -1,9 +1,11 @@
 from django.db import models
 
-# Create your models here.
+class Base(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)  # 최초 생성일
+    updated_at = models.DateTimeField(auto_now=True)  # 최초 수정일
 
 # API6 -시도별 실시간 측정정보
-class Api_6(models.Model):
+class Api6(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -47,15 +49,10 @@ class Region(models.Model):
     api10_code = models.IntegerField()  # 종관관측예보 api code
 
     # FK
-    api6_id = models.ForeignKey(Api_6, on_delete=models.CASCADE,null=True, default='')
+    api6_id = models.ForeignKey(Api6, on_delete=models.CASCADE,null=True, default='')
 
     def __str__(self):
         return self.div_code  # 행정 구역 코드값을 대표값으로
-
-class Base(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)  # 최초 생성일
-    updated_at = models.DateTimeField(auto_now=True)  # 최초 수정일
-
 
 class Api1(Base):
     base_date = models.CharField(max_length=10)
@@ -70,21 +67,6 @@ class Api1(Base):
     WSD = models.CharField(max_length=10)  # 풍속
 
     region = models.OneToOneField(Region, on_delete=models.CASCADE)
-
-# API7 - 일몰 일출 데이터
-class Api_7(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    sunrise = models.IntegerField() # 일출
-    sunset = models.IntegerField() # 일몰
-
-    # FK
-    region_id = models.OneToOneField(Region, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.div_code  # 행정 구역 코드값을 대표값으로
-
 
 # API2 - 초단기 예보 조회
 class Api2(Base):
@@ -237,3 +219,35 @@ class Api5(Base):
 
     # 중기기온코드 지역이 거의 x,y 지역좌표랑 개수가 같아서 1:1로 매핑시킴
     region = models.OneToOneField(Region, on_delete=models.CASCADE)
+
+# API7 -일몰 일출 데이터
+class Api7(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    today_sunrise = models.IntegerField() # 오늘 일출
+    today_sunset = models.IntegerField() # 오늘 일몰
+    tomorrow_sunrise = models.IntegerField(null=True, default=0) # 내일 일출
+    tomorrow_sunset = models.IntegerField(null=True, default=0) # 내일 일몰
+
+    # FK
+    region_id = models.OneToOneField(Region, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.div_code  # 행정 구역 코드값을 대표값으로
+
+#API8 - 자외선 지수 API
+class Api8(Base):
+
+    today = models.IntegerField()  # 오늘 예측값
+    tomorrow = models.IntegerField()  # 내일 예측값
+
+    div_code = models.CharField(max_length=10)  # 행정구역 코드
+
+#API9 - 체감온도 API
+class Api9(Base):
+    temperature = models.CharField(max_length=1500, null=True, default='')
+
+    base_time = models.CharField(max_length=10, null=True, default='')
+
+    div_code = models.CharField(max_length=10)  # 행정구역 코드
