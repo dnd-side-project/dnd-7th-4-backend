@@ -176,4 +176,38 @@ class Api3(Base):
     info_day3_MAX = models.TextField(null=True, default='')  # 글피 최고기온
     info_day3_MIN = models.TextField(null=True, default='')  # 글피 최저기온
 
-    region = models.OneToOneField(Region, on_delete=models.CASCADE)
+    region = models.OneToOneField(Region, on_delete=models.CASCADE)  # x,y 좌표랑 1:1 mapping
+
+
+# API4 - 중기육상예보조회
+class Api4(Base):
+    regId = models.CharField(max_length=20)    # 중기육상지역코드 (10개)
+    tmFc = models.CharField(max_length=20)     # 관측된 날짜 + 시간
+
+    rnSt3Am = models.CharField(max_length=10)  # 3일 후 오전 강수 확률
+    rnSt3Pm = models.CharField(max_length=10)  # 3일 후 오후 강수 확률
+    rnSt4Am = models.CharField(max_length=10)  # 4일 후 오전 강수 확률
+    rnSt4Pm = models.CharField(max_length=10)  # 4일 후 오후 강수 확률
+    rnSt5Am = models.CharField(max_length=10)  # 5일 후 오전 강수 확률
+    rnSt5Pm = models.CharField(max_length=10)  # 5일 후 오후 강수 확률
+    rnSt6Am = models.CharField(max_length=10)  # 6일 후 오전 강수 확률
+    rnSt6Pm = models.CharField(max_length=10)  # 6일 후 오후 강수 확률
+    rnSt7Am = models.CharField(max_length=10)  # 7일 후 오전 강수 확률
+    rnSt7Pm = models.CharField(max_length=10)  # 7일 후 오후 강수 확률
+    rnSt8 = models.CharField(max_length=10)    # 8일 후 강수 확률
+    rnSt9 = models.CharField(max_length=10)    # 9일 후 강수 확률
+    rnSt10 = models.CharField(max_length=10)   # 10일 후 강수 확률
+
+    wf3Am = models.CharField(max_length=20)    # 3일 후 오전 날씨 예보
+    wf3Pm = models.CharField(max_length=20)    # 3일 후 오후 날씨 예보
+    wf4Am = models.CharField(max_length=20)    # 4일 후 오전 날씨 예보
+    wf4Pm = models.CharField(max_length=20)    # 4일 후 오후 날씨 예보
+    wf5Am = models.CharField(max_length=20)    # 5일 후 오전 날씨 예보
+    wf5Pm = models.CharField(max_length=20)    # 5일 후 오후 날씨 예보
+    wf6Am = models.CharField(max_length=20)    # 6일 후 오전 날씨 예보
+    wf6Pm = models.CharField(max_length=20)    # 6일 후 오후 날씨 예보
+    wf7Am = models.CharField(max_length=20)    # 7일 후 오전 날씨 예보
+    wf7Pm = models.CharField(max_length=20)    # 7일 후 오후 날씨 예보
+    wf8 = models.CharField(max_length=20)      # 8일 후 날씨 예보
+    wf9 = models.CharField(max_length=20)      # 9일 후 날씨 예보
+    wf10 = models.CharField(max_length=20)     # 10일 후 날씨 예보
