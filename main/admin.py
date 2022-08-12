@@ -32,3 +32,8 @@ class Api2Admin(admin.ModelAdmin):
 @admin.register(Api3)
 class Api3Admin(admin.ModelAdmin):
     list_display = [field.name for field in Api3._meta.get_fields()]
+
+
+@admin.register(Api4)
+class Api4Admin(admin.ModelAdmin):
+    list_display = [field.name for field in Api4._meta.get_fields()]
