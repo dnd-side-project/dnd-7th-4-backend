@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 
 from drf_yasg.utils       import swagger_auto_schema
 
+from datetime import datetime
+
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -45,6 +47,7 @@ class MainView(APIView):
     
     def today(self, region) :
         data = {}
+        now = datetime.today()
         
         # api6
         data['finddust'] = MainApi6TodaySerializer(region.api6_id).data
@@ -56,10 +59,22 @@ class MainView(APIView):
         api8 = get_object_or_404(Api8, div_code = region.div_code)
         data['ultraviolet'] = MainApi8TodaySerializer(api8).data['ultraviolet']
 
+        # api9
+        ## 현재 시간 데이터 찾기
+        api9 = get_object_or_404(Api9, div_code = region.div_code)
+        api9_temperature = api9.temperature.split('/')
+        api9_basetime = api9.base_time
+        now_hour = now.strftime("%H")
+        index = int(now_hour) - int(api9_basetime)
+        if index < 0:
+            index = int(now_hour) + 6
+        data['apparent_tem'] = api9_temperature[index]
+
         return data
 
     def tomorrow(self, region) :
         data = {}
+        now = datetime.now()
 
         # api6
         data['finddust'] = MainApi6TomorrowSerializer(region.api6_id).data
@@ -70,6 +85,17 @@ class MainView(APIView):
         # api8
         api8 = get_object_or_404(Api8, div_code = region.div_code)
         data['ultraviolet'] = MainApi8TomorrowSerializer(api8).data['ultraviolet']
+
+        # api9
+        ## 현재 시간 데이터 찾기
+        api9 = get_object_or_404(Api9, div_code = region.div_code)
+        api9_temperature = api9.temperature.split('/')
+        api9_basetime = api9.base_time
+        now_hour = now.strftime("%H")
+        index = int(now_hour) - int(api9_basetime)
+        if index < 0:
+            index = int(now_hour) + 6
+        data['apparent_tem'] = api9_temperature[index+24]
 
         return data
 
