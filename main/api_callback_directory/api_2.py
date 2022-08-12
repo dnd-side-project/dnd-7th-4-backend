@@ -83,25 +83,25 @@ def func2():
                     print(f'{field} || {value}')
 
                     if field == 'info_0':
-                        obj.info_00 = value
+                        obj.info_0 = value
                     elif field == 'info_1':
-                        obj.info_01 = value
+                        obj.info_1 = value
                     elif field == 'info_2':
-                        obj.info_02 = value
+                        obj.info_2 = value
                     elif field == 'info_3':
-                        obj.info_03 = value
+                        obj.info_3 = value
                     elif field == 'info_4':
-                        obj.info_04 = value
+                        obj.info_4 = value
                     elif field == 'info_5':
-                        obj.info_05 = value
+                        obj.info_5 = value
                     elif field == 'info_6':
-                        obj.info_06 = value
+                        obj.info_6 = value
                     elif field == 'info_7':
-                        obj.info_07 = value
+                        obj.info_7 = value
                     elif field == 'info_8':
-                        obj.info_08 = value
+                        obj.info_8 = value
                     elif field == 'info_9':
-                        obj.info_09 = value
+                        obj.info_9 = value
                     elif field == 'info_10':
                         obj.info_10 = value
 
