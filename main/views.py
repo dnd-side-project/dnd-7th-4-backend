@@ -73,7 +73,7 @@ class MainView(APIView):
         # api10
         today_tem = region.api1.T1H
         yesterdat_tem = api_10()
-        data['previous_tem'] = float(today_tem) - float(yesterdat_tem)
+        data['previous_tem'] = str(float(today_tem) - float(yesterdat_tem))[:4]
 
         return data
 
@@ -110,6 +110,6 @@ class MainView(APIView):
         today_tem = today_data.split('/')[0]
 
         yesterdat_tem = region.api1.T1H
-        data['previous_tem'] = float(today_tem) - float(yesterdat_tem)
+        data['previous_tem'] = str(float(today_tem) - float(yesterdat_tem))[:4]
 
         return data
