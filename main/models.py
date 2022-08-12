@@ -225,10 +225,10 @@ class Api7(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    today_sunrise = models.IntegerField() # 오늘 일출
-    today_sunset = models.IntegerField() # 오늘 일몰
-    tomorrow_sunrise = models.IntegerField(null=True, default=0) # 내일 일출
-    tomorrow_sunset = models.IntegerField(null=True, default=0) # 내일 일몰
+    today_sunrise = models.CharField(max_length=10) # 오늘 일출
+    today_sunset = models.CharField(max_length=10) # 오늘 일몰
+    tomorrow_sunrise = models.CharField(max_length=10, null=True, default=0) # 내일 일출
+    tomorrow_sunset = models.CharField(max_length=10, null=True, default=0) # 내일 일몰
 
     # FK
     region_id = models.OneToOneField(Region, on_delete=models.CASCADE)
