@@ -5,7 +5,11 @@ from .models import *
 from dnd_7th_4_backend.settings.base import env
 from datetime import date, datetime
 from dnd_7th_4_backend.celery import app
-from main.api_callback_directory.api_1 import func1, func2
+from main.api_callback_directory.api_1 import *
+from main.api_callback_directory.api_2 import *
+from main.api_callback_directory.api_3 import *
+from main.api_callback_directory.api_4 import *
+from main.api_callback_directory.api_5 import *
 
 from main.api_callback_directory.api_6 import call_api_6, update_api_6
 from main.api_callback_directory.api_7 import call_api_7, update_api_7
@@ -26,7 +30,31 @@ def api1_create():
 # api1 재호출 시 필요한 함수 -> update
 @shared_task
 def api1_update():
+    func1_update()
+
+
+# api2
+@shared_task
+def api2():
     func2()
+
+
+# api3
+@shared_task
+def api3():
+    func3()
+
+
+# api4
+@shared_task
+def api4():
+    func4()
+
+
+# api5
+@shared_task
+def api5():
+    func5()
 
 
 @shared_task
