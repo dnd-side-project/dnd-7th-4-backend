@@ -61,7 +61,7 @@ def api5():
 
 @shared_task
 def api_6():
-    if not len(Api_6.objects.all()): # Api_6 가 비어있는 경우
+    if not len(Api6.objects.all()): # Api_6 가 비어있는 경우
         print('api_6: save -----------------------------')
         call_api_6()
     else:
@@ -70,7 +70,7 @@ def api_6():
 
 @shared_task
 def api_7():
-    if not len(Api_7.objects.all()): # api_7 가 비어있는 경우
+    if not len(Api7.objects.all()): # api_7 가 비어있는 경우
         print('api_7: save -----------------------------')
         call_api_7()
 
