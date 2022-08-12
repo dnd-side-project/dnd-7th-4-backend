@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Region, Api1, Api6, Api7, Api8, Api9
+from .models import *
 
 # Register your models here.
 
@@ -9,10 +9,28 @@ class RegionAdmin(admin.ModelAdmin):
     list_display = ['id', 'country', 'div_code', 'city', 'district', 'api6_station', 'api6_id']
     ordering = ('id',)
 
-
 @admin.register(Api1)
 class Api1Admin(admin.ModelAdmin):
     list_display = [field.name for field in Api1._meta.get_fields()]
+
+@admin.register(Api2)
+class Api2Admin(admin.ModelAdmin):
+    list_display = [field.name for field in Api2._meta.get_fields()]
+
+
+@admin.register(Api3)
+class Api3Admin(admin.ModelAdmin):
+    list_display = [field.name for field in Api3._meta.get_fields()]
+
+
+@admin.register(Api4)
+class Api4Admin(admin.ModelAdmin):
+    list_display = [field.name for field in Api4._meta.get_fields()]
+
+
+@admin.register(Api5)
+class Api5Admin(admin.ModelAdmin):
+    list_display = [field.name for field in Api5._meta.get_fields()]
 
 @admin.register(Api6)
 class Api6Admin(admin.ModelAdmin):
