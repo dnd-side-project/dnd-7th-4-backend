@@ -34,11 +34,11 @@ class MainView(APIView):
         data = {}
 
         # 오늘 페이지 데이터 생성하기
-        data['today'] = self.today(region)
+        data['오늘'] = self.today(region)
 
 
         # 내일 페이지 데이터 생성하기
-        data['tomorrow'] = self.tomorrow(region)
+        data['내일'] = self.tomorrow(region)
 
         # 이번주 페이지 데이터 생성하기
         #data['week']
@@ -50,14 +50,14 @@ class MainView(APIView):
         now = datetime.today()
         
         # api6
-        data['finddust'] = MainApi6TodaySerializer(region.api6_id).data
+        data['미세먼지'] = MainApi6TodaySerializer(region.api6_id).data
 
         # api7
-        data['sun'] = MainApi7TodaySerializer(region.api7).data
+        data['일몰일출'] = MainApi7TodaySerializer(region.api7).data
 
         # api8
         api8 = get_object_or_404(Api8, div_code = region.div_code)
-        data['ultraviolet'] = MainApi8TodaySerializer(api8).data['ultraviolet']
+        data['자외선지수'] = MainApi8TodaySerializer(api8).data['ultraviolet']
 
         # api9
         ## 현재 시간 데이터 찾기
@@ -68,12 +68,12 @@ class MainView(APIView):
         index = int(now_hour) - int(api9_basetime)
         if index < 0:
             index = int(now_hour) + 6
-        data['apparent_tem'] = api9_temperature[index]
+        data['체감온도'] = api9_temperature[index]
 
         # api10
         today_tem = region.api1.T1H
         yesterdat_tem = api_10()
-        data['previous_tem'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
 
         return data
 
@@ -82,14 +82,14 @@ class MainView(APIView):
         now = datetime.now()
 
         # api6
-        data['finddust'] = MainApi6TomorrowSerializer(region.api6_id).data
+        data['미세먼지'] = MainApi6TomorrowSerializer(region.api6_id).data
 
         # api7
-        data['sun'] = MainApi7TomorrowSerializer(region.api7).data
+        data['일몰일출'] = MainApi7TomorrowSerializer(region.api7).data
 
         # api8
         api8 = get_object_or_404(Api8, div_code = region.div_code)
-        data['ultraviolet'] = MainApi8TomorrowSerializer(api8).data['ultraviolet']
+        data['자외선지수'] = MainApi8TomorrowSerializer(api8).data['ultraviolet']
 
         # api9
         ## 현재 시간 데이터 찾기
@@ -100,7 +100,7 @@ class MainView(APIView):
         index = int(now_hour) - int(api9_basetime)
         if index < 0:
             index = int(now_hour) + 6
-        data['apparent_tem'] = api9_temperature[index+24]
+        data['체감온도'] = api9_temperature[index+24]
 
         # api10
         ## 현재 시간 데이터 찾기
@@ -110,6 +110,6 @@ class MainView(APIView):
         today_tem = today_data.split('/')[0]
 
         yesterdat_tem = region.api1.T1H
-        data['previous_tem'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
 
         return data

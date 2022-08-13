@@ -4,39 +4,39 @@ from .models import *
 
 # API6 오늘 데이터
 class MainApi6TodaySerializer(serializers.ModelSerializer):
-    pm10 = serializers.IntegerField(source="pm10Grade1h")
-    pm25 = serializers.IntegerField(source="pm25Grade1h")
+    미세먼지 = serializers.IntegerField(source="pm10Grade1h")
+    초미세먼지 = serializers.IntegerField(source="pm25Grade1h")
 
     class Meta:
         model = Api6
-        fields = ['pm10', 'pm25']
+        fields = ['미세먼지', '초미세먼지']
 
 # API6 내일 데이터
 class MainApi6TomorrowSerializer(serializers.ModelSerializer):
-    pm10 = serializers.IntegerField(source="pm10Value24")
-    pm25 = serializers.IntegerField(source="pm10Value24")
+    미세먼지 = serializers.IntegerField(source="pm10Value24")
+    초미세먼지 = serializers.IntegerField(source="pm10Value24")
 
     class Meta:
         model = Api6
-        fields = ['pm10', 'pm25']
+        fields = ['미세먼지', '초미세먼지']
 
 # API7 오늘 데이터
 class MainApi7TodaySerializer(serializers.ModelSerializer):
-    sunrise = serializers.IntegerField(source="today_sunrise")
-    sunset = serializers.IntegerField(source="today_sunset")
+    일출 = serializers.IntegerField(source="today_sunrise")
+    일몰 = serializers.IntegerField(source="today_sunset")
 
     class Meta:
         model = Api7
-        fields = ['sunrise', 'sunset']
+        fields = ['일출', '일몰']
 
 # API7 내일 데이터
 class MainApi7TomorrowSerializer(serializers.ModelSerializer):
-    sunrise = serializers.IntegerField(source="tomorrow_sunrise")
-    sunset = serializers.IntegerField(source="tomorrow_sunset")
+    일출 = serializers.IntegerField(source="tomorrow_sunrise")
+    일몰 = serializers.IntegerField(source="tomorrow_sunset")
 
     class Meta:
         model = Api7
-        fields = ['sunrise', 'sunset']
+        fields = ['일출', '일몰']
 
 # API8 오늘 데이터
 class MainApi8TodaySerializer(serializers.ModelSerializer):
