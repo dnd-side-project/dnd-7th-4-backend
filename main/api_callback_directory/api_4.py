@@ -15,8 +15,8 @@ def func4():
     current = datetime.datetime.now()  # 테스트용
     base_date = current.strftime("%Y%m%d")
     base_time = current.strftime("%H")
-    tmFc = str(base_date) + str(base_time) + "00"  # 배포용
-    # tmFc = "202208121800"  # 테스트용
+    # tmFc = str(base_date) + str(base_time) + "00"  # 배포용
+    tmFc = "202208131800"  # 테스트용
 
     districtCode = ["11B00000", "11D10000", "11D20000", "11C20000", "11C10000",
                     "11F20000", "11F10000", "11H10000", "11H20000", "11G00000"]
@@ -181,5 +181,3 @@ def test():
         except:
             print("Extra Error")
             pass
-
-
