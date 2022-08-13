@@ -46,7 +46,7 @@ app.conf.beat_schedule = {
 
     'add-every-60-minutes-api6': {
         'task': 'main.tasks.api_6',
-        'schedule': crontab(minute='*/60'), # 한 시간마다 호출
+        'schedule': crontab(minute=0, hour='*'),
 
     },
     'add-every-24-hour-api7': {

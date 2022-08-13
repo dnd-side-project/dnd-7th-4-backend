@@ -20,7 +20,7 @@ def func3():
     current = datetime.datetime.now()
     base_date = current.strftime("%Y%m%d")
     base_time = current.strftime("%H%M") ## 배포용
-    # base_time = "2015"  # 테스트용
+    base_time = "1715"  # 테스트용
 
     for i in range(1, 251):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
@@ -105,12 +105,12 @@ def func3():
                 print(TMP)
                 print(REH)
 
-                for i in range(fcstTime, 48):
+                for i in range(fcstTime, 72):  # 현재 시간으로부터 ~ 72시(3일 후) 까지의 시간정보 저장
                     field = "info_" + str(i)
                     idx = i - fcstTime
-                    value = str(TMP[idx]) + '/ ' + sky[SKY[idx]] + '/ ' + str(REH[idx]) + '/ ' +\
-                            pty[PTY[idx]] + '/ ' + str(POP[idx]) + '/ ' + str(PCP[idx]) + '/ ' +\
-                            str(WSD[idx]) + '/ ' + str(VEC[idx])
+                    value = str(TMP[idx]) + '/' + sky[SKY[idx]] + '/' + str(REH[idx]) + '/' +\
+                            pty[PTY[idx]] + '/' + str(POP[idx]) + '/' + str(PCP[idx]) + '/' +\
+                            str(WSD[idx]) + '/' + str(VEC[idx])
 
                     print(f'time: {i}, idx: {idx}, value: {value}')
 
@@ -214,6 +214,57 @@ def func3():
                         obj.info_46 = value
                     elif field == 'info_47':
                         obj.info_47 = value
+                    elif field == 'info_48':
+                        obj.info_48 = value
+                    elif field == 'info_49':
+                        obj.info_49 = value
+                    elif field == 'info_50':
+                        obj.info_50 = value
+
+                    elif field == 'info_51':
+                        obj.info_51 = value
+                    elif field == 'info_52':
+                        obj.info_52 = value
+                    elif field == 'info_53':
+                        obj.info_53 = value
+                    elif field == 'info_54':
+                        obj.info_54 = value
+                    elif field == 'info_55':
+                        obj.info_55 = value
+                    elif field == 'info_56':
+                        obj.info_56 = value
+                    elif field == 'info_57':
+                        obj.info_57 = value
+                    elif field == 'info_58':
+                        obj.info_58 = value
+                    elif field == 'info_59':
+                        obj.info_59 = value
+                    elif field == 'info_60':
+                        obj.info_60 = value
+
+                    elif field == 'info_61':
+                        obj.info_61 = value
+                    elif field == 'info_62':
+                        obj.info_62 = value
+                    elif field == 'info_63':
+                        obj.info_63 = value
+                    elif field == 'info_64':
+                        obj.info_64 = value
+                    elif field == 'info_65':
+                        obj.info_65 = value
+                    elif field == 'info_66':
+                        obj.info_66 = value
+                    elif field == 'info_67':
+                        obj.info_67 = value
+                    elif field == 'info_68':
+                        obj.info_68 = value
+                    elif field == 'info_69':
+                        obj.info_69 = value
+                    elif field == 'info_70':
+                        obj.info_70 = value
+
+                    elif field == 'info_71':
+                        obj.info_71 = value
 
                 # 일 최저기온 / 최고기온 기록 갱신시키기
                 ## 각 시간별 예외처리 필요
