@@ -108,9 +108,9 @@ def func3():
                 for i in range(fcstTime, 48):
                     field = "info_" + str(i)
                     idx = i - fcstTime
-                    value = str(TMP[idx]) + '/ ' + sky[SKY[idx]] + '/ ' + str(REH[idx]) + '/ ' +\
-                            pty[PTY[idx]] + '/ ' + str(POP[idx]) + '/ ' + str(PCP[idx]) + '/ ' +\
-                            str(WSD[idx]) + '/ ' + str(VEC[idx])
+                    value = str(TMP[idx]) + '/' + sky[SKY[idx]] + '/' + str(REH[idx]) + '/' +\
+                            pty[PTY[idx]] + '/' + str(POP[idx]) + '/' + str(PCP[idx]) + '/' +\
+                            str(WSD[idx]) + '/' + str(VEC[idx])
 
                     print(f'time: {i}, idx: {idx}, value: {value}')
 

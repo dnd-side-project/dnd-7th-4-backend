@@ -79,7 +79,7 @@ def func2():
 
                 for i in range(6):  # 총 6시간에 대한 기록 정보
                     field = "info_" + str((fcstTime + i) % 24)
-                    value = str(T1H[i]) + '/ ' + sky[SKY[i]] + '/ ' + pty[PTY[i]] + '/ ' + str(RN1[i])  # 저장할 값들 문자열로 만들기
+                    value = str(T1H[i]) + '/' + sky[SKY[i]] + '/' + pty[PTY[i]] + '/' + str(RN1[i])  # 저장할 값들 문자열로 만들기
                     print(f'{field} || {value}')
 
                     if field == 'info_0':
