@@ -1,15 +1,23 @@
-from django.shortcuts import render
-import datetime, collections
+from django.shortcuts import render, get_object_or_404
+
+from drf_yasg.utils import swagger_auto_schema
+
+from datetime import datetime
+import collections
+
 from rest_framework import permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+
 from main.models import *
+from .serializers import *
 
 from .api_test.api_6 import api_6
 from .api_test.api_7 import api_7
 from .api_test.api_8 import api_8
 from .api_test.api_9 import api_9
+from .api_test.api_10 import api_10
 
 # Swagger test용 - 이후 삭제
 class TestView(APIView):
@@ -17,7 +25,6 @@ class TestView(APIView):
 
     def get(self, request):
         return Response("Swagger 연동 테스트")
-
 
 pty = {'0': '없음', '1': '비', '2': '비/눈', '5': '빗방울',  # 강수형태코드
            '6': '빗방울눈날림', '7': '눈날림'}
@@ -28,7 +35,7 @@ class MainView(APIView):
     permission_classes = (AllowAny, )
 
     def get(self, request):
-        current = datetime.datetime.now()  # 매 시각 45분 이후부터 호출 가능 --> task에는 45분으로 등록
+        current = datetime.now()  # 매 시각 45분 이후부터 호출 가능 --> task에는 45분으로 등록
         base_date = current.strftime("%Y%m%d")
         base_time = current.strftime("%H%M")
         h = int(current.strftime("%H"))
@@ -204,6 +211,86 @@ class MainView(APIView):
                    "최저기온": api5.taMin6, "최고기온": api5.taMax6}
              }
 
+        # 데이터 넣기
+        ## 오늘 데이터 넣기
+        response_today = {"현재": d, "시간별 정보": d1}
+        for k, v in self.today(region).items():
+            response_today[k] = v
+        
+        ## 내일 데이터 넣기
+        response_tomorrow = {"내일현재": d3, "시간별 정보": d4}
+        for k, v in self.tomorrow(region).items():
+            response_today[k] = v
 
-        return Response({"data": {"오늘": {"현재": d, "시간별 정보": d1}, "내일": {"내일현재": d3, "시간별 정보": d4},
+        return Response({"data": {"오늘": response_today, "내일": response_tomorrow,
                          "이번주": d5}}, status=status.HTTP_200_OK)
+
+
+    def today(self, region) :
+        data = {}
+        now = datetime.today()
+        
+        # api6
+        data['미세먼지'] = MainApi6TodaySerializer(region.api6_id).data
+
+        # api7
+        data['일몰일출'] = MainApi7TodaySerializer(region.api7).data
+
+        # api8
+        api8 = get_object_or_404(Api8, div_code = region.div_code)
+        data['자외선지수'] = MainApi8TodaySerializer(api8).data['ultraviolet']
+
+        # api9
+        ## 현재 시간 데이터 찾기
+        api9 = get_object_or_404(Api9, div_code = region.div_code)
+        api9_temperature = api9.temperature.split('/')
+        api9_basetime = api9.base_time
+        now_hour = now.strftime("%H")
+        index = int(now_hour) - int(api9_basetime)
+        if index < 0:
+            index = int(now_hour) + 6
+        data['체감온도'] = api9_temperature[index]
+
+        # api10
+        today_tem = region.api1.T1H
+        yesterdat_tem = api_10()
+        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+
+        return data
+
+    def tomorrow(self, region) :
+        data = {}
+        now = datetime.now()
+
+        # api6
+        data['미세먼지'] = MainApi6TomorrowSerializer(region.api6_id).data
+
+        # api7
+        data['일몰일출'] = MainApi7TomorrowSerializer(region.api7).data
+
+        # api8
+        api8 = get_object_or_404(Api8, div_code = region.div_code)
+        data['자외선지수'] = MainApi8TomorrowSerializer(api8).data['ultraviolet']
+
+        # api9
+        ## 현재 시간 데이터 찾기
+        api9 = get_object_or_404(Api9, div_code = region.div_code)
+        api9_temperature = api9.temperature.split('/')
+        api9_basetime = api9.base_time
+        now_hour = now.strftime("%H")
+        index = int(now_hour) - int(api9_basetime)
+        if index < 0:
+            index = int(now_hour) + 6
+        data['체감온도'] = api9_temperature[index+24]
+
+        # api10
+        ## 현재 시간 데이터 찾기
+        api3_data = Api3Serializer(region.api3).data
+        now_hour = int(now.strftime("%H"))
+        today_data = Api3Serializer(region.api3).data['info_'+str(now_hour+24)]
+        today_tem = today_data.split('/')[0]
+
+        yesterdat_tem = region.api1.T1H
+        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+
+        return data

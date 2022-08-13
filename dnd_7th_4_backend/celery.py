@@ -51,17 +51,17 @@ app.conf.beat_schedule = {
     },
     'add-every-24-hour-api7': {
         'task': 'main.tasks.api_7',
-        'schedule': crontab(minute=0, hour=0),
+        'schedule': crontab(minute=0, hour=0), # 자정마다 호출
 
     },
     'add-every-at-06-api8': {
         'task': 'main.tasks.api_8',
-        'schedule': crontab(minute=0, hour='6'),
+        'schedule': crontab(hour='6'), # 6시 마다 호출
     },
 
     'add-every-at-06-18-api9': {
         'task': 'main.tasks.api_9',
-        'schedule': crontab(minute=0, hour='6, 18'),
+        'schedule': crontab(hour='6, 18'), # 6시, 18시에 호출
     },
 
 } 
