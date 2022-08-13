@@ -33,10 +33,11 @@ class MainView(APIView):
         base_time = current.strftime("%H%M")
         h = int(current.strftime("%H"))
 
-        city = request.data["city"]
-        district = request.data["district"]
+        city = request.data["city"]  # 시
+        district = request.data["district"]  # 군, 구
         region = Region.objects.get(city=city, district=district)
 
+        # api1 ~ api5에 해당하는 객체들 가져오기
         api1 = Api1.objects.get(region=region)
         api2 = Api2.objects.get(region=region)
         api3 = Api3.objects.get(region=region)
@@ -83,13 +84,11 @@ class MainView(APIView):
 
         # 딕셔너리 합치기 d1 = d1 + d2
         d1.update(d2)
-        # print(d1)
 
         ##
         ## 내일
         # 내일 특정 h 시간에 대한 정보 제공
         tomm_li = ((api3.serializable_value(f'info_{h}')).replace(" ", "")).split('/')
-        print(tomm_li)
         T1H = tomm_li[0]  # 기온 - 0
         REH = tomm_li[2]  # 습도 - 2
         WSD = tomm_li[6]  # 풍속 - 6
