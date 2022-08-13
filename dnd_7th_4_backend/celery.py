@@ -37,33 +37,31 @@ app.conf.beat_schedule = {
     },
     'api4': {  # 스케쥴링 이름
         'task': 'main.tasks.api4',  # 수행할 task 설정
-        # 'schedule': crontab(minute=0, hour='6,18'),  # 6시, 18시에 호출
-        'schedule': crontab(),  # 테스트용
+        'schedule': crontab(minute=0, hour='6,18'),  # 6시, 18시에 호출
     },
     'api5': {  # 스케쥴링 이름
         'task': 'main.tasks.api5',  # 수행할 task 설정
-        # 'schedule': crontab(minute=0, hour='6,18'),  # 6시, 18시에 호출
-        'schedule': crontab(),  # 테스트용
+        'schedule': crontab(minute=0, hour='6,18'),  # 6시, 18시에 호출
     },
 
-    # 'add-every-60-minutes-api6': {
-    #     'task': 'main.tasks.api_6',
-    #     'schedule': crontab(minute='*/60'),
-    #
-    # },
-    # 'add-every-24-hour-api7': {
-    #     'task': 'main.tasks.api_7',
-    #     'schedule': crontab(minute=0, hour=0),
-    #
-    # },
-    # 'add-every-at-06-api8': {
-    #     'task': 'main.tasks.api_8',
-    #     'schedule': crontab(hour='6'),
-    # },
-    #
-    # 'add-every-at-06-18-api9': {
-    #     'task': 'main.tasks.api_9',
-    #     'schedule': crontab(hour='6, 18'),
-    # },
+    'add-every-60-minutes-api6': {
+        'task': 'main.tasks.api_6',
+        'schedule': crontab(minute=0, hour='*'),
+
+    },
+    'add-every-24-hour-api7': {
+        'task': 'main.tasks.api_7',
+        'schedule': crontab(minute=0, hour=0),
+
+    },
+    'add-every-at-06-api8': {
+        'task': 'main.tasks.api_8',
+        'schedule': crontab(minute=0, hour='6'),
+    },
+
+    'add-every-at-06-18-api9': {
+        'task': 'main.tasks.api_9',
+        'schedule': crontab(minute=0, hour='6, 18'),
+    },
 
 } 
