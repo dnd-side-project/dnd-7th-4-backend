@@ -21,6 +21,8 @@ def func3():
     base_date = current.strftime("%Y%m%d")
     base_time = current.strftime("%H%M") ## 배포용
     # base_time = "1715"  # 테스트용
+    base_date = "20220813"
+    base_time = "2315"
 
     for i in range(1, 251):  # region id: 1 ~ 250 까지 정보 업데이트
         region = Region.objects.get(id=i)
