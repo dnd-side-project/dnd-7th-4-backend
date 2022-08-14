@@ -37,11 +37,11 @@ app.conf.beat_schedule = {
     },
     'api4': {  # 스케쥴링 이름
         'task': 'main.tasks.api4',  # 수행할 task 설정
-        'schedule': crontab(minute=0, hour='6,18'),  # 6시, 18시에 호출
+        'schedule': crontab(minute=1, hour='6,18'),  # 6시, 18시에 호출
     },
     'api5': {  # 스케쥴링 이름
         'task': 'main.tasks.api5',  # 수행할 task 설정
-        'schedule': crontab(minute=0, hour='6,18'),  # 6시, 18시에 호출
+        'schedule': crontab(minute=4, hour='6,18'),  # 6시, 18시에 호출
     },
 
     'add-every-60-minutes-api6': {
@@ -56,12 +56,12 @@ app.conf.beat_schedule = {
     },
     'add-every-at-06-api8': {
         'task': 'main.tasks.api_8',
-        'schedule': crontab(hour='6'), # 6시 마다 호출
+        'schedule': crontab(minute=0, hour=6), # 6시 마다 호출
     },
 
     'add-every-at-06-18-api9': {
         'task': 'main.tasks.api_9',
-        'schedule': crontab(hour='6, 18'), # 6시, 18시에 호출
+        'schedule': crontab(minute=0, hour='6, 18'), # 6시, 18시에 호출
     },
 
 } 
