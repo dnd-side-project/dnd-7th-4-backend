@@ -30,7 +30,7 @@ def call_api_6():
                 for item in response.json()['response']['body']['items']:
                     sido_name = item['sidoName']
                     station_name = item['stationName']
-                    pm_data = [item['pm10Grade1h'], item['pm25Grade1h'], item['pm10Value24'], item['pm25Value24']]
+                    pm_data = [item['pm10Grade1h'], item['pm25Grade1h'], item['pm10Grade24'], item['pm25Grade24']]
 
                     # 측정 불가 데이터 처리
                     for i in range(4):
@@ -84,7 +84,7 @@ def update_api_6():
                 for item in response.json()['response']['body']['items']:
                     sido_name = item['sidoName']
                     station_name = item['stationName']
-                    pm_data = [item['pm10Grade1h'], item['pm25Grade1h'], item['pm10Value24'], item['pm25Value24']]
+                    pm_data = [item['pm10Grade1h'], item['pm25Grade1h'], item['pm10Grade24'], item['pm25Grade24']]
                     
                     # 측정 불가 데이터 처리
                     for i in range(4):
