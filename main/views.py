@@ -214,83 +214,82 @@ class MainView(APIView):
         # 데이터 넣기
         ## 오늘 데이터 넣기
         response_today = {"현재": d, "시간별 정보": d1}
-        for k, v in today(region).items():
+        for k, v in self.today(region).items():
             response_today[k] = v
         
         ## 내일 데이터 넣기
         response_tomorrow = {"내일현재": d3, "시간별 정보": d4}
-        for k, v in tomorrow(region).items():
-            response_today[k] = v
+        for k, v in self.tomorrow(region).items():
+            response_tomorrow[k] = v
 
         return Response({"data": {"오늘": response_today, "내일": response_tomorrow,
                          "이번주": d5}}, status=status.HTTP_200_OK)
 
+    def today(self, region) :
+        data = {}
+        now = datetime.today()
+        
+        # api6
+        data['미세먼지'] = MainApi6TodaySerializer(region.api6_id).data
 
-def today(region) :
-    data = {}
-    now = datetime.today()
-    
-    # api6
-    data['미세먼지'] = MainApi6TodaySerializer(region.api6_id).data
+        # api7
+        data['일몰일출'] = MainApi7TodaySerializer(region.api7).data
 
-    # api7
-    data['일몰일출'] = MainApi7TodaySerializer(region.api7).data
+        # api8
+        api8 = get_object_or_404(Api8, div_code = region.div_code)
+        data['자외선지수'] = MainApi8TodaySerializer(api8).data['ultraviolet']
 
-    # api8
-    api8 = get_object_or_404(Api8, div_code = region.div_code)
-    data['자외선지수'] = MainApi8TodaySerializer(api8).data['ultraviolet']
+        # api9
+        ## 현재 시간 데이터 찾기
+        api9 = get_object_or_404(Api9, div_code = region.div_code)
+        api9_temperature = api9.temperature.split('/')
+        api9_basetime = api9.base_time
+        now_hour = now.strftime("%H")
+        index = int(now_hour) - int(api9_basetime)
+        if index < 0:
+            index = int(now_hour) + 6
+        data['체감온도'] = api9_temperature[index]
 
-    # api9
-    ## 현재 시간 데이터 찾기
-    api9 = get_object_or_404(Api9, div_code = region.div_code)
-    api9_temperature = api9.temperature.split('/')
-    api9_basetime = api9.base_time
-    now_hour = now.strftime("%H")
-    index = int(now_hour) - int(api9_basetime)
-    if index < 0:
-        index = int(now_hour) + 6
-    data['체감온도'] = api9_temperature[index]
+        # api10
+        today_tem = region.api1.T1H
+        yesterdat_tem = api_10()
+        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+        print(data)
+        return data
 
-    # api10
-    today_tem = region.api1.T1H
-    yesterdat_tem = api_10()
-    data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+    def tomorrow(self, region) :
+        data = {}
+        now = datetime.now()
 
-    return data
+        # api6
+        data['미세먼지'] = MainApi6TomorrowSerializer(region.api6_id).data
 
-def tomorrow(region) :
-    data = {}
-    now = datetime.now()
+        # api7
+        data['일몰일출'] = MainApi7TomorrowSerializer(region.api7).data
 
-    # api6
-    data['미세먼지'] = MainApi6TomorrowSerializer(region.api6_id).data
+        # api8
+        api8 = get_object_or_404(Api8, div_code = region.div_code)
+        data['자외선지수'] = MainApi8TomorrowSerializer(api8).data['ultraviolet']
 
-    # api7
-    data['일몰일출'] = MainApi7TomorrowSerializer(region.api7).data
+        # api9
+        ## 현재 시간 데이터 찾기
+        api9 = get_object_or_404(Api9, div_code = region.div_code)
+        api9_temperature = api9.temperature.split('/')
+        api9_basetime = api9.base_time
+        now_hour = now.strftime("%H")
+        index = int(now_hour) - int(api9_basetime)
+        if index < 0:
+            index = int(now_hour) + 6
+        data['체감온도'] = api9_temperature[index+24]
 
-    # api8
-    api8 = get_object_or_404(Api8, div_code = region.div_code)
-    data['자외선지수'] = MainApi8TomorrowSerializer(api8).data['ultraviolet']
+        # api10
+        ## 현재 시간 데이터 찾기
+        api3_data = Api3Serializer(region.api3).data
+        now_hour = int(now.strftime("%H"))
+        today_data = Api3Serializer(region.api3).data['info_'+str(now_hour+24)]
+        today_tem = today_data.split('/')[0]
 
-    # api9
-    ## 현재 시간 데이터 찾기
-    api9 = get_object_or_404(Api9, div_code = region.div_code)
-    api9_temperature = api9.temperature.split('/')
-    api9_basetime = api9.base_time
-    now_hour = now.strftime("%H")
-    index = int(now_hour) - int(api9_basetime)
-    if index < 0:
-        index = int(now_hour) + 6
-    data['체감온도'] = api9_temperature[index+24]
-
-    # api10
-    ## 현재 시간 데이터 찾기
-    api3_data = Api3Serializer(region.api3).data
-    now_hour = int(now.strftime("%H"))
-    today_data = Api3Serializer(region.api3).data['info_'+str(now_hour+24)]
-    today_tem = today_data.split('/')[0]
-
-    yesterdat_tem = region.api1.T1H
-    data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
-
-    return data
+        yesterdat_tem = region.api1.T1H
+        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+        print(data)
+        return data
