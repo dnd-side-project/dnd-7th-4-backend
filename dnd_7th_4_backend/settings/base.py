@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     # 앱
     'main',
+    'comment',
 
     # Swagger
     'drf_yasg',
