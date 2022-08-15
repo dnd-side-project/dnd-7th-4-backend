@@ -8,7 +8,6 @@ from main.models import *
 import random
 from datetime import datetime
 
-
 ## 오늘 코멘트 부분
 # 1차 기준: 1시간 이내 확률 40% 이상의 강수예보시
 # 2차 기준: 1시간 이내 확률 0 초과 40% 미만의 강수예보 시
@@ -108,13 +107,39 @@ def wind(self):  # 바람
 
 def finedust(fd): # 미세먼지
     standard = 0
-    if fd == 1 or fd == 2:
+    if fd == 29 or fd == 2:
         standard = 1
     elif fd == 2:
         standard = 2
     else:
         standard = 3
     queryset = list(Finedust.objects.filter(standard=standard))
+    comm = random.sample(queryset, 1)
+    data = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
+    return data
+
+def windchill(wd): # 체감온도
+    wd = float(wd)
+    standard = 0
+    if 29 <= wd < 31:
+        standard = 1
+    elif 31 <= wd < 34:
+        standard = 2
+    elif 34 <= wd < 37:
+        standard = 3
+    elif wd > 37 :
+        standard = 4
+    elif -10 < wd <= 10:
+        standard = 5
+    elif -25 < wd <= -10:
+        standard = 6
+    elif -45 < wd <= -25:
+        standard = 7
+    elif -59 <= wd <= -45:
+        standard = 8
+    elif wd <= -60:
+        standard = 9
+    queryset = list(Windchill.objects.filter(standard=standard))
     comm = random.sample(queryset, 1)
     data = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
     return data
