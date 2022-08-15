@@ -34,7 +34,7 @@ def api_10():
         # 데이터 받기가 성공일 경우
         if code == '00':
             tem = response.json()['response']['body']['items']['item'][0]['ta']
-            print(f'api_10: --{tem}---------------------------')
+            print(f'api_10 result : -- {tem} ---------------------------')
             return tem
         else:
             get_api_error(str(response.status_code), response.text)

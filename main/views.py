@@ -245,6 +245,8 @@ class MainView(APIView):
         ### 코멘트 넣기
         response_tomorrow.update(self.tomorrow_comment())
 
+        today(region, self.today_windchill)
+
         return Response({"data": {"오늘": response_today, "세부 코멘트": comments_detail, "내일": response_tomorrow,
                          "이번주": d5}}, status=status.HTTP_200_OK)
 
