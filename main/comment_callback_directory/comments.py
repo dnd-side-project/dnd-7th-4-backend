@@ -17,10 +17,9 @@ from datetime import datetime
 # 5차 기준(그 외): 하늘상태 기준 - 맑음 / 구름많음 / 흐림
 
 # 아직 이 함수는 배포에는 적용하지 않겠습니다! 채영님까지 완성 후  + db 더미데이터 후에 적용하겠습니다
-def today():
+def today(region):
     current = datetime.now()
     h = int(current.strftime("%H"))
-    region = Region.objects.get(id=1)
     api3 = Api3.objects.get(region=region)
     api2 = Api2.objects.get(region=region)
 
