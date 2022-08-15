@@ -242,6 +242,9 @@ class MainView(APIView):
         
         # api6
         data['미세먼지'] = MainApi6TodaySerializer(region.api6_id).data
+        ## 코멘트 & 일러스트 추가
+        finedust_data = data['미세먼지']['미세먼지']
+        data['미세먼지'].update(finedust(finedust_data))
 
         # api7
         data['일몰일출'] = MainApi7TodaySerializer(region.api7).data
@@ -274,6 +277,9 @@ class MainView(APIView):
 
         # api6
         data['미세먼지'] = MainApi6TomorrowSerializer(region.api6_id).data
+        ## 코멘트 & 일러스트 추가
+        finedust_data = data['미세먼지']['미세먼지']
+        data['미세먼지'].update(finedust(finedust_data))
 
         # api7
         data['일몰일출'] = MainApi7TomorrowSerializer(region.api7).data

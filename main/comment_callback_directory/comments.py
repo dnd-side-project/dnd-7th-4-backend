@@ -104,3 +104,17 @@ def wind(self):  # 바람
     comm = random.sample(queryset, 1)
     d = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
     return d
+
+
+def finedust(fd): # 미세먼지
+    standard = 0
+    if fd == 1 or fd == 2:
+        standard = 1
+    elif fd == 2:
+        standard = 2
+    else:
+        standard = 3
+    queryset = list(Finedust.objects.filter(standard=standard))
+    comm = random.sample(queryset, 1)
+    data = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
+    return data
