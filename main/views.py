@@ -83,10 +83,10 @@ class MainView(APIView):
              "1시간강수량": RN1, "강수확률": POP, "최고기온": MAX, "최저기온": MIN}
 
         ## 코멘트 부분 추가
-        comments_detail = dict()
-        comments_detail["습도"] = humidity(REH)  # 습도
-        comments_detail["강수"] = precipication(RN1)  # 강수
-        comments_detail["바람"] = wind(WSD)  ## 바람
+        today_comments_detail = dict()
+        today_comments_detail["습도"] = humidity(REH)  # 습도
+        today_comments_detail["강수"] = precipication(RN1)  # 강수
+        today_comments_detail["바람"] = wind(WSD)  ## 바람
         ## 이 부분 밑에 추가해주시면 될 것 같아요!!
         ########
 
@@ -130,6 +130,12 @@ class MainView(APIView):
 
         d3 = {"기온": T1H, "하늘상태": SKY, "습도": REH, "풍속": WSD, "강수형태": PTY,
               "1시간강수량": RN1, "강수확률": POP, "최고기온": MAX, "최저기온": MIN}
+
+        ## 코멘트 부분 추가
+        tomorrow_comments_detail = dict()
+        tomorrow_comments_detail["습도"] = humidity(REH)  # 습도
+        tomorrow_comments_detail["강수"] = precipication(RN1)  # 강수
+        tomorrow_comments_detail["바람"] = wind(WSD)  ## 바람
 
         # 내일 00시 ~ 23시 정보
         d4 = dict()
@@ -232,18 +238,18 @@ class MainView(APIView):
 
         # 데이터 넣기
         ## API6 - 10까지의 오늘 데이터 넣기
-        response_today = {"현재": d, "시간별 정보": d1}
+        response_today = {"현재": d, "시간별 정보": d1, "세부 코멘트1": today_comments_detail}
         response_today.update(self.today(region).items())
         ### 코멘트 넣기
         response_today.update(self.today_comment())
 
         ## API6 - 10까지의 내일 데이터 넣기
-        response_tomorrow = {"내일현재": d3, "시간별 정보": d4}
+        response_tomorrow = {"내일현재": d3, "시간별 정보": d4, "세부 코멘트2": tomorrow_comments_detail}
         response_tomorrow.update(self.tomorrow(region).items())
         ### 코멘트 넣기
         response_tomorrow.update(self.tomorrow_comment())
 
-        return Response({"data": {"오늘": response_today, "세부 코멘트": comments_detail, "내일": response_tomorrow,
+        return Response({"data": {"오늘": response_today, "내일": response_tomorrow,
                                   "이번주": d5}}, status=status.HTTP_200_OK)
 
     def today(self, region):
