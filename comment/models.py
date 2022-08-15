@@ -31,6 +31,24 @@ SEASON_CHOICES = [
     ('4', '겨울'),
 ]
 
+FINEDUST_CHOICES = [
+    ('1', '좋음, 보통'),
+    ('2', '나쁨'),
+    ('3', '매우 나쁨')
+]
+
+WINDCHILL_CHOICES = [
+    ('0', '이상 없음'),
+    ('1', '여름철 관심'),
+    ('2', '여름철 주의'),
+    ('3', '여름철 경고'),
+    ('4', '여름철 위험'),
+    ('5', '겨울철 낮음'),
+    ('6', '겨울철 보통'),
+    ('7', '겨울철 추움'),
+    ('8', '겨울철 주의'),
+    ('9', '겨울철 위험')
+]
 
 # 강수 코멘트
 class Precipitation(models.Model):
@@ -61,6 +79,23 @@ class Wind(models.Model):
     def __str__(self):
         return self.comment  # comment 값을 대표값으로
 
+# 미세먼지 코멘트
+class Finedust(models.Model):
+    comment = models.TextField()
+    imageUrl = models.TextField(max_length=100)
+    standard = models.CharField(max_length=50, choices=FINEDUST_CHOICES)
+
+    def __str__(self):
+        return self.comment  # comment 값을 대표값으로
+
+# 체감온도 코멘트
+class Windchill(models.Model):
+    comment = models.TextField()
+    imageUrl = models.TextField(max_length=100)
+    standard = models.CharField(max_length=50, choices=WINDCHILL_CHOICES)
+
+    def __str__(self):
+        return self.comment  # comment 값을 대표값으로
 
 # 오늘 코멘트
 class Today(models.Model):

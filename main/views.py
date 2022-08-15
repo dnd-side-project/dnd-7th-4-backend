@@ -37,6 +37,16 @@ pty = {'0': '없음', '1': '비', '2': '비/눈', '5': '빗방울',  # 강수형
 class MainView(APIView):
     permission_classes = (AllowAny, )
 
+    def __init__(self):
+        self.today_finedust = 0
+        self.today_windchill = 0
+        self.today_sunset = 0
+        self.today_sunrise = 0
+        self.tomorrow_finedust = 0
+        self.tomorrow_windchill = 0
+        self.tomorrow_sunset = 0
+        self.tomorrow_sunrise = 0
+
     def get(self, request):
         current = datetime.now()  # 매 시각 45분 이후부터 호출 가능 --> task에는 45분으로 등록
         base_date = current.strftime("%Y%m%d")
@@ -223,16 +233,18 @@ class MainView(APIView):
              }
 
         # 데이터 넣기
-        ## 오늘 데이터 넣기
+        ## API6 - 10까지의 오늘 데이터 넣기
         response_today = {"현재": d, "시간별 정보": d1}
-        for k, v in self.today(region).items():
-            response_today[k] = v
+        response_today.update(self.today(region).items())
+        ### 코멘트 넣기
+        response_today.update(self.today_comment())
         
-        ## 내일 데이터 넣기
+        ## API6 - 10까지의 내일 데이터 넣기
         response_tomorrow = {"내일현재": d3, "시간별 정보": d4}
-        for k, v in self.tomorrow(region).items():
-            response_tomorrow[k] = v
-
+        response_tomorrow.update(self.tomorrow(region).items())
+        ### 코멘트 넣기
+        response_tomorrow.update(self.tomorrow_comment())
+        
         return Response({"data": {"오늘": response_today, "세부 코멘트": comments_detail, "내일": response_tomorrow,
                          "이번주": d5}}, status=status.HTTP_200_OK)
 
@@ -242,9 +254,12 @@ class MainView(APIView):
         
         # api6
         data['미세먼지'] = MainApi6TodaySerializer(region.api6_id).data
+        data['미세먼지']['미세먼지'] = self.today_finedust
 
         # api7
         data['일몰일출'] = MainApi7TodaySerializer(region.api7).data
+        self.today_sunset = data['일몰일출']['일몰']
+        self.today_sunrise = data['일몰일출']['일출']
 
         # api8
         api8 = get_object_or_404(Api8, div_code = region.div_code)
@@ -260,12 +275,12 @@ class MainView(APIView):
         if index < 0:
             index = int(now_hour) + 6
         data['체감온도'] = api9_temperature[index]
+        self.today_windchill = api9_temperature[index]
 
         # api10
         today_tem = region.api1.T1H
         yesterdat_tem = api_10()
         data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
-        print(data)
         return data
 
     def tomorrow(self, region) :
@@ -274,9 +289,12 @@ class MainView(APIView):
 
         # api6
         data['미세먼지'] = MainApi6TomorrowSerializer(region.api6_id).data
+        data['미세먼지']['미세먼지'] = self.tomorrow_finedust
 
         # api7
         data['일몰일출'] = MainApi7TomorrowSerializer(region.api7).data
+        self.tomorrow_sunset = data['일몰일출']['일몰']
+        self.tomorrow_sunrise = data['일몰일출']['일출']
 
         # api8
         api8 = get_object_or_404(Api8, div_code = region.div_code)
@@ -292,6 +310,7 @@ class MainView(APIView):
         if index < 0:
             index = int(now_hour) + 6
         data['체감온도'] = api9_temperature[index+24]
+        self.tomorrow_windchill = api9_temperature[index]
 
         # api10
         ## 현재 시간 데이터 찾기
@@ -302,8 +321,23 @@ class MainView(APIView):
 
         yesterdat_tem = region.api1.T1H
         data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
-        print(data)
         return data
+    
+    def today_comment(self):
+        comments_detail = dict()
+        comments_detail['미세먼지'] = finedust(self.today_finedust)
+        comments_detail['체감온도'] = windchill(self.today_windchill)
+        comments_detail['일몰일출'] = sun(False, self.today_sunrise, self.today_sunset)
+
+        return {'세부 코멘트' : comments_detail}
+
+    def tomorrow_comment(self):
+        comments_detail = dict()
+        comments_detail['미세먼지'] = finedust(self.tomorrow_finedust)
+        comments_detail['체감온도'] = windchill(self.tomorrow_windchill)
+        comments_detail['일몰일출'] = sun(True, self.tomorrow_sunrise, self.tomorrow_sunset)
+
+        return {'세부 코멘트' : comments_detail}
 
 
 
