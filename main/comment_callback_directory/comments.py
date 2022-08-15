@@ -8,6 +8,8 @@ from main.models import *
 import random
 from datetime import datetime
 
+now = datetime.today()
+
 ## 오늘 코멘트 부분
 # 1차 기준: 1시간 이내 확률 40% 이상의 강수예보시
 # 2차 기준: 1시간 이내 확률 0 초과 40% 미만의 강수예보 시
@@ -143,3 +145,34 @@ def windchill(wd): # 체감온도
     comm = random.sample(queryset, 1)
     data = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
     return data
+
+def sun(state, sunrise, sunset):
+    sunrise = (str(sunrise)[0], str(sunrise)[1:])
+    sunset = (str(sunset)[0], str(sunset)[1:])
+
+    now_hour = int(now.strftime("%H"))
+    now_minute = int(now.strftime("%M"))
+
+    if int(sunset[0]) >= now_hour and int(sunset[1]) >= now_minute:
+        hour, minute = cal_time(state, int(sunrise[0])-now_hour, int(sunrise[1])-now_minute)
+        return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
+    elif int(sunrise[0]) >= now_hour and int(sunrise[1]) >= now_minute:
+        hour, minute = cal_time(int(state, sunset[0])-now_hour, int(sunset[1])-now_minute)
+        return {"코멘트": f'일몰까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
+    else:
+        hour, minute = cal_time(int(state, sunrise[0])-now_hour, int(sunrise[1])-now_minute)
+        return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
+
+def cal_time(state, hour, minute):
+    if minute < 0:
+        hour -= 1
+        minute += 60
+
+    if hour < 0:
+        hour += 12
+    
+    if state: # 내일에 대한 코멘트인 경우
+        hour += 24
+    return hour, minute
+
+    
