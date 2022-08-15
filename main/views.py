@@ -304,3 +304,39 @@ class MainView(APIView):
         data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
         print(data)
         return data
+
+
+
+## 검색 기능
+# 요청받은 지명값 파싱하기 이후 city, district 에서 찾기
+class SearchView(APIView):
+    permission_classes = (AllowAny, )
+
+    def get(self, request):
+        str = request.data["data"]
+        words = str.split(" ")  # 공백을 기준으로 파싱하기
+
+        if len(words) == 1:  # city 또는 district 만 입력받은 경우
+            objs = Region.objects.filter(city__contains=words[0]).values()  # 검색한 것이 -> city 인 경우
+
+            if len(objs)==0:
+                objs = Region.objects.filter(district__contains=words[0]).values()  # 검색한 것이 -> district 인 경우
+
+        elif len(words) > 1:  # city, district 모두 입력받은 경우 (공백 기준 문자열 2개일 경우)
+            objs = Region.objects.filter(city__contains=words[0]).filter(district__contains=words[1]).values()
+        else:
+            return Response({"data": ""}, status=status.HTTP_200_OK)
+
+        # 해당 objs의 기온과 하늘상태 불러오기 // 기온 -> api2 이용
+        d = {}
+        h = int(datetime.now().strftime("%H"))
+        for obj in objs:  # obj는 Region 객체
+            print(obj)
+            key = obj["city"] + " " + obj["district"]
+            print(key)
+            api2 = Api2.objects.get(region=obj["id"])
+            sky = (((api2.serializable_value(f'info_{h}')).replace(" ", "")).split('/'))[1]  # 현재 하늘상태
+            tem = (((api2.serializable_value(f'info_{h}')).replace(" ", "")).split('/'))[0]  # 현재 기온
+            d[key] = {"하늘상태": sky, "기온": tem}
+
+        return Response({"data": d}, status=status.HTTP_200_OK)
