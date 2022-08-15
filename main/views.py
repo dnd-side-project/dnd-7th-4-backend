@@ -29,13 +29,14 @@ class TestView(APIView):
     def get(self, request):
         return Response("Swagger 연동 테스트")
 
+
 pty = {'0': '없음', '1': '비', '2': '비/눈', '5': '빗방울',  # 강수형태코드
-           '6': '빗방울눈날림', '7': '눈날림'}
+       '6': '빗방울눈날림', '7': '눈날림'}
 
 
 # 메인 화면 - 오늘, 내일, 이번주
 class MainView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
     def __init__(self):
         self.today_finedust = 0
@@ -82,13 +83,15 @@ class MainView(APIView):
              "1시간강수량": RN1, "강수확률": POP, "최고기온": MAX, "최저기온": MIN}
 
         ## 코멘트 부분 추가
-        today_comments_detail = dict()
-        today_comments_detail["습도"] = humidity(REH)  # 습도
-        today_comments_detail["강수"] = precipication(RN1)  # 강수
-        today_comments_detail["바람"] = wind(WSD) ## 바람
+        comments_detail = dict()
+        comments_detail["습도"] = humidity(REH)  # 습도
+        comments_detail["강수"] = precipication(RN1)  # 강수
+        comments_detail["바람"] = wind(WSD)  ## 바람
+        ## 이 부분 밑에 추가해주시면 될 것 같아요!!
+        ########
 
         d1 = dict()
-        for i in range(h, h+6):  # 현재 시각 ~ 6 시간의 정보
+        for i in range(h, h + 6):  # 현재 시각 ~ 6 시간의 정보
             if i == 24:  # 00 ~ 23시까지의 정보만을 표현
                 break
             field = f'info_{i}'
@@ -96,8 +99,8 @@ class MainView(APIView):
             d1[i] = str.split('/')
 
         d2 = dict()
-        if h+6 < 24:  # 아직 오늘 날씨가 더 남아있으면 -> API3에서 가져오기 (기온, 하늘 상태, 강수 형태, 1시간 강수량 만 가져오기)
-            for i in range(h+6, 24):
+        if h + 6 < 24:  # 아직 오늘 날씨가 더 남아있으면 -> API3에서 가져오기 (기온, 하늘 상태, 강수 형태, 1시간 강수량 만 가져오기)
+            for i in range(h + 6, 24):
                 field = f'info_{i}'
                 str = (api3.serializable_value(field)).replace(" ", "")
                 li = str.split('/')
@@ -126,13 +129,7 @@ class MainView(APIView):
         MIN = api3.info_day1_MIN  # 내일 최저기온
 
         d3 = {"기온": T1H, "하늘상태": SKY, "습도": REH, "풍속": WSD, "강수형태": PTY,
-             "1시간강수량": RN1, "강수확률": POP, "최고기온": MAX, "최저기온": MIN}
-
-        ## 코멘트 부분 추가
-        tomorrow_comments_detail = dict()
-        tomorrow_comments_detail["습도"] = humidity(REH)  # 습도
-        tomorrow_comments_detail["강수"] = precipication(RN1)  # 강수
-        tomorrow_comments_detail["바람"] = wind(WSD)  ## 바람
+              "1시간강수량": RN1, "강수확률": POP, "최고기온": MAX, "최저기온": MIN}
 
         # 내일 00시 ~ 23시 정보
         d4 = dict()
@@ -145,7 +142,7 @@ class MainView(APIView):
             new_li.append(li[1])
             new_li.append(li[3])
             new_li.append(li[5])
-            d4[i-24] = new_li
+            d4[i - 24] = new_li
 
         ##
         ## 이번주 ( day0 ~ day6 )
@@ -167,14 +164,13 @@ class MainView(APIView):
             sky0.append(li[1])
             pop0.append(li[4])
 
-            li = ((api3.serializable_value(f'info_{i+24}')).replace(" ", "")).split('/')
+            li = ((api3.serializable_value(f'info_{i + 24}')).replace(" ", "")).split('/')
             sky1.append(li[1])
             pop1.append(li[4])
 
-            li = ((api3.serializable_value(f'info_{i+48}')).replace(" ", "")).split('/')
+            li = ((api3.serializable_value(f'info_{i + 48}')).replace(" ", "")).split('/')
             sky2.append(li[1])
             pop2.append(li[4])
-
 
         SKY0_am = (collections.Counter(sky0)).most_common(1)[0][0]  # 하늘상태
         POP0_am = max(pop0)  # 강수확률
@@ -195,14 +191,13 @@ class MainView(APIView):
             sky0.append(li[1])
             pop0.append(li[4])
 
-            li = ((api3.serializable_value(f'info_{i+24}')).replace(" ", "")).split('/')
+            li = ((api3.serializable_value(f'info_{i + 24}')).replace(" ", "")).split('/')
             sky1.append(li[1])
             pop1.append(li[4])
 
-            li = ((api3.serializable_value(f'info_{i+48}')).replace(" ", "")).split('/')
+            li = ((api3.serializable_value(f'info_{i + 48}')).replace(" ", "")).split('/')
             sky2.append(li[1])
             pop2.append(li[4])
-
 
         SKY0_pm = (collections.Counter(sky0)).most_common(1)[0][0]  # 하늘상태
         POP0_pm = max(pop0)  # 강수확률
@@ -212,50 +207,49 @@ class MainView(APIView):
         POP2_pm = max(pop2)  # 강수확률
 
         d5 = {"0": {"오전 하늘상태": SKY0_am, "오후 하늘상태": SKY0_pm,
-                   "오전 강수확률": POP0_am, "오후 강수확률": POP0_pm,
-                   "최저기온": api3.info_day0_MIN, "최고기온": api3.info_day0_MAX},
-             "1": {"오전 하늘상태": SKY1_am, "오후 하늘상태": SKY1_pm,
-                   "오전 강수확률": POP1_am, "오후 강수확률": POP1_pm,
-                   "최저기온": api3.info_day1_MIN, "최고기온": api3.info_day1_MAX},
-             "2": {"오전 하늘상태": SKY2_am, "오후 하늘상태": SKY2_pm,
-                   "오전 강수확률": POP2_am, "오후 강수확률": POP2_pm,
-                   "최저기온": api3.info_day2_MIN, "최고기온": api3.info_day2_MAX},
+                    "오전 강수확률": POP0_am, "오후 강수확률": POP0_pm,
+                    "최저기온": api3.info_day0_MIN, "최고기온": api3.info_day0_MAX},
+              "1": {"오전 하늘상태": SKY1_am, "오후 하늘상태": SKY1_pm,
+                    "오전 강수확률": POP1_am, "오후 강수확률": POP1_pm,
+                    "최저기온": api3.info_day1_MIN, "최고기온": api3.info_day1_MAX},
+              "2": {"오전 하늘상태": SKY2_am, "오후 하늘상태": SKY2_pm,
+                    "오전 강수확률": POP2_am, "오후 강수확률": POP2_pm,
+                    "최저기온": api3.info_day2_MIN, "최고기온": api3.info_day2_MAX},
 
-             "3": {"오전 하늘상태": api4.wf3Am, "오후 하늘상태": api4.wf3Pm,
-                   "오전 강수확률": api4.rnSt3Am, "오후 강수확률": api4.rnSt3Pm,
-                   "최저기온": api5.taMin3, "최고기온": api5.taMax3},
-             "4": {"오전 하늘상태": api4.wf4Am, "오후 하늘상태": api4.wf4Pm,
-                   "오전 강수확률": api4.rnSt4Am, "오후 강수확률": api4.rnSt4Pm,
-                   "최저기온": api5.taMin4, "최고기온": api5.taMax4},
-             "5": {"오전 하늘상태": api4.wf5Am, "오후 하늘상태": api4.wf5Pm,
-                   "오전 강수확률": api4.rnSt5Am, "오후 강수확률": api4.rnSt5Pm,
-                   "최저기온": api5.taMin5, "최고기온": api5.taMax5},
-             "6": {"오전 하늘상태": api4.wf6Am, "오후 하늘상태": api4.wf6Pm,
-                   "오전 강수확률": api4.rnSt6Am, "오후 강수확률": api4.rnSt6Pm,
-                   "최저기온": api5.taMin6, "최고기온": api5.taMax6}
-             }
+              "3": {"오전 하늘상태": api4.wf3Am, "오후 하늘상태": api4.wf3Pm,
+                    "오전 강수확률": api4.rnSt3Am, "오후 강수확률": api4.rnSt3Pm,
+                    "최저기온": api5.taMin3, "최고기온": api5.taMax3},
+              "4": {"오전 하늘상태": api4.wf4Am, "오후 하늘상태": api4.wf4Pm,
+                    "오전 강수확률": api4.rnSt4Am, "오후 강수확률": api4.rnSt4Pm,
+                    "최저기온": api5.taMin4, "최고기온": api5.taMax4},
+              "5": {"오전 하늘상태": api4.wf5Am, "오후 하늘상태": api4.wf5Pm,
+                    "오전 강수확률": api4.rnSt5Am, "오후 강수확률": api4.rnSt5Pm,
+                    "최저기온": api5.taMin5, "최고기온": api5.taMax5},
+              "6": {"오전 하늘상태": api4.wf6Am, "오후 하늘상태": api4.wf6Pm,
+                    "오전 강수확률": api4.rnSt6Am, "오후 강수확률": api4.rnSt6Pm,
+                    "최저기온": api5.taMin6, "최고기온": api5.taMax6}
+              }
 
         # 데이터 넣기
         ## API6 - 10까지의 오늘 데이터 넣기
-        response_today = {"현재": d, "시간별 정보": d1, "세부 코멘트1": today_comments_detail}
+        response_today = {"현재": d, "시간별 정보": d1}
         response_today.update(self.today(region).items())
-        ### 코멘트 넣기 - 채영
+        ### 코멘트 넣기
         response_today.update(self.today_comment())
-        
+
         ## API6 - 10까지의 내일 데이터 넣기
-        response_tomorrow = {"내일현재": d3, "시간별 정보": d4, "세부 코멘트1": tomorrow_comments_detail}
+        response_tomorrow = {"내일현재": d3, "시간별 정보": d4}
         response_tomorrow.update(self.tomorrow(region).items())
-        ### 코멘트 넣기 - 채영
+        ### 코멘트 넣기
         response_tomorrow.update(self.tomorrow_comment())
 
-        
-        return Response({"data": {"오늘": response_today, "내일": response_tomorrow,
-                         "이번주": d5}}, status=status.HTTP_200_OK)
+        return Response({"data": {"오늘": response_today, "세부 코멘트": comments_detail, "내일": response_tomorrow,
+                                  "이번주": d5}}, status=status.HTTP_200_OK)
 
-    def today(self, region) :
+    def today(self, region):
         data = {}
         now = datetime.today()
-        
+
         # api6
         data['미세먼지'] = MainApi6TodaySerializer(region.api6_id).data
         data['미세먼지']['미세먼지'] = self.today_finedust
@@ -266,12 +260,12 @@ class MainView(APIView):
         self.today_sunrise = data['일몰일출']['일출']
 
         # api8
-        api8 = get_object_or_404(Api8, div_code = region.div_code)
+        api8 = get_object_or_404(Api8, div_code=region.div_code)
         data['자외선지수'] = MainApi8TodaySerializer(api8).data['ultraviolet']
 
         # api9
         ## 현재 시간 데이터 찾기
-        api9 = get_object_or_404(Api9, div_code = region.div_code)
+        api9 = get_object_or_404(Api9, div_code=region.div_code)
         api9_temperature = api9.temperature.split('/')
         api9_basetime = api9.base_time
         now_hour = now.strftime("%H")
@@ -287,7 +281,7 @@ class MainView(APIView):
         data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
         return data
 
-    def tomorrow(self, region) :
+    def tomorrow(self, region):
         data = {}
         now = datetime.now()
 
@@ -301,39 +295,39 @@ class MainView(APIView):
         self.tomorrow_sunrise = data['일몰일출']['일출']
 
         # api8
-        api8 = get_object_or_404(Api8, div_code = region.div_code)
+        api8 = get_object_or_404(Api8, div_code=region.div_code)
         data['자외선지수'] = MainApi8TomorrowSerializer(api8).data['ultraviolet']
 
         # api9
         ## 현재 시간 데이터 찾기
-        api9 = get_object_or_404(Api9, div_code = region.div_code)
+        api9 = get_object_or_404(Api9, div_code=region.div_code)
         api9_temperature = api9.temperature.split('/')
         api9_basetime = api9.base_time
         now_hour = now.strftime("%H")
         index = int(now_hour) - int(api9_basetime)
         if index < 0:
             index = int(now_hour) + 6
-        data['체감온도'] = api9_temperature[index+24]
+        data['체감온도'] = api9_temperature[index + 24]
         self.tomorrow_windchill = api9_temperature[index]
 
         # api10
         ## 현재 시간 데이터 찾기
         api3_data = Api3Serializer(region.api3).data
         now_hour = int(now.strftime("%H"))
-        today_data = Api3Serializer(region.api3).data['info_'+str(now_hour+24)]
+        today_data = Api3Serializer(region.api3).data['info_' + str(now_hour + 24)]
         today_tem = today_data.split('/')[0]
 
         yesterdat_tem = region.api1.T1H
         data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
         return data
-    
+
     def today_comment(self):
         comments_detail = dict()
         comments_detail['미세먼지'] = finedust(self.today_finedust)
         comments_detail['체감온도'] = windchill(self.today_windchill)
         comments_detail['일몰일출'] = sun(False, self.today_sunrise, self.today_sunset)
 
-        return {'세부 코멘트2': comments_detail}
+        return {'세부 코멘트': comments_detail}
 
     def tomorrow_comment(self):
         comments_detail = dict()
@@ -341,14 +335,13 @@ class MainView(APIView):
         comments_detail['체감온도'] = windchill(self.tomorrow_windchill)
         comments_detail['일몰일출'] = sun(True, self.tomorrow_sunrise, self.tomorrow_sunset)
 
-        return {'세부 코멘트2': comments_detail}
-
+        return {'세부 코멘트': comments_detail}
 
 
 ## 검색 기능
 # 요청받은 지명값 파싱하기 이후 city, district 에서 찾기
 class SearchView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
     def get(self, request):
         str = request.data["data"]
@@ -357,7 +350,7 @@ class SearchView(APIView):
         if len(words) == 1:  # city 또는 district 만 입력받은 경우
             objs = Region.objects.filter(city__contains=words[0]).values()  # 검색한 것이 -> city 인 경우
 
-            if len(objs)==0:
+            if len(objs) == 0:
                 objs = Region.objects.filter(district__contains=words[0]).values()  # 검색한 것이 -> district 인 경우
 
         elif len(words) > 1:  # city, district 모두 입력받은 경우 (공백 기준 문자열 2개일 경우)
