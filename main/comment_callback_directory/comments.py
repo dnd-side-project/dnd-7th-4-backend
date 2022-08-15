@@ -8,7 +8,7 @@ from main.models import *
 import random
 from datetime import datetime
 
-now = datetime.today()
+current = datetime.now()
 
 ## 오늘 코멘트 부분
 # 1차 기준: 1시간 이내 확률 40% 이상의 강수예보시
@@ -18,15 +18,18 @@ now = datetime.today()
 # 5차 기준(그 외): 하늘상태 기준 - 맑음 / 구름많음 / 흐림
 
 # 아직 이 함수는 배포에는 적용하지 않겠습니다! 채영님까지 완성 후  + db 더미데이터 후에 적용하겠습니다
-def today(region):
-    current = datetime.now()
+def today(region, windchill):
     h = int(current.strftime("%H"))
-    api3 = Api3.objects.get(region=region)
     api2 = Api2.objects.get(region=region)
+    api3 = Api3.objects.get(region=region)
+    api8 = Api8.objects.get(div_code = region.div_code)
 
     # 2시간 내 강수 확률 확인
     p1 = int(((api3.serializable_value(f'info_{h}')).replace(" ", "")).split('/')[4])  # 현재 시 강수 확률
     p2 = int(((api3.serializable_value(f'info_{h+1}')).replace(" ", "")).split('/')[4])  # 현재 시 + 1 강수 확률
+    p3_1 = region.api1.T1H # 현재 기온
+    p3_2 = windchill # 체감온도
+    p4 = api8.today
 
     if p1 >= 40 or p2 >= 40:  # 1차 기준
         queryset = list(Today.objects.filter(first_standard=1))
@@ -37,9 +40,16 @@ def today(region):
         queryset = list(Today.objects.filter(first_standard=2))
         comm = random.sample(queryset, 1)
         today_comment = comm[0].commet
-
-    # elif (3차 기준):
-    # elif (4차 기준):
+    
+    elif p3_2 > p3_1: # 3차 기준
+        queryset = list(Today.objects.filter(first_standard=3))
+        comm = random.sample(queryset, 1)
+        today_comment = comm[0].commet
+    
+    elif p4 >= 6:
+        queryset = list(Today.objects.filter(first_standard=4))
+        comm = random.sample(queryset, 1)
+        today_comment = comm[0].commet
 
     else:  # 5차 기준 (그 외) -> 현재 하늘상태로 판별
         sky = (((api2.serializable_value(f'info_{h}')).replace(" ", "")).split('/'))[1]  # 현재 하늘상태
@@ -50,8 +60,6 @@ def today(region):
     return today_comment
 
 
-
-##
 ## 세부 코멘트 부분 -> 딕셔너리 형태로 반환
 def humidity(self):  # 습도
     hud = float(self)
@@ -150,8 +158,8 @@ def sun(state, sunrise, sunset):
     sunrise = (str(sunrise)[0], str(sunrise)[1:])
     sunset = (str(sunset)[0], str(sunset)[1:])
 
-    now_hour = int(now.strftime("%H"))
-    now_minute = int(now.strftime("%M"))
+    now_hour = int(current.strftime("%H"))
+    now_minute = int(current.strftime("%M"))
 
     if int(sunset[0]) >= now_hour and int(sunset[1]) >= now_minute:
         hour, minute = cal_time(state, int(sunrise[0])-now_hour, int(sunrise[1])-now_minute)
