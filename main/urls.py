@@ -9,4 +9,6 @@ urlpatterns = [
     path('api/api7/', views.api_7),
     path('api/api8/', views.api_8),
     path('api/api9/', views.api_9),
+
+    path('search', views.SearchView.as_view()),  # 검색
 ]
