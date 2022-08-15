@@ -22,3 +22,7 @@ class HumidityAdmin(admin.ModelAdmin):
 @admin.register(Wind)
 class WindAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Wind._meta.get_fields()]
+
+@admin.register(Finedust)
+class FinedustAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Finedust._meta.get_fields()]

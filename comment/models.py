@@ -30,6 +30,11 @@ SEASON_CHOICES = [
     ('3', '가을'),
     ('4', '겨울'),
 ]
+FINEDUST_CHOICES = [
+    ('1', '좋음, 보통'),
+    ('2', '나쁨'),
+    ('3', '매우 나쁨')
+]
 
 
 # 강수 코멘트
@@ -57,6 +62,15 @@ class Wind(models.Model):
     comment = models.TextField()
     imageUrl = models.TextField(max_length=100)
     standard = models.CharField(max_length=50, choices=WIND_CHOICES)
+
+    def __str__(self):
+        return self.comment  # comment 값을 대표값으로
+
+# 미세먼지 코멘트
+class Finedust(models.Model):
+    comment = models.TextField()
+    imageUrl = models.TextField(max_length=100)
+    standard = models.CharField(max_length=50, choices=FINEDUST_CHOICES)
 
     def __str__(self):
         return self.comment  # comment 값을 대표값으로
