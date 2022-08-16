@@ -155,20 +155,19 @@ def windchill(wd): # 체감온도
     return data
 
 def sun(state, sunrise, sunset):
-    sunrise = (str(sunrise)[0], str(sunrise)[1:])
-    sunset = (str(sunset)[0], str(sunset)[1:])
+    sunrise = (int(str(sunrise)[0]), int(str(sunrise)[1:]))
+    sunset = (int(str(sunset)[0]), int(str(sunset)[1:]))
 
     now_hour = int(current.strftime("%H"))
     now_minute = int(current.strftime("%M"))
-
-    if int(sunset[0]) >= now_hour and int(sunset[1]) >= now_minute:
-        hour, minute = cal_time(state, int(sunrise[0])-now_hour, int(sunrise[1])-now_minute)
+    if sunset[0] >= now_hour and sunset[1] >= now_minute:
+        hour, minute = cal_time(state, sunrise[0]-now_hour, sunrise[1]-now_minute)
         return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
-    elif int(sunrise[0]) >= now_hour and int(sunrise[1]) >= now_minute:
-        hour, minute = cal_time(int(state, sunset[0])-now_hour, int(sunset[1])-now_minute)
+    elif sunrise[0] >= now_hour and sunrise[1] >= now_minute:
+        hour, minute = cal_time(state, sunset[0]-now_hour, sunset[1]-now_minute)
         return {"코멘트": f'일몰까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
     else:
-        hour, minute = cal_time(int(state, sunrise[0])-now_hour, int(sunrise[1])-now_minute)
+        hour, minute = cal_time(state, sunrise[0]-now_hour, sunrise[1]-now_minute)
         return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
 
 def cal_time(state, hour, minute):
