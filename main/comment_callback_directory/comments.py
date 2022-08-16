@@ -18,7 +18,7 @@ current = datetime.now()
 # 5차 기준(그 외): 하늘상태 기준 - 맑음 / 구름많음 / 흐림
 
 # 아직 이 함수는 배포에는 적용하지 않겠습니다! 채영님까지 완성 후  + db 더미데이터 후에 적용하겠습니다
-def today(region, windchill):
+def today_comment(region, windchill):
     h = int(current.strftime("%H"))
     api2 = Api2.objects.get(region=region)
     api3 = Api3.objects.get(region=region)
@@ -47,6 +47,48 @@ def today(region, windchill):
         today_comment = comm[0].commet
     
     elif p4 >= 6:
+        queryset = list(Today.objects.filter(first_standard=4))
+        comm = random.sample(queryset, 1)
+        today_comment = comm[0].commet
+
+    else:  # 5차 기준 (그 외) -> 현재 하늘상태로 판별
+        sky = (((api2.serializable_value(f'info_{h}')).replace(" ", "")).split('/'))[1]  # 현재 하늘상태
+        queryset = list(Today.objects.filter(first_standard=5).filter(second_standard=sky))
+        comm = random.sample(queryset, 1)
+        today_comment = comm[0].comment
+
+    return today_comment
+
+# today() 함수에서 복붙한 후, 이름만 변경해놓았습니다!!
+def tomorrow_comment(region, windchill):
+    h = int(current.strftime("%H"))
+    api2 = Api2.objects.get(region=region)
+    api3 = Api3.objects.get(region=region)
+    api8 = Api8.objects.get(div_code = region.div_code)
+
+    # 2시간 내 강수 확률 확인
+    p1 = int(((api3.serializable_value(f'info_{h}')).replace(" ", "")).split('/')[4])  # 현재 시 강수 확률
+    p2 = int(((api3.serializable_value(f'info_{h+1}')).replace(" ", "")).split('/')[4])  # 현재 시 + 1 강수 확률
+    p3_1 = int(Api3Serializer(region.api3).data['info_' + str(h + 24)]) # 현재 기온
+    p3_2 = windchill # 체감온도
+    p4 = api8.tomorrow
+
+    if p1 >= 40 or p2 >= 40:  # 1차 기준
+        queryset = list(Today.objects.filter(first_standard=1))
+        comm = random.sample(queryset, 1)
+        today_comment = comm[0].commet
+
+    elif 0 < p1 < 40 or 0 < p2 < 40:  # 2차 기준
+        queryset = list(Today.objects.filter(first_standard=2))
+        comm = random.sample(queryset, 1)
+        today_comment = comm[0].commet
+    
+    elif p3_2 > p3_1: # 3차 기준
+        queryset = list(Today.objects.filter(first_standard=3))
+        comm = random.sample(queryset, 1)
+        today_comment = comm[0].commet
+    
+    elif p4 >= 6: # 4차 기준
         queryset = list(Today.objects.filter(first_standard=4))
         comm = random.sample(queryset, 1)
         today_comment = comm[0].commet
