@@ -20,23 +20,28 @@ current = datetime.now()
 # 아직 이 함수는 배포에는 적용하지 않겠습니다! 채영님까지 완성 후  + db 더미데이터 후에 적용하겠습니다
 def today_comment(region, windchill):
     h = int(current.strftime("%H"))
+    api1 = Api1.objects.get(region=region)
     api2 = Api2.objects.get(region=region)
     api3 = Api3.objects.get(region=region)
     api8 = Api8.objects.get(div_code = region.div_code)
 
     # 2시간 내 강수 확률 확인
+    api_p1 = float(api1.RN1)  # 현재 1시간 강수량
+    api1_p2 = int(api1.PTY)  # 현재 강수 형태
+    ##
+
     p1 = int(((api3.serializable_value(f'info_{h}')).replace(" ", "")).split('/')[4])  # 현재 시 강수 확률
     p2 = int(((api3.serializable_value(f'info_{h+1}')).replace(" ", "")).split('/')[4])  # 현재 시 + 1 강수 확률
     p3_1 = float(region.api1.T1H) # 현재 기온
     p3_2 = windchill # 체감온도
     p4 = api8.today
 
-    if p1 >= 40 or p2 >= 40:  # 1차 기준
+    if p1 >= 40:  # 1차 기준  # 현재 강수 형태가 있음 추가 (api1_p2 != 0)
         queryset = list(Today.objects.filter(first_standard=1))
         comm = random.sample(queryset, 1)
         today_comment = comm[0].comment
 
-    elif 0 < p1 < 40 or 0 < p2 < 40:  # 2차 기준
+    elif 0 < p1 < 40:  # 2차 기준
         queryset = list(Today.objects.filter(first_standard=2))
         comm = random.sample(queryset, 1)
         today_comment = comm[0].comment
@@ -75,12 +80,12 @@ def tomorrow_comment(region, windchill):
     p3_2 = windchill  # 체감온도
     p4 = api8.tomorrow
 
-    if p1 >= 40 or p2 >= 40:  # 1차 기준
+    if p1 >= 40:  # 1차 기준
         queryset = list(Today.objects.filter(first_standard=1))
         comm = random.sample(queryset, 1)
         today_comment = comm[0].comment
 
-    elif 0 < p1 < 40 or 0 < p2 < 40:  # 2차 기준
+    elif 0 < p1 < 40:  # 2차 기준
         queryset = list(Today.objects.filter(first_standard=2))
         comm = random.sample(queryset, 1)
         today_comment = comm[0].comment
