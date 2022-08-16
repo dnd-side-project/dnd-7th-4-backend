@@ -41,7 +41,6 @@ def call_api_8():
         try:
             # api 요청
             response = requests.get(url, params=params)
-            print(response.text)
 
             # 데이터 받기가 성공일 경우
             code = response.json()['response']['header']['resultCode']
@@ -76,28 +75,34 @@ def update_api_8():
         search_date = (datetime.today() - timedelta(days=1))
     print(f'api_8: get request: -----------------------------')
 
-    api8_data = Api8.objects.all()
-    for api8 in api8_data:
-        region = api8.div_code
+    region_data = Region.objects.all()
+    for region in region_data:
         params = {
             "serviceKey": serviceKey,
-            "areaNo": region,
+            "areaNo": region.div_code,
             "dataType": "JSON",
             "time": search_date.strftime("%Y%m%d")+"06"
         }
         try:
             # api 요청
             response = requests.get(url, params=params)
-            print('a')
+
             # 데이터 받기가 성공일 경우
             code = response.json()['response']['header']['resultCode']
-            print(response.text)
+
             if code == '00':
                 # API 8 데이터 저장
                 today = response.json()['response']['body']['items']['item'][0]['today']
                 tomorrow = response.json()['response']['body']['items']['item'][0]['tomorrow']
-                api8.today = today
-                api8.tomorrow = tomorrow
+                api8 = Api8.objects.filter(div_code = region.div_code)
+                if len(api8) :
+                    #API 8 업데이트
+                    api8 = api8[0]
+                    api8.today = today
+                    api8.tomorrow = tomorrow
+                else:
+                    # Api 8 생성
+                    api8 = Api8(today = today, tomorrow = tomorrow, div_code = region.div_code)
                 api8.save()
                 print(f'api_8: {region} {today} {tomorrow} -----------------------------')
 
@@ -108,3 +113,14 @@ def update_api_8():
             print(f'api_8: Timeout: -----------------------------')
         except requests.ConnectionError:
             print(f'api_8: ConnectionError:-----------------------------')
+        except request.JSONDecodeError:
+            print(f'api_8: JSONDecodeError:-----------------------------')
+
+# OpenAPI 에러 처리
+def get_api_error(code, text):
+    if code == '01':
+        print('api_6: Application Error: Application 서비스 제공 상태 원활하지 않음-----------------------------')
+    elif code == '02':
+        print('api_6: DB Error: DB 서비스 제공 상태 원활하지 않음-----------------------------')
+    else:
+        print(text)
