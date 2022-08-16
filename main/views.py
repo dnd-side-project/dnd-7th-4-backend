@@ -84,6 +84,7 @@ class MainView(APIView):
 
         ## 코멘트 부분 추가
         today_comments_detail = dict()
+        today_comments_detail["메인"] = today_comment(region, self.today_windchill)
         today_comments_detail["습도"] = humidity(REH)  # 습도
         today_comments_detail["강수"] = precipication(RN1)  # 강수
         today_comments_detail["바람"] = wind(WSD)  ## 바람
@@ -133,6 +134,7 @@ class MainView(APIView):
 
         ## 코멘트 부분 추가
         tomorrow_comments_detail = dict()
+        tomorrow_comments_detail["메인"] = tomorrow_comment(region, self.tomorrow_windchill)
         tomorrow_comments_detail["습도"] = humidity(REH)  # 습도
         tomorrow_comments_detail["강수"] = precipication(RN1)  # 강수
         tomorrow_comments_detail["바람"] = wind(WSD)  ## 바람

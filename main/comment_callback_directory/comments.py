@@ -27,29 +27,29 @@ def today_comment(region, windchill):
     # 2시간 내 강수 확률 확인
     p1 = int(((api3.serializable_value(f'info_{h}')).replace(" ", "")).split('/')[4])  # 현재 시 강수 확률
     p2 = int(((api3.serializable_value(f'info_{h+1}')).replace(" ", "")).split('/')[4])  # 현재 시 + 1 강수 확률
-    p3_1 = region.api1.T1H # 현재 기온
+    p3_1 = float(region.api1.T1H) # 현재 기온
     p3_2 = windchill # 체감온도
     p4 = api8.today
 
     if p1 >= 40 or p2 >= 40:  # 1차 기준
         queryset = list(Today.objects.filter(first_standard=1))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].commet
+        today_comment = comm[0].comment
 
     elif 0 < p1 < 40 or 0 < p2 < 40:  # 2차 기준
         queryset = list(Today.objects.filter(first_standard=2))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].commet
+        today_comment = comm[0].comment
     
     elif p3_2 > p3_1: # 3차 기준
         queryset = list(Today.objects.filter(first_standard=3))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].commet
+        today_comment = comm[0].comment
     
     elif p4 >= 6:
         queryset = list(Today.objects.filter(first_standard=4))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].commet
+        today_comment = comm[0].comment
 
     else:  # 5차 기준 (그 외) -> 현재 하늘상태로 판별
         sky = (((api2.serializable_value(f'info_{h}')).replace(" ", "")).split('/'))[1]  # 현재 하늘상태
@@ -59,6 +59,7 @@ def today_comment(region, windchill):
 
     return today_comment
 
+
 # today() 함수에서 복붙한 후, 이름만 변경해놓았습니다!!
 def tomorrow_comment(region, windchill):
     h = int(current.strftime("%H"))
@@ -67,34 +68,35 @@ def tomorrow_comment(region, windchill):
     api8 = Api8.objects.get(div_code = region.div_code)
 
     # 2시간 내 강수 확률 확인
-    p1 = int(((api3.serializable_value(f'info_{h}')).replace(" ", "")).split('/')[4])  # 현재 시 강수 확률
-    p2 = int(((api3.serializable_value(f'info_{h+1}')).replace(" ", "")).split('/')[4])  # 현재 시 + 1 강수 확률
-    p3_1 = int(Api3Serializer(region.api3).data['info_' + str(h + 24)]) # 현재 기온
-    p3_2 = windchill # 체감온도
+    p1 = int(((api3.serializable_value(f'info_{24+(h)}')).replace(" ", "")).split('/')[4])  # 내일 현재 시 강수 확률
+    p2 = int(((api3.serializable_value(f'info_{24+(h+1)}')).replace(" ", "")).split('/')[4])  # 내일 현재 시 + 1 강수 확률
+
+    p3_1 = float((((api3.serializable_value(f'info_{24+h}')).replace(" ", "")).split('/'))[0])  # 내일 현재 기온
+    p3_2 = windchill  # 체감온도
     p4 = api8.tomorrow
 
     if p1 >= 40 or p2 >= 40:  # 1차 기준
         queryset = list(Today.objects.filter(first_standard=1))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].commet
+        today_comment = comm[0].comment
 
     elif 0 < p1 < 40 or 0 < p2 < 40:  # 2차 기준
         queryset = list(Today.objects.filter(first_standard=2))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].commet
+        today_comment = comm[0].comment
     
     elif p3_2 > p3_1: # 3차 기준
         queryset = list(Today.objects.filter(first_standard=3))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].commet
+        today_comment = comm[0].comment
     
     elif p4 >= 6: # 4차 기준
         queryset = list(Today.objects.filter(first_standard=4))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].commet
+        today_comment = comm[0].comment
 
-    else:  # 5차 기준 (그 외) -> 현재 하늘상태로 판별
-        sky = (((api2.serializable_value(f'info_{h}')).replace(" ", "")).split('/'))[1]  # 현재 하늘상태
+    else:  # 5차 기준 (그 외) -> 내일 현재 하늘상태로 판별
+        sky = (((api3.serializable_value(f'info_{24+h}')).replace(" ", "")).split('/'))[1]  # 내일 현재 하늘상태
         queryset = list(Today.objects.filter(first_standard=5).filter(second_standard=sky))
         comm = random.sample(queryset, 1)
         today_comment = comm[0].comment
@@ -170,6 +172,7 @@ def finedust(fd): # 미세먼지
     data = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
     return data
 
+
 def windchill(wd): # 체감온도
     wd = float(wd)
     standard = 0
@@ -196,6 +199,7 @@ def windchill(wd): # 체감온도
     data = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
     return data
 
+
 def sun(state, sunrise, sunset):
     sunrise = (int(str(sunrise)[0]), int(str(sunrise)[1:]))
     sunset = (int(str(sunset)[0]), int(str(sunset)[1:]))
@@ -212,6 +216,7 @@ def sun(state, sunrise, sunset):
         hour, minute = cal_time(state, sunrise[0]-now_hour, sunrise[1]-now_minute)
         return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
 
+
 def cal_time(state, hour, minute):
     if minute < 0:
         hour -= 1
@@ -223,5 +228,3 @@ def cal_time(state, hour, minute):
     if state: # 내일에 대한 코멘트인 경우
         hour += 24
     return hour, minute
-
-    
