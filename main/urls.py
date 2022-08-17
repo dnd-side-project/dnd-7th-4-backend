@@ -10,5 +10,6 @@ urlpatterns = [
     path('api/api8/', views.api_8),
     path('api/api9/', views.api_9),
 
-    path('search', views.SearchView.as_view()),  # 검색
+    path('search', views.SearchView.as_view()),  # 검색,
+    path('region', views.RegionView.as_view()),  # 사용자의 지역 생성, 삭제
 ]

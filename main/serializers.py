@@ -76,3 +76,9 @@ class Api3Serializer(serializers.ModelSerializer):
     class Meta:
         model = Api3
         fields = [field.name for field in Api3._meta.get_fields()]
+
+# Region 데이터
+class RegionSeriallizer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = ['id', 'city', 'district']
