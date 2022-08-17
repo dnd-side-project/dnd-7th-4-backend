@@ -28,6 +28,15 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 DEBUG = env('DEBUG')
 
+## CORS 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+#CORS_ORIGIN_ALLOW_ALL = False
+#CORS_ORIGIN_WHITELIST = [
+#    'localhost:3000'
+# ]
+
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -89,8 +98,8 @@ TEMPLATES = [
 
 
 # Celery
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')  # 배포용
-# CELERY_BROKER_URL = 'amqp://localhost'  # 로컬 테스트용
+#CELERY_BROKER_URL = env('CELERY_BROKER_URL')  # 배포용
+CELERY_BROKER_URL = 'amqp://localhost'  # 로컬 테스트용
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
