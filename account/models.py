@@ -7,7 +7,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     kakao_id = models.CharField(max_length=50)  # 카카오 id
     nickname = models.CharField(max_length=50)  # 카카오 닉네임
-    profile_image = models.TextField()  # 카카오 프로필 이미지
+    profile_image = models.TextField(null=True, default='')  # 카카오 프로필 이미지
     kakao_alarm = models.BooleanField(default=0)  # 카카오 알람
 
     def __str__(self):
