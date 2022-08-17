@@ -30,14 +30,16 @@ DEBUG = env('DEBUG')
 
 ## CORS 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+#CORS_ALLOW_CREDENTIALS = True
 #CORS_ORIGIN_ALLOW_ALL = False
-#CORS_ORIGIN_WHITELIST = [
-#    'localhost:3000'
-# ]
+CORS_ORIGIN_WHITELIST = [ 
+    'http://127.0.0.1:8000',
+    'https://127.0.0.1:3000', 
+    'http://localhost:8000',
+    'https://localhost:3000', ]
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '127.0.0.1:3000', '127.0.0.1:8000']
 
 # Application definition
 
@@ -76,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'dnd_7th_4_backend.urls'
