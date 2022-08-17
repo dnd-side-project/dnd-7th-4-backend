@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from main.models import *
+from account.models import *
 from .serializers import *
 
 from .api_test.api_6 import api_6
@@ -381,3 +382,32 @@ class SearchView(APIView):
             d[key] = {"하늘상태": sky, "기온": tem}
 
         return Response({"data": d}, status=status.HTTP_200_OK)
+
+# 사용자 지역 생성 및 삭제
+class RegionView(APIView):
+    permission_classes = (AllowAny,)
+
+    # 도착한 city, district를 사용자 지역으로 생성
+    def post(self, request):
+        # 받은 데이터
+        user_id = request.data["user_id"] # 사용자 id
+        city = request.data["city"]  # 시
+        district = request.data["district"]  # 군, 구
+
+        user = get_object_or_404(Profile, id=user_id)
+        region = get_object_or_404(Region, city=city, district=district)
+        print(f'데이터 찾기: --- {user}, {region}')
+
+        try:
+            # 이미 user와 region에 대한 데이터가 존재하는 경우
+            user_region = User_Region.objects.get(region=region, user=user)
+            return Response({"error": "user와 region에 대해 데이터가 이미 존재합니다."}, status=status.HTTP_409_CONFLICT)
+        except User_Region.DoesNotExist:
+            # user_region 데이터 생성
+            user_region = User_Region(user=user, region=region)
+            user_region.save()
+
+            data = {}
+            data['사용자 id'] = user_id
+            data['지역'] = RegionSeriallizer(region).data
+            return Response({"data": data}, status=status.HTTP_200_OK)
