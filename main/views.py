@@ -242,16 +242,16 @@ class MainView(APIView):
         ## API1 - 5까지의 오늘 데이터 넣기
         response_today = {"현재": d, "시간별 정보": d1, "세부 코멘트": today_comments_detail}
         ## API6 - 10까지의 오늘 데이터 넣기
-        response_today.update(self.today(region).items())
+        # response_today.update(self.today(region).items())
         ### 코멘트 넣기
-        response_today['세부 코멘트'].update(self.today_comment())
+        # response_today['세부 코멘트'].update(self.today_comment())
 
         ## API1 - 5까지의 내일 데이터 넣기
         response_tomorrow = {"내일현재": d3, "시간별 정보": d4, "세부 코멘트": tomorrow_comments_detail}
         ## API6 - 10까지의 내일 데이터 넣기
-        response_tomorrow.update(self.tomorrow(region).items())
+        # response_tomorrow.update(self.tomorrow(region).items())
         ### 코멘트 넣기
-        response_tomorrow['세부 코멘트'].update(self.tomorrow_comment())
+        # response_tomorrow['세부 코멘트'].update(self.tomorrow_comment())
 
         return Response({"data": {"오늘": response_today, "내일": response_tomorrow,
                                   "이번주": d5}}, status=status.HTTP_200_OK)
