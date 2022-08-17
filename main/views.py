@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
 
 from drf_yasg.utils import swagger_auto_schema
 
@@ -55,9 +56,9 @@ class MainView(APIView):
         base_time = current.strftime("%H%M")
         h = int(current.strftime("%H"))
 
-        city = request.data["city"]  # 시
-        district = request.data["district"]  # 군, 구
-        region = Region.objects.get(city=city, district=district)
+        city = request.GET.get('city', '')  # 시
+        district = request.GET.get('district', '')   # 군, 구
+        region = get_object_or_404(Region, city=city, district=district)
 
         # api1 ~ api5에 해당하는 객체들 가져오기
         api1 = Api1.objects.get(region=region)
