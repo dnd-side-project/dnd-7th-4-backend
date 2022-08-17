@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import environ
+import environ, datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # 앱
     'main',
     'comment',
+    'account',
 
     # Swagger
     'drf_yasg',
@@ -53,6 +54,9 @@ INSTALLED_APPS = [
     # celery
     'django_celery_beat',
     'django_celery_results',
+
+    # simple-jwt
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -113,6 +117,22 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# simple-jwt 설정들
+# simplejwt permission, authentication 세팅
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=14),
+    'SIGNING_KEY': env('DJANGO_SECRET_KEY'),
+    'ALGORITHM': 'HS256',
+}
 
 
 # Internationalization
