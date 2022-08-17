@@ -69,12 +69,11 @@ def update_api_9():
     print(f'api_9: get request: -----------------------------')
 
     now_hour = int(datetime.today().strftime("%H"))
-    api9_data = Api9.objects.all()
-    for api9 in api9_data:
-        region = api9.div_code
+    region_data = Region.objects.all()
+    for region in region_data:
         params = {
             "serviceKey": serviceKey,
-            "areaNo": region,
+            "areaNo": region.div_code,
             "dataType": "JSON",
             "time": "",
             "requestCode": "A41"
@@ -95,8 +94,15 @@ def update_api_9():
                 div_code = response.json()['response']['body']['items']['item'][0]['areaNo']
 
                 # API 9 데이터 저장
-                api9.temperature = data
-                api9.base_time = base_time
+                api9 = Api9.objects.filter(div_code = region.div_code)
+                if len(api9) :
+                    # API9 업데이트
+                    api9 = api9[0]
+                    api9.temperature = data
+                    api9.base_time = base_time
+                else:
+                    # API9 생성
+                    api_9 = Api9(temperature = data, base_time = base_time, div_code = region.div_code)
                 api9.save()
                 print(f'api_9: {div_code} {base_time} {data} -----------------------------')
             else:

@@ -5,6 +5,7 @@ from datetime import datetime
 
 from main.models import Api6, Region
 
+
 # api_6 데이터 저장을 위한 데이터 요청
 def call_api_6():
     url = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"
@@ -30,7 +31,7 @@ def call_api_6():
                 for item in response.json()['response']['body']['items']:
                     sido_name = item['sidoName']
                     station_name = item['stationName']
-                    pm_data = [item['pm10Grade1h'], item['pm25Grade1h'], item['pm10Grade24'], item['pm25Grade24']]
+                    pm_data = [item['pm10Grade1h'], item['pm25Grade1h'], item['pm10Grade'], item['pm25Grade']]
 
                     # 측정 불가 데이터 처리
                     for i in range(4):
@@ -84,7 +85,7 @@ def update_api_6():
                 for item in response.json()['response']['body']['items']:
                     sido_name = item['sidoName']
                     station_name = item['stationName']
-                    pm_data = [item['pm10Grade1h'], item['pm25Grade1h'], item['pm10Grade24'], item['pm25Grade24']]
+                    pm_data = [item['pm10Grade1h'], item['pm25Grade1h'], item['pm10Grade'], item['pm25Grade']]
                     
                     # 측정 불가 데이터 처리
                     for i in range(4):

@@ -1,5 +1,7 @@
 from django.db import models
 
+from account.models import *
+
 class Base(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)  # 최초 생성일
     updated_at = models.DateTimeField(auto_now=True)  # 최초 수정일
@@ -53,6 +55,12 @@ class Region(models.Model):
 
     def __str__(self):
         return self.div_code  # 행정 구역 코드값을 대표값으로
+
+# 유저-행정구역 중개모델
+class User_Region(Base):
+    #FK
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True, default='')
+    region = models.ForeignKey(Region, on_delete=models.CASCADE,null=True, default='')
 
 class Api1(Base):
     base_date = models.CharField(max_length=10)
