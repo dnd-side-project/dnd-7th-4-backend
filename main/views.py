@@ -355,7 +355,7 @@ class MainView(APIView):
 class SearchView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request):
+    def post(self, request):
         str = request.data["data"]
         words = str.split(" ")  # 공백을 기준으로 파싱하기
 
