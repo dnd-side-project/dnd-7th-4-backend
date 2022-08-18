@@ -11,8 +11,6 @@ from main.models import Api8, Region
 # api_8 데이터 저장을 위한 데이터 요청
 def call_api_8():
     url = "http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2"
-    #serviceKey = env('API_SERVICEKEY1')
-    serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     search_date = datetime.today()
 
     # 오전 6시 이전인 경우
@@ -24,7 +22,7 @@ def call_api_8():
     region_data = Region.objects.all()
     for region in region_data:
         params = {
-            "serviceKey": serviceKey,
+            "serviceKey": env('DECODING_KEY2'),
             "areaNo": region.div_code,
             "dataType": "JSON",
             "time": search_date.strftime("%Y%m%d")+"06"
@@ -55,9 +53,6 @@ def call_api_8():
 # 오전 6시마다 api_8 데이터 업데이트
 def update_api_8():
     url = "http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2"
-
-    #serviceKey = env('API_SERVICEKEY1')
-    serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     search_date = datetime.today()
 
     # 오전 6시 이전인 경우
@@ -69,7 +64,7 @@ def update_api_8():
     region_data = Region.objects.all()
     for region in region_data:
         params = {
-            "serviceKey": serviceKey,
+            "serviceKey": env('DECODING_KEY2'),
             "areaNo": region.div_code,
             "dataType": "JSON",
             "time": search_date.strftime("%Y%m%d")+"06"

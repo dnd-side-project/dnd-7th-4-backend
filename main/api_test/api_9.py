@@ -20,15 +20,13 @@ def api_9(request):
 # api_9 데이터 저장을 위한 데이터 요청
 def call_api_9():
     url = "http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2"
-    #serviceKey = env('API_SERVICEKEY1')
-    serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     search_date = datetime.today().strftime("%Y%m%d%H")
     print(f'api_9: get request: -----------------------------')
 
     region_data = Region.objects.all()
     for region in region_data:
         params = {
-            "serviceKey": serviceKey,
+            "serviceKey": env('DECODING_KEY2'),
             "areaNo": region.div_code,
             "dataType": "JSON",
             "time": "",
@@ -63,8 +61,6 @@ def call_api_9():
 # 오전 6시마다 api_9 데이터 업데이트
 def update_api_9():
     url = "http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2"
-    #serviceKey = env('API_SERVICEKEY1')
-    serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     search_date = datetime.today().strftime("%Y%m%d%H")
     print(f'api_9: get request: -----------------------------')
 
@@ -72,7 +68,7 @@ def update_api_9():
     region_data = Region.objects.all()
     for region in region_data:
         params = {
-            "serviceKey": serviceKey,
+            "serviceKey": env('DECODING_KEY2'),
             "areaNo": region.div_code,
             "dataType": "JSON",
             "time": "",

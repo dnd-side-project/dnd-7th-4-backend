@@ -24,14 +24,6 @@ from .api_test.api_10 import api_10
 from .comment_callback_directory.comments import *
 
 
-# Swagger test용 - 이후 삭제
-class TestView(APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request):
-        return Response("Swagger 연동 테스트")
-
-
 pty = {'0': '없음', '1': '비', '2': '비/눈', '5': '빗방울',  # 강수형태코드
        '6': '빗방울눈날림', '7': '눈날림'}
 
@@ -391,12 +383,11 @@ class RegionView(APIView):
 
     # 도착한 city, district를 사용자 지역으로 생성
     def post(self, request):
+        print('/region : POST -----------------------------')
         # 받은 데이터
-        user_id = request.data["user_id"] # 사용자 id
-        city = request.data["city"]  # 시
+        city = request.data["city"]  # 시 
         district = request.data["district"]  # 군, 구
-
-        user = get_object_or_404(Profile, id=user_id)
+        user = request.user.profile
         region = get_object_or_404(Region, city=city, district=district)
 
         try:
@@ -404,23 +395,24 @@ class RegionView(APIView):
             user_region = User_Region.objects.get(region=region, user=user)
             return Response({"error": "user와 region에 대해 데이터가 이미 존재합니다."}, status=status.HTTP_409_CONFLICT)
         except User_Region.DoesNotExist:
+
             # user_region 데이터 생성
             user_region = User_Region(user=user, region=region)
             user_region.save()
 
             data = {}
-            data['사용자 id'] = user_id
+            data['사용자id'] = user.id
             data['지역'] = RegionSeriallizer(region).data
             return Response({"data": data}, status=status.HTTP_200_OK)
 
     # 도착한 city, district를 사용자 지역 목록에서 삭제
     def delete(self, request):
+        print('/region : DELETE -----------------------------')
         # 받은 데이터
-        user_id = request.data["user_id"] # 사용자 id
-        city = request.data["city"]  # 시
-        district = request.data["district"]  # 군, 구
-
-        user = get_object_or_404(Profile, id=user_id)
+        city = request.GET.get('city', '')  # 시
+        district = request.GET.get('district', '')   # 군, 구
+        
+        user = request.user.profile
         region = get_object_or_404(Region, city=city, district=district)
 
         try:

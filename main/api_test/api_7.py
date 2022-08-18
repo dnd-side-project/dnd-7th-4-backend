@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import xmltodict
 import json
 
+from dnd_7th_4_backend.settings.base import env
 from main.models import Api7, Region
 
 def api_7(request):
@@ -21,7 +22,6 @@ def api_7(request):
 # api_7 데이터 저장을 위한 데이터 요청
 def call_api_7():
     url = "http://apis.data.go.kr/B090041/openapi/service/RiseSetInfoService/getLCRiseSetInfo"
-    serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     now = datetime.today()
     tomorrow = (datetime.today() + timedelta(days=1))
     print(f'api_7: get request: -----------------------------')
@@ -31,7 +31,7 @@ def call_api_7():
         try:
             # 오늘에 대한 데이터 보내기
             today_params = {
-                "serviceKey": serviceKey,
+                "serviceKey": env('DECODING_KEY2'),
                 "locdate": now.strftime("%Y%m%d"),
                 "longitude": region.longitude,
                 "latitude": region.latitude,
@@ -41,7 +41,7 @@ def call_api_7():
 
             # 내일에 대한 데이터 보내기
             tomorrow_params = {
-                "serviceKey": serviceKey,
+                "serviceKey": env('DECODING_KEY2'),
                 "locdate": tomorrow.strftime("%Y%m%d"),
                 "longitude": region.longitude,
                 "latitude": region.latitude,
@@ -82,7 +82,6 @@ def call_api_7():
 # 1시간 주기로 api_7 데이터 업데이트
 def update_api_7():
     url = "http://apis.data.go.kr/B090041/openapi/service/RiseSetInfoService/getLCRiseSetInfo"
-    serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     print(f'api_7: get request: -----------------------------')
     now = datetime.today()
     tomorrow = (datetime.today() + timedelta(days=1))
@@ -93,7 +92,7 @@ def update_api_7():
         try:
             # 오늘에 대한 데이터 보내기
             today_params = {
-                "serviceKey": serviceKey,
+                "serviceKey": env('DECODING_KEY2'),
                 "locdate": now.strftime("%Y%m%d"),
                 "longitude": region.longitude,
                 "latitude": region.latitude,
@@ -103,7 +102,7 @@ def update_api_7():
 
             # 내일에 대한 데이터 보내기
             tomorrow_params = {
-                "serviceKey": serviceKey,
+                "serviceKey": env('DECODING_KEY2'),
                 "locdate": tomorrow.strftime("%Y%m%d"),
                 "longitude": region.longitude,
                 "latitude": region.latitude,
