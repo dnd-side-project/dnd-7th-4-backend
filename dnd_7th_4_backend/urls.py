@@ -33,7 +33,7 @@ router = routers.DefaultRouter()
 schema_view = get_schema_view(
     openapi.Info(
         title="Statchung API",
-        default_version='api',
+        default_version='',
         description="Test description",
         terms_of_service="https://www.google.com/policies/terms/",
     ),
