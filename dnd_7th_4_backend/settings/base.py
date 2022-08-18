@@ -101,8 +101,8 @@ TEMPLATES = [
 
 
 # Celery
-#CELERY_BROKER_URL = env('CELERY_BROKER_URL')  # 배포용
-CELERY_BROKER_URL = 'amqp://localhost'  # 로컬 테스트용
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')  # 배포용
+# CELERY_BROKER_URL = 'amqp://localhost'  # 로컬 테스트용
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
