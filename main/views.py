@@ -24,14 +24,6 @@ from .api_test.api_10 import api_10
 from .comment_callback_directory.comments import *
 
 
-# kakako channel 등록을 위한 url
-def test_main(requests):
-    context = {
-        'data': Region.objects.all(),
-    }
-    return render(requests, 'test/index.html', context)
-
-
 pty = {'0': '없음', '1': '비', '2': '비/눈', '5': '빗방울',  # 강수형태코드
        '6': '빗방울눈날림', '7': '눈날림'}
 
