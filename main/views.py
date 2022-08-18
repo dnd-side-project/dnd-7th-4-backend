@@ -384,11 +384,10 @@ class RegionView(APIView):
     # 도착한 city, district를 사용자 지역으로 생성
     def post(self, request):
         # 받은 데이터
-        django_token #NOTE
-        city = request.data["city"]  # 시  #NOTE
+        city = request.data["city"]  # 시 
         district = request.data["district"]  # 군, 구
 
-        user = get_object_or_404(Profile, id=user_id)
+        user = get_object_or_404(Profile, nickname=request.user)
         region = get_object_or_404(Region, city=city, district=district)
 
         try:
@@ -396,9 +395,6 @@ class RegionView(APIView):
             user_region = User_Region.objects.get(region=region, user=user)
             return Response({"error": "user와 region에 대해 데이터가 이미 존재합니다."}, status=status.HTTP_409_CONFLICT)
         except User_Region.DoesNotExist:
-            # header 생성
-            header = {}
-            header['Authorization'] = 'django token'
 
             # user_region 데이터 생성
             user_region = User_Region(user=user, region=region)
@@ -412,11 +408,10 @@ class RegionView(APIView):
     # 도착한 city, district를 사용자 지역 목록에서 삭제
     def delete(self, request):
         # 받은 데이터
-        django_token  #NOTE
-        city = request.GET.get('city', '')  # 시  #NOTE
+        city = request.GET.get('city', '')  # 시
         district = request.GET.get('district', '')   # 군, 구
 
-        user = get_object_or_404(Profile, id=user_id)
+        user = get_object_or_404(Profile, nickname=request.user)
         region = get_object_or_404(Region, city=city, district=district)
 
         try:
