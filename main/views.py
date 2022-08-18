@@ -383,11 +383,11 @@ class RegionView(APIView):
 
     # 도착한 city, district를 사용자 지역으로 생성
     def post(self, request):
+        print('/region : POST -----------------------------')
         # 받은 데이터
         city = request.data["city"]  # 시 
         district = request.data["district"]  # 군, 구
-
-        user = get_object_or_404(Profile, nickname=request.user)
+        user = request.user.profile
         region = get_object_or_404(Region, city=city, district=district)
 
         try:
@@ -401,17 +401,18 @@ class RegionView(APIView):
             user_region.save()
 
             data = {}
-            data['사용자 id'] = user_id
+            data['사용자id'] = user.id
             data['지역'] = RegionSeriallizer(region).data
             return Response({"data": data}, status=status.HTTP_200_OK)
 
     # 도착한 city, district를 사용자 지역 목록에서 삭제
     def delete(self, request):
+        print('/region : DELETE -----------------------------')
         # 받은 데이터
         city = request.GET.get('city', '')  # 시
         district = request.GET.get('district', '')   # 군, 구
-
-        user = get_object_or_404(Profile, nickname=request.user)
+        
+        user = request.user.profile
         region = get_object_or_404(Region, city=city, district=district)
 
         try:
