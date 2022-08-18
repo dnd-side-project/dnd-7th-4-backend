@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('main', views.MainView.as_view()),  # 메인 페이지
-    path('api/test_swagger/', views.TestView.as_view(), name='test_swagger'),
+    path('single_line_of_weather', views.test_main),
     path('api/api6/', views.api_6),
     path('api/api7/', views.api_7),
     path('api/api8/', views.api_8),

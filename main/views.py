@@ -24,12 +24,12 @@ from .api_test.api_10 import api_10
 from .comment_callback_directory.comments import *
 
 
-# Swagger test용 - 이후 삭제
-class TestView(APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request):
-        return Response("Swagger 연동 테스트")
+# kakako channel 등록을 위한 url
+def test_main(requests):
+    context = {
+        'data': Region.objects.all(),
+    }
+    return render(requests, 'test/index.html', context)
 
 
 pty = {'0': '없음', '1': '비', '2': '비/눈', '5': '빗방울',  # 강수형태코드
