@@ -107,6 +107,11 @@ def login(request):
         username = request.data['username']
         password = request.data['password']
         user = User.objects.get(username=username)
+
+        if not Profile.objects.filter(user=user).exists():
+            profile = Profile.objects.create(user=user, nickname=user.username, kakao_id=user.id)
+            profile.save()
+
         if check_password(password, user.password):
             user = authenticate(username=username, password=password)
             data = {'username': username, 'django_token': get_tokens_for_user(user)}
