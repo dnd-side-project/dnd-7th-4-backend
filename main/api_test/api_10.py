@@ -9,14 +9,12 @@ from main.models import Api9, Region
 
 def api_10():
     url = "http://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList"
-    #serviceKey = env('API_SERVICEKEY1')
-    serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     search_date = (datetime.today() - timedelta(days=1)).strftime("%Y%m%d")
     hour = datetime.today().strftime("%H")
     print(f'api_10: get request: -----------------------------')
     print(search_date, hour)
     params = {
-        "serviceKey": serviceKey,
+        "serviceKey": env('DECODING_KEY2'),
         "numOfRows" : "1",
         "dataType": "JSON",
         "dataCd": "ASOS",

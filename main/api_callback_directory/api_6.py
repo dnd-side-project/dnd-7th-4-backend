@@ -3,6 +3,7 @@ from django.http import HttpResponse
 import requests
 from datetime import datetime
 
+from dnd_7th_4_backend.settings.base import env
 from main.models import Api6, Region
 
 
@@ -10,12 +11,11 @@ from main.models import Api6, Region
 def call_api_6():
     url = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"
     search_date = datetime.today().strftime("YYYY-mm-dd")
-    serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     local_list = ['서울', '부산', '대구', '인천', '광주', '대전', '울산', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주', '세종']
     pm_data = {} # {(sideName, stationName): (pm10Grade1h, pm25Grade1h)}
     for local in local_list:
         params = {
-            "serviceKey": serviceKey,
+            "serviceKey": env('DECODING_KEY2'),
             "returnType": "json",
             "sidoName": local,
             "numOfRows": 300,
@@ -64,12 +64,11 @@ def call_api_6():
 def update_api_6():
     url = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"
     search_date = datetime.today().strftime("YYYY-mm-dd")
-    serviceKey = 'kRLAj2LoKpX5giQmDxfZbpmHWY8G++w0AGVsCS++Q6g6p+4ipUwMGOsXP1sduPrqOEPWjZjxqGxJjxTXzBQAsA=='
     local_list = ['서울', '부산', '대구', '인천', '광주', '대전', '울산', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주', '세종']
     pm_data = {} # {(sideName, stationName): (pm10Grade1h, pm25Grade1h)}
     for local in local_list:
         params = {
-            "serviceKey": serviceKey,
+            "serviceKey": env('DECODING_KEY2'),
             "returnType": "json",
             "sidoName": local,
             "numOfRows": 300,
@@ -81,6 +80,7 @@ def update_api_6():
             print(f'api_6: get request: {local}-----------------------------')
 
             # 데이터 받기가 성공일 경우
+            print(response.text)
             if response.status_code == 200:
                 for item in response.json()['response']['body']['items']:
                     sido_name = item['sidoName']
