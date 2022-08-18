@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 import requests
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -7,6 +8,8 @@ from .models import Profile
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from dnd_7th_4_backend.settings.base import env
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import authenticate, get_user_model
 
 # Create your views here.
 
@@ -88,9 +91,25 @@ def back(request):
 
 # 연결 끊기 -> 로컬 테스트용
 def logout(request):
-    kakao_access_token = ""  # kakao access token
+    kakao_access_token = "EcW8_CTN85mbXlR38Nru2qujG0RSfLniZa9-AP5LCisMpwAAAYKu3xw5"  # kakao access token
     data = requests.post("https://kapi.kakao.com/v1/user/unlink",
                          headers={"Authorization": f"Bearer {kakao_access_token}"},
                          )
     print(data.json())
     return Response({"data": "연결 끊기 완료"})
+
+
+# 백엔드 테스트용
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login(request):
+    try:
+        username = request.data['username']
+        password = request.data['password']
+        user = User.objects.get(username=username)
+        if check_password(password, user.password):
+            user = authenticate(username=username, password=password)
+            data = {'username': username, 'django_token': get_tokens_for_user(user)}
+            return Response(data, status=status.HTTP_200_OK)
+    except:
+        return Response({"message": "로그인 오류"}, status=status.HTTP_400_BAD_REQUEST)
