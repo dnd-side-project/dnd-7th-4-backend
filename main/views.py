@@ -216,44 +216,44 @@ class MainView(APIView):
         SKY2_pm = (collections.Counter(sky2)).most_common(1)[0][0]  # 하늘상태
         POP2_pm = max(pop2)  # 강수확률
 
-        d5 = {"0": {"오전 하늘상태": SKY0_am, "오후 하늘상태": SKY0_pm,
-                    "오전 강수확률": POP0_am, "오후 강수확률": POP0_pm,
+        d5 = {"0": {"오전하늘상태": SKY0_am, "오후하늘상태": SKY0_pm,
+                    "오전강수확률": POP0_am, "오후강수확률": POP0_pm,
                     "최저기온": api3.info_day0_MIN, "최고기온": api3.info_day0_MAX},
-              "1": {"오전 하늘상태": SKY1_am, "오후 하늘상태": SKY1_pm,
-                    "오전 강수확률": POP1_am, "오후 강수확률": POP1_pm,
+              "1": {"오전하늘상태": SKY1_am, "오후하늘상태": SKY1_pm,
+                    "오전강수확률": POP1_am, "오후강수확률": POP1_pm,
                     "최저기온": api3.info_day1_MIN, "최고기온": api3.info_day1_MAX},
-              "2": {"오전 하늘상태": SKY2_am, "오후 하늘상태": SKY2_pm,
-                    "오전 강수확률": POP2_am, "오후 강수확률": POP2_pm,
+              "2": {"오전하늘상태": SKY2_am, "오후하늘상태": SKY2_pm,
+                    "오전강수확률": POP2_am, "오후강수확률": POP2_pm,
                     "최저기온": api3.info_day2_MIN, "최고기온": api3.info_day2_MAX},
 
-              "3": {"오전 하늘상태": api4.wf3Am, "오후 하늘상태": api4.wf3Pm,
-                    "오전 강수확률": api4.rnSt3Am, "오후 강수확률": api4.rnSt3Pm,
+              "3": {"오전하늘상태": api4.wf3Am, "오후하늘상태": api4.wf3Pm,
+                    "오전강수확률": api4.rnSt3Am, "오후강수확률": api4.rnSt3Pm,
                     "최저기온": api5.taMin3, "최고기온": api5.taMax3},
-              "4": {"오전 하늘상태": api4.wf4Am, "오후 하늘상태": api4.wf4Pm,
-                    "오전 강수확률": api4.rnSt4Am, "오후 강수확률": api4.rnSt4Pm,
+              "4": {"오전하늘상태": api4.wf4Am, "오후하늘상태": api4.wf4Pm,
+                    "오전강수확률": api4.rnSt4Am, "오후강수확률": api4.rnSt4Pm,
                     "최저기온": api5.taMin4, "최고기온": api5.taMax4},
-              "5": {"오전 하늘상태": api4.wf5Am, "오후 하늘상태": api4.wf5Pm,
-                    "오전 강수확률": api4.rnSt5Am, "오후 강수확률": api4.rnSt5Pm,
+              "5": {"오전하늘상태": api4.wf5Am, "오후하늘상태": api4.wf5Pm,
+                    "오전강수확률": api4.rnSt5Am, "오후강수확률": api4.rnSt5Pm,
                     "최저기온": api5.taMin5, "최고기온": api5.taMax5},
-              "6": {"오전 하늘상태": api4.wf6Am, "오후 하늘상태": api4.wf6Pm,
-                    "오전 강수확률": api4.rnSt6Am, "오후 강수확률": api4.rnSt6Pm,
+              "6": {"오전하늘상태": api4.wf6Am, "오후하늘상태": api4.wf6Pm,
+                    "오전강수확률": api4.rnSt6Am, "오후강수확률": api4.rnSt6Pm,
                     "최저기온": api5.taMin6, "최고기온": api5.taMax6}
               }
 
         # 데이터 넣기
         ## API1 - 5까지의 오늘 데이터 넣기
-        response_today = {"현재": d, "시간별 정보": d1, "세부 코멘트": today_comments_detail}
+        response_today = {"현재": d, "시간별정보": d1, "세부코멘트": today_comments_detail}
         ## API6 - 10까지의 오늘 데이터 넣기
         response_today.update(self.today(region).items())
         ### 코멘트 넣기
-        response_today['세부 코멘트'].update(self.today_comment())
+        response_today['세부코멘트'].update(self.today_comment())
 
         ## API1 - 5까지의 내일 데이터 넣기
-        response_tomorrow = {"내일현재": d3, "시간별 정보": d4, "세부 코멘트": tomorrow_comments_detail}
+        response_tomorrow = {"내일현재": d3, "시간별정보": d4, "세부코멘트": tomorrow_comments_detail}
         ## API6 - 10까지의 내일 데이터 넣기
         response_tomorrow.update(self.tomorrow(region).items())
         ### 코멘트 넣기
-        response_tomorrow['세부 코멘트'].update(self.tomorrow_comment())
+        response_tomorrow['세부코멘트'].update(self.tomorrow_comment())
 
         return Response({"data": {"오늘": response_today, "내일": response_tomorrow,
                                   "이번주": d5}}, status=status.HTTP_200_OK)
@@ -355,7 +355,7 @@ class MainView(APIView):
 class SearchView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request):
+    def post(self, request):
         str = request.data["data"]
         words = str.split(" ")  # 공백을 기준으로 파싱하기
 
@@ -383,6 +383,7 @@ class SearchView(APIView):
             d[key] = {"하늘상태": sky, "기온": tem}
 
         return Response({"data": d}, status=status.HTTP_200_OK)
+
 
 # 사용자 지역 생성 및 삭제
 class RegionView(APIView):
