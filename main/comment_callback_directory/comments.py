@@ -142,7 +142,7 @@ def precipication(self):  # 강수
         stand = 1
 
     else:
-        prec = int(prec.replace("mm", ""))  # 단위 없애기
+        prec = float(prec.replace("mm", ""))  # 단위 없애기
         if prec < 3:
             stand = 2
         elif 3 <= prec < 15:
