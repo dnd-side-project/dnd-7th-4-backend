@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from main.models import Region, Base
 
 
 # 유저 모델
@@ -13,3 +14,12 @@ class Profile(models.Model):
     def __str__(self):
         return self.nickname  # 닉네임 값을 대표값으로 설정
 
+
+# 유저-행정구역 중개모델
+class User_Region(Base):
+    #FK
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, default='')
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True, default='')
+
+    def __str__(self):
+        return f'{self.user.nickname} - {self.region.city} {self.region.district}'

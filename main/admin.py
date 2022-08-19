@@ -9,9 +9,7 @@ class RegionAdmin(admin.ModelAdmin):
     list_display = ['id', 'country', 'div_code', 'city', 'district', 'api6_station', 'api6_id']
     ordering = ('id',)
 
-@admin.register(User_Region)
-class Api1Admin(admin.ModelAdmin):
-    list_display = [field.name for field in User_Region._meta.get_fields()]
+
 
 @admin.register(Api1)
 class Api1Admin(admin.ModelAdmin):
