@@ -282,7 +282,7 @@ class MainView(APIView):
         # api10
         today_tem = region.api1.T1H
         yesterdat_tem = api_10()
-        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+        data['전날기온차이'] = round((float(today_tem) - float(yesterdat_tem)), 2)
         return data
 
     def tomorrow(self, region):
@@ -322,7 +322,7 @@ class MainView(APIView):
         today_tem = today_data.split('/')[0]
 
         yesterdat_tem = region.api1.T1H
-        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+        data['전날기온차이'] = round((float(today_tem) - float(yesterdat_tem)), 2)
         return data
 
     def today_comment(self):
