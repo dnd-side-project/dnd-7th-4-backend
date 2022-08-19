@@ -241,7 +241,7 @@ class MainView(APIView):
         response_today['세부코멘트'].update(self.today_comment())
 
         ## API1 - 5까지의 내일 데이터 넣기
-        response_tomorrow = {"내일현재": d3, "시간별정보": d4, "세부코멘트": tomorrow_comments_detail}
+        response_tomorrow = {"현재": d3, "시간별정보": d4, "세부코멘트": tomorrow_comments_detail}
         ## API6 - 10까지의 내일 데이터 넣기
         response_tomorrow.update(self.tomorrow(region).items())
         ### 코멘트 넣기
@@ -282,7 +282,7 @@ class MainView(APIView):
         # api10
         today_tem = region.api1.T1H
         yesterdat_tem = api_10()
-        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+        data['전날기온차이'] = round((float(today_tem) - float(yesterdat_tem)), 2)
         return data
 
     def tomorrow(self, region):
@@ -322,7 +322,7 @@ class MainView(APIView):
         today_tem = today_data.split('/')[0]
 
         yesterdat_tem = region.api1.T1H
-        data['전날기온차이'] = str(float(today_tem) - float(yesterdat_tem))[:4]
+        data['전날기온차이'] = round((float(today_tem) - float(yesterdat_tem)), 2)
         return data
 
     def today_comment(self):

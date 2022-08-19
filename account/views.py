@@ -4,14 +4,16 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from .models import Profile
+from rest_framework.views import APIView
+
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from dnd_7th_4_backend.settings.base import env
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import authenticate, get_user_model
 
-# Create your views here.
+from .models import Profile
+from .serializers import *
 
 # JWT 발급 함수
 def get_tokens_for_user(user):
@@ -117,3 +119,22 @@ def login(request):
             return Response(data, status=status.HTTP_200_OK)
     except:
         return Response({"message": "로그인 오류"}, status=status.HTTP_400_BAD_REQUEST)
+
+# 카카오톡 알림 설정
+class KakaoAlarmView(APIView):
+    permission_classes = (AllowAny,)
+
+    # 만약 사용자의 alarm이 on -> off로 off 였으면 on으로 변경
+    def get(self, request):
+        print('/accout/kakao_alarm : GET -----------------------------')
+        # 받은 데이터
+        user = request.user.profile
+        
+        # 카카오톡 알림 설정하기
+        if user.kakao_alarm:
+            user.kakao_alarm = False
+        else:
+            user.kakao_alarm = True
+        user.save()
+
+        return Response({"data": ProfileKakaoAlarmSerializers(user).data}, status=status.HTTP_200_OK)
