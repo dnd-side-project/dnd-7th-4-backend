@@ -70,8 +70,6 @@ def today_comment(region, windchill):
 
     return {'코멘트': today_comment, '캡션': caption}
 
-
-# today() 함수에서 복붙한 후, 이름만 변경해놓았습니다!!
 def tomorrow_comment(region, windchill):
     h = int(current.strftime("%H"))
     api2 = Api2.objects.get(region=region)
@@ -86,38 +84,40 @@ def tomorrow_comment(region, windchill):
     p3_2 = windchill  # 체감온도
     p4 = api8.tomorrow
 
+    tomorrow_comment = ''
+    caption = ''
     if p1 >= 40:  # 1차 기준
         queryset = list(Today.objects.filter(first_standard=1))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].comment
+        tomorrow_comment = comm[0].comment
         caption = '1시간 내 강수예보 40% 이상'
 
     elif 0 < p1 < 40:  # 2차 기준
         queryset = list(Today.objects.filter(first_standard=2))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].comment
+        tomorrow_comment = comm[0].comment
         caption = '1시간 내 강수예보 40% 미만'
     
     elif p3_2 > p3_1: # 3차 기준
         queryset = list(Today.objects.filter(first_standard=3))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].comment
+        tomorrow_comment = comm[0].comment
         caption = '체감온도 높음'
     
     elif p4 >= 6: # 4차 기준
         queryset = list(Today.objects.filter(first_standard=4))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].comment
+        tomorrow_comment = comm[0].comment
         caption = '자외선지수 높음'
 
     else:  # 5차 기준 (그 외) -> 내일 현재 하늘상태로 판별
         sky = (((api3.serializable_value(f'info_{24+h}')).replace(" ", "")).split('/'))[1]  # 내일 현재 하늘상태
         queryset = list(Today.objects.filter(first_standard=5).filter(second_standard=sky))
         comm = random.sample(queryset, 1)
-        today_comment = comm[0].comment
+        tomorrow_comment = comm[0].comment
         caption = sky
 
-    return {'코멘트': today_comment, '캡션': caption}
+    return {'코멘트': tomorrow_comment, '캡션': caption}
 
 
 ## 세부 코멘트 부분 -> 딕셔너리 형태로 반환
