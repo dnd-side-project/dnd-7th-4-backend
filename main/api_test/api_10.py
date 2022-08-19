@@ -14,7 +14,7 @@ def api_10():
     print(f'api_10: get request: -----------------------------')
     print(search_date, hour)
     params = {
-        "serviceKey": env('DECODING_KEY2'),
+        "serviceKey": `lBsQJ7AKQ12dYsYOFKnToj90mX5JOb7s5a5gPvjf0ZiEpZIda9Umu3+VVW7YgKNCT1F4ByCX/r3MGSH/4VJQBg==`,
         "numOfRows" : "1",
         "dataType": "JSON",
         "dataCd": "ASOS",
