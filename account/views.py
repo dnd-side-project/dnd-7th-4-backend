@@ -69,7 +69,6 @@ def back(request):
         },
     )
     kakao_api_response = kakao_api_response.json()
-
     kakao_id = kakao_api_response["id"]
     nickname = kakao_api_response["properties"]["nickname"]
     profile_image = kakao_api_response["properties"]["profile_image"]
