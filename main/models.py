@@ -13,11 +13,11 @@ class Api6(models.Model):
     sidoName = models.CharField(max_length=2) # 시도명
     stationName = models.CharField(max_length=10) # 측정소명
 
-    pm10Grade1h = models.IntegerField(null=True, default=0) # 미세먼지 등급
-    pm25Grade1h = models.IntegerField(null=True, default=0) # 고농도 미세먼지 등급
+    pm10Grade1h = models.CharField(null=True, default=0, max_length=10) # 미세먼지 등급
+    pm25Grade1h = models.CharField(null=True, default=0, max_length=10) # 고농도 미세먼지 등급
     
-    pm10Value24 = models.IntegerField(null=True, default=0) # 미세먼지 24시간 예측 등급
-    pm25Value24 = models.IntegerField(null=True, default=0) # 고농도 24시간 예측 미세먼지 등급
+    pm10Value24 = models.CharField(null=True, default=0, max_length=10) # 미세먼지 24시간 예측 등급
+    pm25Value24 = models.CharField(null=True, default=0, max_length=10) # 고농도 24시간 예측 미세먼지 등급
 
     def __str__(self):
         return str(self.id)

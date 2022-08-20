@@ -46,8 +46,14 @@ def call_api_6():
 
                     # 측정 불가 데이터 처리
                     for i in range(4):
-                        if pm_data[i] == '-':
-                            pm_data[i] = 0
+                        if pm_data[i] == 1:
+                            pm_data[i] = '좋음'
+                        elif pm_data[i] == 2:
+                            pm_data[i] = '보통'
+                        elif pm_data[i] == 3:
+                            pm_data[i] = '나쁨'
+                        else:
+                            pm_data[i] = '매우 나쁨'
 
                     # 관련 지역에 대해서 Region 데이터가 존재하는지 확인
                     region_data = Region.objects.filter(api6_station = station_name)
@@ -100,8 +106,14 @@ def update_api_6():
                     
                     # 측정 불가 데이터 처리
                     for i in range(4):
-                        if pm_data[i] == '-':
-                            pm_data[i] = 0
+                        if pm_data[i] == 1:
+                            pm_data[i] = '좋음'
+                        elif pm_data[i] == 2:
+                            pm_data[i] = '보통'
+                        elif pm_data[i] == 3:
+                            pm_data[i] = '나쁨'
+                        else:
+                            pm_data[i] = '매우 나쁨'
 
                     # api 데이터 찾아서 업데이트
                     api6_data = Api6.objects.filter(stationName = station_name)
