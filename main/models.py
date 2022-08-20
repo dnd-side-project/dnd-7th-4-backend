@@ -56,7 +56,6 @@ class Region(models.Model):
         return self.div_code  # 행정 구역 코드값을 대표값으로
 
 
-
 class Api1(Base):
     base_date = models.CharField(max_length=10)
     base_time = models.CharField(max_length=10)

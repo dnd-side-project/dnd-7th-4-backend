@@ -4,8 +4,8 @@ from .models import *
 
 # API6 오늘 데이터
 class MainApi6TodaySerializer(serializers.ModelSerializer):
-    미세먼지 = serializers.IntegerField(source="pm10Grade1h")
-    초미세먼지 = serializers.IntegerField(source="pm25Grade1h")
+    미세먼지 = serializers.CharField(source="pm10Grade1h")
+    초미세먼지 = serializers.CharField(source="pm25Grade1h")
 
     class Meta:
         model = Api6
@@ -13,8 +13,8 @@ class MainApi6TodaySerializer(serializers.ModelSerializer):
 
 # API6 내일 데이터
 class MainApi6TomorrowSerializer(serializers.ModelSerializer):
-    미세먼지 = serializers.IntegerField(source="pm10Value24")
-    초미세먼지 = serializers.IntegerField(source="pm10Value24")
+    미세먼지 = serializers.CharField(source="pm10Value24")
+    초미세먼지 = serializers.CharField(source="pm10Value24")
 
     class Meta:
         model = Api6
@@ -22,8 +22,8 @@ class MainApi6TomorrowSerializer(serializers.ModelSerializer):
 
 # API7 오늘 데이터
 class MainApi7TodaySerializer(serializers.ModelSerializer):
-    일출 = serializers.IntegerField(source="today_sunrise")
-    일몰 = serializers.IntegerField(source="today_sunset")
+    일출 = serializers.CharField(source="today_sunrise")
+    일몰 = serializers.CharField(source="today_sunset")
 
     class Meta:
         model = Api7
@@ -31,8 +31,8 @@ class MainApi7TodaySerializer(serializers.ModelSerializer):
 
 # API7 내일 데이터
 class MainApi7TomorrowSerializer(serializers.ModelSerializer):
-    일출 = serializers.IntegerField(source="tomorrow_sunrise")
-    일몰 = serializers.IntegerField(source="tomorrow_sunset")
+    일출 = serializers.CharField(source="tomorrow_sunrise")
+    일몰 = serializers.CharField(source="tomorrow_sunset")
 
     class Meta:
         model = Api7
