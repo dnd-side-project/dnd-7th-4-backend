@@ -350,31 +350,52 @@ class SearchView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
+        imgs = {
+            "비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
+            "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%A7%91%EC%9D%8C.png",
+            "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EA%B5%AC%EB%A6%84%EB%A7%8E%EC%9D%8C.png",
+            "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%ED%9D%90%EB%A6%BC.png"
+        }
+
         str = request.data["data"]
         words = str.split(" ")  # 공백을 기준으로 파싱하기
 
         if len(words) == 1:  # city 또는 district 만 입력받은 경우
-            objs = Region.objects.filter(city__contains=words[0]).values()  # 검색한 것이 -> city 인 경우
+            regions = Region.objects.filter(city__contains=words[0]).values()  # 검색한 것이 -> city 인 경우
 
-            if len(objs) == 0:
-                objs = Region.objects.filter(district__contains=words[0]).values()  # 검색한 것이 -> district 인 경우
+            if len(regions) == 0:
+                regions = Region.objects.filter(district__contains=words[0]).values()  # 검색한 것이 -> district 인 경우
 
         elif len(words) > 1:  # city, district 모두 입력받은 경우 (공백 기준 문자열 2개일 경우)
-            objs = Region.objects.filter(city__contains=words[0]).filter(district__contains=words[1]).values()
+            regions = Region.objects.filter(city__contains=words[0]).filter(district__contains=words[1]).values()
         else:
             return Response({"data": ""}, status=status.HTTP_200_OK)
 
         # 해당 objs의 기온과 하늘상태 불러오기 // 기온 -> api2 이용
         d = {}
         h = int(datetime.now().strftime("%H"))
-        for obj in objs:  # obj는 Region 객체
-            print(obj)
-            key = obj["city"] + " " + obj["district"]
+        for region in regions:  # obj는 Region 객체
+            print(region)
+            key = region["city"] + " " + region["district"]
             print(key)
-            api2 = Api2.objects.get(region=obj["id"])
-            sky = (((api2.serializable_value(f'info_{h}')).replace(" ", "")).split('/'))[1]  # 현재 하늘상태
-            tem = (((api2.serializable_value(f'info_{h}')).replace(" ", "")).split('/'))[0]  # 현재 기온
-            d[key] = {"하늘상태": sky, "기온": tem}
+            api1 = Api1.objects.get(region=region["id"])
+            tem = api1.T1H  # 현재 기온
+            pty = api1.PTY  # 강수 형태 (코드값으로 받음)
+
+            # 강수 형태 -> 없음 (맑음, 구름많음, 흐림) // 있음 -> 비 기준으로 1차 판별
+
+            # 강수 형태 "없음" -> "하늘상태"로 판별
+            if pty == "0":
+                api2 = Api2.objects.get(region=region["id"])
+                field = f'info_{h}'
+                sky = (((api2.serializable_value(field)).replace(" ", "")).split('/'))[1]  # 하늘상태
+                img_url = imgs[sky]
+
+            # 강수 형태 있음 -> "비"로 판단
+            else:
+                img_url = imgs["비"]
+
+            d[key] = {"이미지url": img_url, "기온": tem}
 
         return Response({"data": d}, status=status.HTTP_200_OK)
 
