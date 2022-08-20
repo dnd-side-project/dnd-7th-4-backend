@@ -176,14 +176,14 @@ def wind(self):  # 바람
 
 def finedust(fd): # 미세먼지
     standard = 0
-    if fd == 1:
+    if fd == '좋음':
         standard = 1
-    elif fd == 2:
+    elif fd == '보통':
         standard = 2
-    elif fd == 3:
+    elif fd == '나쁨':
         standard = 3
     else:
-        standard = 4
+        standard = 3
     queryset = list(Finedust.objects.filter(standard=standard))
     comm = random.sample(queryset, 1)
     data = {"코멘트": comm[0].comment, "이미지url": comm[0].imageUrl}
