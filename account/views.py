@@ -11,10 +11,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from dnd_7th_4_backend.settings.base import env
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import authenticate, get_user_model
+from datetime import datetime
 
 from .models import Profile
 from .serializers import *
 from main.serializers import *
+
 
 # JWT 발급 함수
 def get_tokens_for_user(user):
@@ -189,3 +191,54 @@ class RegionView(APIView):
         except User_Region.DoesNotExist:
             # 요청한 데이터가 사용자에게 등록이 되어 있지 않았던 경우
             return Response({"error": "해당은 지역은 사용자에게 등록되어 있지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+
+# 등록 지역 목록 API 반환
+class RegisterRegionView(APIView):
+
+    def get(self, request):
+        imgs = {
+            "비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
+            "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%A7%91%EC%9D%8C.png",
+            "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EA%B5%AC%EB%A6%84%EB%A7%8E%EC%9D%8C.png",
+            "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%ED%9D%90%EB%A6%BC.png"
+        }
+
+        try:
+            profile = request.user.profile
+            user_regions = User_Region.objects.filter(user=profile)
+            res = dict()
+            for user_region in user_regions:
+                city = user_region.region.city
+                district = user_region.region.district
+                region = user_region.region
+
+                api1 = Api1.objects.get(region=region)
+                temperature = api1.T1H  # 현재 기온
+                PTY = api1.PTY  # 강수 형태(코드값으로 받음)
+
+                ## 강수 형태 -> 없음(맑음, 구름많음, 흐림) / 있음(비) 기준으로 1차 판별
+
+                # 강수 형태 "없음" -> "하늘상태"로 판별
+                if PTY == "0":
+                    api2 = Api2.objects.get(region=region)
+                    h = int(datetime.now().strftime("%H"))  # 현재 시각
+                    field = f'info_{h}'
+                    str = (api2.serializable_value(field)).replace(" ", "")
+                    f_list = str.split('/')
+                    SKY = f_list[1]  # 현재 하늘 상태
+                    img_url = imgs[SKY]
+
+                # 강수 형태 있음 -> "비"
+                else:
+                    img_url = imgs["비"]
+
+                d = {"지역": city + " " + district,
+                      "이미지url": img_url,
+                      "현재기온": temperature}
+                res[f'{len(res)}'] = d
+
+            return Response({"data": res}, status=status.HTTP_200_OK)
+
+        except:
+            return Response({"data": ""}, status=status.HTTP_200_OK)
