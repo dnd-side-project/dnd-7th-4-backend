@@ -132,7 +132,7 @@ def humidity(self):  # 습도
 
     queryset = list(Humidity.objects.filter(standard=stand))
     comm = random.sample(queryset, 1)
-    d = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
+    d = {"코멘트": comm[0].comment, "이미지url": comm[0].imageUrl}
     return d
 
 
@@ -154,7 +154,7 @@ def precipication(self):  # 강수
 
     queryset = list(Precipitation.objects.filter(standard=stand))
     comm = random.sample(queryset, 1)
-    d = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
+    d = {"코멘트": comm[0].comment, "이미지url": comm[0].imageUrl}
     return d
 
 
@@ -171,7 +171,7 @@ def wind(self):  # 바람
 
     queryset = list(Wind.objects.filter(standard=stand))
     comm = random.sample(queryset, 1)
-    d = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
+    d = {"코멘트": comm[0].comment, "이미지url": comm[0].imageUrl}
     return d
 
 
@@ -185,7 +185,7 @@ def finedust(fd): # 미세먼지
         standard = 3
     queryset = list(Finedust.objects.filter(standard=standard))
     comm = random.sample(queryset, 1)
-    data = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
+    data = {"코멘트": comm[0].comment, "이미지url": comm[0].imageUrl}
     return data
 
 
@@ -212,7 +212,7 @@ def windchill(wd): # 체감온도
         standard = 9
     queryset = list(Windchill.objects.filter(standard=standard))
     comm = random.sample(queryset, 1)
-    data = {"코멘트": comm[0].comment, "이미지 url": comm[0].imageUrl}
+    data = {"코멘트": comm[0].comment, "이미지url": comm[0].imageUrl}
     return data
 
 
@@ -224,13 +224,13 @@ def sun(state, sunrise, sunset):
     now_minute = int(current.strftime("%M"))
     if sunset[0] >= now_hour and sunset[1] >= now_minute:
         hour, minute = cal_time(state, sunrise[0]-now_hour, sunrise[1]-now_minute)
-        return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
+        return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지url": "일몰 일출 이미지"}
     elif sunrise[0] >= now_hour and sunrise[1] >= now_minute:
         hour, minute = cal_time(state, sunset[0]-now_hour, sunset[1]-now_minute)
-        return {"코멘트": f'일몰까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
+        return {"코멘트": f'일몰까지/{hour}시간 {minute}분', "이미지url": "일몰 일출 이미지"}
     else:
         hour, minute = cal_time(state, sunrise[0]-now_hour, sunrise[1]-now_minute)
-        return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지 url": "일몰 일출 이미지"}
+        return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지url": "일몰 일출 이미지"}
 
 
 def cal_time(state, hour, minute):
