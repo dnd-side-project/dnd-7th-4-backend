@@ -34,8 +34,8 @@ SEASON_CHOICES = [
 FINEDUST_CHOICES = [
     ('1', '좋음'),
     ('2', '보통'),
-    ('2', '나쁨'),
-    ('3', '매우 나쁨')
+    ('3', '나쁨'),
+    ('4', '매우 나쁨')
 ]
 
 WINDCHILL_CHOICES = [

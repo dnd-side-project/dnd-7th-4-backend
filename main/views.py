@@ -255,8 +255,10 @@ class MainView(APIView):
         now = datetime.today()
 
         # api6
-        data['미세먼지'] = MainApi6TodaySerializer(region.api6_id).data
-        data['미세먼지']['미세먼지'] = self.today_finedust
+        print(region.api6_id)
+        data['미세먼지'] = region.api6_id.pm10Grade1h
+        self.today_finedust = data['미세먼지']
+
 
         # api7
         data['일몰일출'] = MainApi7TodaySerializer(region.api7).data
@@ -290,8 +292,8 @@ class MainView(APIView):
         now = datetime.now()
 
         # api6
-        data['미세먼지'] = MainApi6TomorrowSerializer(region.api6_id).data
-        data['미세먼지']['미세먼지'] = self.tomorrow_finedust
+        data['미세먼지'] = region.api6_id.pm10Value24
+        self.tomorrow_finedust = data['미세먼지']
 
         # api7
         data['일몰일출'] = MainApi7TomorrowSerializer(region.api7).data
