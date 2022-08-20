@@ -141,6 +141,29 @@ class KakaoAlarmView(APIView):
 
         return Response({"data": ProfileKakaoAlarmSerializers(user).data}, status=status.HTTP_200_OK)
 
+class KakaoRegionView(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        print('account/alarm/region : POST ——————————————')
+
+        # 받은 데이터
+        city = request.data["city"]  # 시
+        district = request.data["district"]  # 군, 구
+        user = request.user.profile # 사용자
+        region = get_object_or_404(Region, city=city, district=district)
+
+        if user.kakao_region == region:
+            return Response({"text": "이전에 설정되어 있었던 지역입니다."}, status=status.HTTP_409_CONFLICT)
+        else:
+            user.kakao_region = region
+
+            data = {}
+            data['사용자id'] = user.id
+            data['등록된지역'] = RegionSeriallizer(user.kakao_region).data
+            return Response({"data": data}, status=status.HTTP_200_OK)
+
+
 
 # 사용자 지역 생성 및 삭제
 class RegionView(APIView):
@@ -148,7 +171,7 @@ class RegionView(APIView):
 
     # 도착한 city, district를 사용자 지역으로 생성
     def post(self, request):
-        print('/region : POST ——————————————')
+        print('account/region : POST ——————————————')
         # 받은 데이터
         city = request.data["city"]  # 시
         district = request.data["district"]  # 군, 구
@@ -189,3 +212,4 @@ class RegionView(APIView):
         except User_Region.DoesNotExist:
             # 요청한 데이터가 사용자에게 등록이 되어 있지 않았던 경우
             return Response({"error": "해당은 지역은 사용자에게 등록되어 있지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
+

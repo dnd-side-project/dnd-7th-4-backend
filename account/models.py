@@ -10,6 +10,7 @@ class Profile(models.Model):
     nickname = models.CharField(max_length=50)  # 카카오 닉네임
     profile_image = models.TextField(null=True, default='')  # 카카오 프로필 이미지
     kakao_alarm = models.BooleanField(default=0)  # 카카오 알람
+    kakao_region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True, default='')
 
     def __str__(self):
         return self.nickname  # 닉네임 값을 대표값으로 설정
