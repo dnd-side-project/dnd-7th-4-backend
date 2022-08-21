@@ -127,7 +127,7 @@ class KakaoAlarmView(APIView):
     permission_classes = (AllowAny,)
 
     # 만약 사용자의 alarm이 on -> off로 off 였으면 on으로 변경
-    def get(self, request):
+    def post(self, request):
         print('/accout/kakao_alarm : GET -----------------------------')
         # 받은 데이터
         user = request.user.profile
@@ -141,6 +141,8 @@ class KakaoAlarmView(APIView):
 
         return Response({"data": ProfileKakaoAlarmSerializers(user).data}, status=status.HTTP_200_OK)
 
+
+# 카카오톡 지역 설정
 class KakaoRegionView(APIView):
     permission_classes = (AllowAny,)
 
@@ -154,15 +156,16 @@ class KakaoRegionView(APIView):
         region = get_object_or_404(Region, city=city, district=district)
 
         if user.kakao_region == region:
-            return Response({"text": "이전에 설정되어 있었던 지역입니다."}, status=status.HTTP_409_CONFLICT)
+            return Response({"text": "이미 설정된 지역입니다."}, status=status.HTTP_409_CONFLICT)
         else:
+            # 알림 지역 갱신하기
             user.kakao_region = region
+            user.save()
 
             data = {}
             data['사용자id'] = user.id
             data['등록된지역'] = RegionSeriallizer(user.kakao_region).data
             return Response({"data": data}, status=status.HTTP_200_OK)
-
 
 
 # 사용자 지역 생성 및 삭제
