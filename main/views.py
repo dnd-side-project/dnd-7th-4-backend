@@ -22,6 +22,7 @@ from .api_test.api_9 import api_9
 from .api_test.api_10 import api_10
 
 from .comment_callback_directory.comments import *
+from .comment_callback_directory.comments_img import *
 
 
 pty = {'0': '없음', '1': '비', '2': '비/눈', '5': '빗방울',  # 강수형태코드
@@ -76,12 +77,31 @@ class MainView(APIView):
         d = {"기온": T1H, "하늘상태": SKY, "습도": REH, "풍속": WSD, "강수형태": PTY,
              "1시간강수량": RN1, "강수확률": POP, "최고기온": MAX, "최저기온": MIN}
 
-        ## 코멘트 부분 추가
+
+        ## 메인 백그라운드 이미지 데이터 -> 맑음 / 구름많음 / 흐림 / ( 약한비 / 중간비 / 강한비 )
+        rn1 = float(RN1)
+        if rn1 == 0:  # 1시간 강수량이 0일때 -> 맑음, 구름많음, 흐림으로 판별
+            today_weather_state = SKY
+        else:
+            if rn1 >= 15:
+                today_weather_state = "강한 비"
+            elif 3 <= rn1 < 15:
+                today_weather_state = "중간 비"
+            else:  # 3 미만
+                today_weather_state = "약한 비"
+        #######
+
+
+        ## 코멘트 부분 추가 -> 이미지도 업로드 할 것!
         today_comments_detail = dict()
         today_comments_detail["메인"] = today_comment(region, self.today_windchill)
         today_comments_detail["습도"] = humidity(REH)  # 습도
+        today_comments_detail["습도"]["이미지url"] = humidity_img(REH)  # 습도 이미지
         today_comments_detail["강수"] = precipication(RN1)  # 강수
-        today_comments_detail["바람"] = wind(WSD)  ## 바람
+        today_comments_detail["강수"]["이미지url"] = precipication_img(SKY, PTY, RN1)  # 강수 이미지
+
+        today_comments_detail["바람"] = wind(WSD)  # 바람
+        today_comments_detail["바람"]["이미지url"] = wind_img(WSD)  # 바람 이미지
         ## 이 부분 밑에 추가해주시면 될 것 같아요!!
         ########
 
@@ -90,8 +110,10 @@ class MainView(APIView):
             if i == 24:  # 00 ~ 23시까지의 정보만을 표현
                 break
             field = f'info_{i}'
-            str = (api2.serializable_value(field)).replace(" ", "")
-            d1[i] = str.split('/')
+            str = ((api2.serializable_value(field)).replace(" ", "")).split('/')  # 정보 4개 : 기온 / 하늘상태 / 강수형태 / 1시간강수량
+            str.append(time_img(str[2], str[1]))
+            d1[i] = str
+
 
         d2 = dict()
         if h + 6 < 24:  # 아직 오늘 날씨가 더 남아있으면 -> API3에서 가져오기 (기온, 하늘 상태, 강수 형태, 1시간 강수량 만 가져오기)
@@ -100,10 +122,11 @@ class MainView(APIView):
                 str = (api3.serializable_value(field)).replace(" ", "")
                 li = str.split('/')
                 new_li = []
-                new_li.append(li[0])
-                new_li.append(li[1])
-                new_li.append(li[3])
-                new_li.append(li[5])
+                new_li.append(li[0])  # 기온
+                new_li.append(li[1])  # 하늘 상태
+                new_li.append(li[3])  # 강수 형태
+                new_li.append(li[5])  # 1시간 강수량
+                new_li.append(time_img(li[3], li[1]))  # 이미지 추가
                 d2[i] = new_li
 
         # 딕셔너리 합치기 d1 = d1 + d2
@@ -126,12 +149,35 @@ class MainView(APIView):
         d3 = {"기온": T1H, "하늘상태": SKY, "습도": REH, "풍속": WSD, "강수형태": PTY,
               "1시간강수량": RN1, "강수확률": POP, "최고기온": MAX, "최저기온": MIN}
 
+
+        ## 메인 백그라운드 이미지 데이터 -> 맑음 / 구름많음 / 흐림 / ( 약한비 / 중간비 / 강한비 )
+        if RN1 == "강수없음":  # 1시간 강수량이 0일때 -> 맑음, 구름많음, 흐림으로 판별
+            tommorrow_weather_state = SKY
+        else:
+            rn1 = float(RN1.replace("mm", ""))
+            if rn1 >= 15:
+                tommorrow_weather_state = "강한 비"
+            elif 3 <= rn1 < 15:
+                tommorrow_weather_state = "중간 비"
+            else:  # 3 미만
+                tommorrow_weather_state = "약한 비"
+        #######
+
+
         ## 코멘트 부분 추가
         tomorrow_comments_detail = dict()
         tomorrow_comments_detail["메인"] = tomorrow_comment(region, self.tomorrow_windchill)
         tomorrow_comments_detail["습도"] = humidity(REH)  # 습도
+        tomorrow_comments_detail["습도"]["이미지url"] = humidity_img(REH)  # 습도 이미지
+        #tomorrow_comments_detail["습도이미지"] = humidity_img(REH)  # 습도 이미지
         tomorrow_comments_detail["강수"] = precipication(RN1)  # 강수
+        tomorrow_comments_detail["강수"]["이미지url"] = precipication_img(SKY, PTY, RN1)  # 강수 이미지
+        #tomorrow_comments_detail["강수이미지"] = precipication_img(SKY, PTY, RN1)  # 강수 이미지
+
         tomorrow_comments_detail["바람"] = wind(WSD)  ## 바람
+        tomorrow_comments_detail["바람"]["이미지url"] = wind_img(WSD)  # 바람 이미지
+        #tomorrow_comments_detail["바람이미지"] = wind_img(WSD)  # 바람 이미지
+
 
         # 내일 00시 ~ 23시 정보
         d4 = dict()
@@ -140,10 +186,12 @@ class MainView(APIView):
             str = (api3.serializable_value(field)).replace(" ", "")
             li = str.split('/')
             new_li = []
-            new_li.append(li[0])
-            new_li.append(li[1])
-            new_li.append(li[3])
-            new_li.append(li[5])
+            new_li.append(li[0])  # 기온
+            new_li.append(li[1])  # 하늘 상태
+            new_li.append(li[3])  # 강수 형태
+            new_li.append(li[5])  # 1시간 강수량
+            new_li.append(time_img(li[3], li[1]))  # 이미지 추가
+
             d4[i - 24] = new_li
 
         ##
@@ -209,39 +257,46 @@ class MainView(APIView):
         POP2_pm = max(pop2)  # 강수확률
 
         d5 = {"0": {"오전하늘상태": SKY0_am, "오후하늘상태": SKY0_pm,
+                    "오전하늘이미지": weekend_img(SKY0_am), "오후하늘이미지": weekend_img(SKY0_pm),
                     "오전강수확률": POP0_am, "오후강수확률": POP0_pm,
                     "최저기온": api3.info_day0_MIN, "최고기온": api3.info_day0_MAX},
               "1": {"오전하늘상태": SKY1_am, "오후하늘상태": SKY1_pm,
+                    "오전하늘이미지": weekend_img(SKY1_am), "오후하늘이미지": weekend_img(SKY1_pm),
                     "오전강수확률": POP1_am, "오후강수확률": POP1_pm,
                     "최저기온": api3.info_day1_MIN, "최고기온": api3.info_day1_MAX},
               "2": {"오전하늘상태": SKY2_am, "오후하늘상태": SKY2_pm,
+                    "오전하늘이미지": weekend_img(SKY2_am), "오후하늘이미지": weekend_img(SKY2_pm),
                     "오전강수확률": POP2_am, "오후강수확률": POP2_pm,
                     "최저기온": api3.info_day2_MIN, "최고기온": api3.info_day2_MAX},
 
               "3": {"오전하늘상태": api4.wf3Am, "오후하늘상태": api4.wf3Pm,
+                    "오전하늘이미지": weekend_img(api4.wf3Am), "오후하늘이미지": weekend_img(api4.wf3Pm),
                     "오전강수확률": api4.rnSt3Am, "오후강수확률": api4.rnSt3Pm,
                     "최저기온": api5.taMin3, "최고기온": api5.taMax3},
               "4": {"오전하늘상태": api4.wf4Am, "오후하늘상태": api4.wf4Pm,
+                    "오전하늘이미지": weekend_img(api4.wf4Am), "오후하늘이미지": weekend_img(api4.wf4Pm),
                     "오전강수확률": api4.rnSt4Am, "오후강수확률": api4.rnSt4Pm,
                     "최저기온": api5.taMin4, "최고기온": api5.taMax4},
               "5": {"오전하늘상태": api4.wf5Am, "오후하늘상태": api4.wf5Pm,
+                    "오전하늘이미지": weekend_img(api4.wf5Am), "오후하늘이미지": weekend_img(api4.wf5Pm),
                     "오전강수확률": api4.rnSt5Am, "오후강수확률": api4.rnSt5Pm,
                     "최저기온": api5.taMin5, "최고기온": api5.taMax5},
               "6": {"오전하늘상태": api4.wf6Am, "오후하늘상태": api4.wf6Pm,
+                    "오전하늘이미지": weekend_img(api4.wf6Am), "오후하늘이미지": weekend_img(api4.wf6Pm),
                     "오전강수확률": api4.rnSt6Am, "오후강수확률": api4.rnSt6Pm,
                     "최저기온": api5.taMin6, "최고기온": api5.taMax6}
               }
 
         # 데이터 넣기
         ## API1 - 5까지의 오늘 데이터 넣기
-        response_today = {"현재": d, "시간별정보": d1, "세부코멘트": today_comments_detail}
+        response_today = {"배경이미지": today_weather_state, "현재": d, "시간별정보": d1, "세부코멘트": today_comments_detail}
         ## API6 - 10까지의 오늘 데이터 넣기
         response_today.update(self.today(region).items())
         ### 코멘트 넣기
         response_today['세부코멘트'].update(self.today_comment())
 
         ## API1 - 5까지의 내일 데이터 넣기
-        response_tomorrow = {"현재": d3, "시간별정보": d4, "세부코멘트": tomorrow_comments_detail}
+        response_tomorrow = {"배경이미지": tommorrow_weather_state, "현재": d3, "시간별정보": d4, "세부코멘트": tomorrow_comments_detail}
         ## API6 - 10까지의 내일 데이터 넣기
         response_tomorrow.update(self.tomorrow(region).items())
         ### 코멘트 넣기
@@ -398,5 +453,3 @@ class SearchView(APIView):
             d[key] = {"이미지url": img_url, "기온": tem}
 
         return Response({"data": d}, status=status.HTTP_200_OK)
-
-
