@@ -16,6 +16,8 @@ TEMPLEATE_INFO = {
     '흐림' : ['cloudy_1', 'cloudy_2', 'cloudy_3']
 }
 
+current = datetime.now()
+
 # 카카오톡 알림을 보내는 
 def send_kakao_alarm():
     people = get_list_or_404(Profile, kakao_alarm =True)
@@ -24,8 +26,8 @@ def send_kakao_alarm():
     # 날씨 기준으로 사용자 나누기
     user_data = {'맑음' : [], '구름많음': [], '흐림': []}
     for p in people:
-        region = p.kakao_alarm_region
-        weather, max_tem, min_tem = get_alarm_info(region.city, region.distinct)
+        region = p.kakao_region
+        weather, max_tem, min_tem = get_alarm_info(region)
         user_data[weather].append((p, max_tem, min_tem))
     
     for weather, user_info in user_data.items():
@@ -42,8 +44,8 @@ def send_kakao_alarm():
         body = {}
         body['plusFriendId'] = env('KAKAO_plusFriendId')
         body['templateCode'] = random.sample(TEMPLEATE_INFO[weather], 1)
-        body['reserveTime'] = datetime.today().strftime("%Y-%m-%d 08:00")
-        body['reserveTimeZone'] = 'Asia/Seou'
+        body['reserveTime'] = datetime.today().strftime("%Y-%m-%d 08:00") # 지금은 현재로!!
+        body['reserveTimeZone'] = 'Asia/Seoul'
         body['messages'] = []
         cnt = 1
         while user_info:
@@ -53,6 +55,7 @@ def send_kakao_alarm():
             body_messages_data['countryCode'] = '82'
             body_messages_data['to'] = user[0].phone_number
             body_messages_data['content'] = f'최고기온, 최저기온 {user[1]}/{user[2]}'
+            
             
             ### 링크
             body_buttons = {}
@@ -79,7 +82,24 @@ def send_kakao_alarm():
 
 
 # 알람에 필요한 정보를 가져오는 함수
-def get_alarm_info(city, distinct):
-    pass
+def get_alarm_info(region):
+    hour = int(current.strftime("%H"))
 
+    # API 객체 가져오기
+    api3 = Api3.objects.get(region=region)
     
+    # 하단 코멘트 데이터
+    ## 강수 예보 확률
+    ### 오전
+    morning = 0
+    for i in range(h, h+6):
+        field = f'info_{i}'
+        data = (api3.serializable_value(field)).replace(" ", "").split('/')[4]
+        morning = max(data, morning)
+    
+    ### 오후
+    afternoon
+    for i in range(h+6, h+18):
+        field = f'info_{i}'
+        data = (api3.serializable_value(field)).replace(" ", "").split('/')[4]
+        afternoon = max(data, afternoon)
