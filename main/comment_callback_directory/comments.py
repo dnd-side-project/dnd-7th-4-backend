@@ -41,13 +41,13 @@ def today_comment(region, windchill):
         queryset = list(Today.objects.filter(first_standard=1))
         comm = random.sample(queryset, 1)
         today_comment = comm[0].comment
-        caption = '1시간 내 강수예보 40% 이상'
+        caption = f'1시간 내 강수예보 {p1}%'
 
     elif 0 < p1 < 40:  # 2차 기준
         queryset = list(Today.objects.filter(first_standard=2))
         comm = random.sample(queryset, 1)
         today_comment = comm[0].comment
-        caption = '1시간 내 강수예보 40% 미만'
+        caption = f'1시간 내 강수예보 {p1}%'
     
     elif p3_2 > p3_1: # 3차 기준
         queryset = list(Today.objects.filter(first_standard=3))
@@ -115,7 +115,7 @@ def tomorrow_comment(region, windchill):
         queryset = list(Today.objects.filter(first_standard=5).filter(second_standard=sky))
         comm = random.sample(queryset, 1)
         tomorrow_comment = comm[0].comment
-        caption = sky
+        caption = sky0
 
     return {'코멘트': tomorrow_comment, '캡션': caption}
 
