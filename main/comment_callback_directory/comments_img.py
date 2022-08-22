@@ -76,9 +76,10 @@ def wind_img(self):
 
 # 강수 이미지 -> 강수없음(맑음, 구름많음, 흐림) / 강수있음(약한비, 보통비, 강한비, 매우강한비)
 def precipication_img(sky, pty, rn1):  # sky: 하늘상태, pty: 강수형태, rn1: 1시간강수량
-    if pty == "없음":  # 강수없음인 경우 -> 맑음, 구름많음, 흐림
+    if pty == "없음" or pty == "강수없음":  # 강수없음인 경우 -> 맑음, 구름많음, 흐림
         img_url = prec_dic[sky]
     else:  # 강수있음인 경우 -> 약한비, 보통비, 강한비, 매우강한비
+        rn1 = rn1.replace("mm", "")
         rn1 = float(rn1)  # data-type 맞추기
         if rn1 >= 30:
             img_url = prec_dic["매우강한비"]
