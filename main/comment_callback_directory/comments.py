@@ -228,13 +228,13 @@ def sun(state, sunrise, sunset):
     print(sunset[0]*100+sunset[1], now_hour*100+now_minute, sunrise[0]*100+sunrise[1])
     if sunset[0]*100+sunset[1] >= now_hour*100+now_minute:
         hour, minute = cal_time(state, sunset[0]-now_hour, sunset[1]-now_minute)
-        return {"코멘트": f'일몰까지/{hour}시간 {minute}분', "이미지url": "일몰 일출 이미지"}
+        return {"코멘트": f'일몰까지/{hour}시간 {minute}분'}
     elif sunrise[0]*100+sunrise[1] >= now_hour*100+now_minute:
         hour, minute = cal_time(state, sunrise[0]-now_hour, sunrise[1]-now_minute)
-        return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지url": "일몰 일출 이미지"}
+        return {"코멘트": f'일출까지/{hour}시간 {minute}분'}
     else:
         hour, minute = cal_time(state, sunrise[0]+24-now_hour, sunrise[1]-now_minute)
-        return {"코멘트": f'일출까지/{hour}시간 {minute}분', "이미지url": "일몰 일출 이미지"}
+        return {"코멘트": f'일출까지/{hour}시간 {minute}분'}
 
 
 def cal_time(state, hour, minute):
