@@ -193,9 +193,11 @@ def finedust(fd): # 미세먼지
 def windchill(wd): # 체감온도
     wd = float(wd)
     standard = 0
-    if 29 <= wd < 31:
+    if 10 <= wd < 26:
+        standard = 0
+    elif 26 <= wd < 29:
         standard = 1
-    elif 31 <= wd < 34:
+    elif 29 <= wd < 34:
         standard = 2
     elif 34 <= wd < 37:
         standard = 3
