@@ -248,7 +248,7 @@ class MainView(APIView):
         response_tomorrow['세부코멘트'].update(self.tomorrow_comment())
 
         return Response({"data": {"오늘": response_today, "내일": response_tomorrow,
-                                  "이번주": d5}}, status=status.HTTP_200_OK)
+                                  "이번주": d5, "업데이트 시간": api1.base_time}}, status=status.HTTP_200_OK)
 
     def today(self, region):
         data = {}
