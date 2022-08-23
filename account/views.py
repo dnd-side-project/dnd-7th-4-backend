@@ -176,7 +176,7 @@ class RegionView(APIView):
 
     # 도착한 city, district를 사용자 지역으로 생성
     def post(self, request):
-        print('account/region : POST ——————————————')
+        print('/account/region : POST ——————————————')
         # 받은 데이터
         city = request.data["city"]  # 시
         district = request.data["district"]  # 군, 구
@@ -201,7 +201,7 @@ class RegionView(APIView):
 
     # 도착한 city, district를 사용자 지역 목록에서 삭제
     def delete(self, request):
-        print('/region : DELETE ——————————————')
+        print('/account/region : DELETE ——————————————')
         # 받은 데이터
         city = request.GET.get('city', '')  # 시
         district = request.GET.get('district', '')  # 군, 구
