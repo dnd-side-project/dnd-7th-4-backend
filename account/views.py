@@ -64,7 +64,7 @@ def back(request):
     token_req_json = token_req.json()
 
     kakao_access_token = token_req_json.get("access_token")
-    print(kakao_access_token)
+
     kakao_api_response = requests.post(
         "https://kapi.kakao.com/v2/user/me",
         headers={
@@ -73,10 +73,11 @@ def back(request):
         },
     )
     kakao_api_response = kakao_api_response.json()
+  
     kakao_id = kakao_api_response["id"]
     nickname = kakao_api_response["properties"]["nickname"]
     profile_image = kakao_api_response["properties"]["profile_image"]
-    phone_number = kakao_api_response["properties"]["phone_number"]
+    phone_number = kakao_api_response["kakao_account"]["phone_number"]
 
     profile = Profile.objects.filter(kakao_id=str(kakao_id))
 
