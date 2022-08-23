@@ -41,7 +41,6 @@ def front(request):
     )
 
 
-
 # 백엔드 처리부분
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -77,6 +76,7 @@ def back(request):
     kakao_id = kakao_api_response["id"]
     nickname = kakao_api_response["properties"]["nickname"]
     profile_image = kakao_api_response["properties"]["profile_image"]
+    phone_number = kakao_api_response["properties"]["phone_number"]
 
     profile = Profile.objects.filter(kakao_id=str(kakao_id))
 
@@ -87,7 +87,7 @@ def back(request):
         print("새로운 유저")
         user = User.objects.create(username=str(kakao_id))  # unique 값으로 username 넣어야함
         user.save()
-        profile = Profile.objects.create(user=user, kakao_id=str(kakao_id), nickname=nickname, profile_image=str(profile_image))
+        profile = Profile.objects.create(user=user, kakao_id=str(kakao_id), nickname=nickname, profile_image=str(profile_image), phone_number=str(phone_number))
         profile.save()
 
     return Response({"nickname": nickname, "kakao_access_token": kakao_access_token, "django_token": get_tokens_for_user(user)})
