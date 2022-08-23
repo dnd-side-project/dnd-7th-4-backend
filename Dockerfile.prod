@@ -52,6 +52,9 @@ RUN pip install mysqlclient
 RUN pip install --no-cache /wheels/*
 RUN apk del build-deps
 
+# add timezone settings
+RUN apk add tzdata
+
 # copy entrypoint-prod.sh
 COPY ./config/docker/entrypoint.prod.sh $APP_HOME
 

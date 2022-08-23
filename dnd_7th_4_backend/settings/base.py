@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import environ
+import environ, datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -28,7 +28,18 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+## CORS 
+CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ALLOW_CREDENTIALS = True
+#CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = [ 
+    'http://127.0.0.1:8000',
+    'https://127.0.0.1:3000', 
+    'http://localhost:8000',
+    'https://localhost:3000', ]
+
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '127.0.0.1:3000', '127.0.0.1:8000']
 
 # Application definition
 
@@ -45,6 +56,8 @@ INSTALLED_APPS = [
 
     # 앱
     'main',
+    'comment',
+    'account',
 
     # Swagger
     'drf_yasg',
@@ -52,6 +65,9 @@ INSTALLED_APPS = [
     # celery
     'django_celery_beat',
     'django_celery_results',
+
+    # simple-jwt
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'dnd_7th_4_backend.urls'
@@ -113,11 +130,27 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# simple-jwt 설정들
+# simplejwt permission, authentication 세팅
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=14),
+    'SIGNING_KEY': env('DJANGO_SECRET_KEY'),
+    'ALGORITHM': 'HS256',
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'ko-KR'
+LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'Asia/Seoul'
 
@@ -125,7 +158,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
