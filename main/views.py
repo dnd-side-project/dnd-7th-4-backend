@@ -477,7 +477,7 @@ class FindRegionView(APIView):
 
         # request 요청하기
         ## header 생성하기
-        rest_api_key = env('KAKAO_REST_API_KEY')
+        rest_api_key = env('kakao_client_id')
         headers={
             "Authorization": f"KakaoAK {rest_api_key}",
         }
