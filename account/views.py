@@ -224,10 +224,12 @@ class RegisterRegionView(APIView):
 
     def get(self, request):
         imgs = {
-            "비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-            "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%A7%91%EC%9D%8C.png",
-            "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EA%B5%AC%EB%A6%84%EB%A7%8E%EC%9D%8C.png",
-            "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%ED%9D%90%EB%A6%BC.png"
+            "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D+%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D_%EB%A7%91%EC%9D%8C.png",
+            "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D+%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D_%EA%B5%AC%EB%A6%84%EB%A7%8E%EC%9D%8C.png",
+            "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D+%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D_%EB%A7%A4%EC%9A%B0%ED%9D%90%EB%A6%BC.png",
+            "약한비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D+%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D_%EC%95%BD%ED%95%9C+%EB%B9%84.png",
+            "중간비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D+%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D_%EC%A4%91%EA%B0%84+%EB%B9%84.png",
+            "강한비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D+%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8/%EC%A7%80%EC%97%AD%EB%AA%A9%EB%A1%9D_%EA%B0%95%ED%95%9C+%EB%B9%84.png"
         }
 
         try:
@@ -257,7 +259,15 @@ class RegisterRegionView(APIView):
 
                 # 강수 형태 있음 -> "비"
                 else:
-                    img_url = imgs["비"]
+                    rn1 = api1.RN1
+                    rn1 = rn1.replace("mm", "")
+                    rn1 = float(rn1)  # data-type 맞추기
+                    if rn1 >= 15:
+                        img_url = imgs["강한비"]
+                    elif 3 <= rn1 < 15:
+                        img_url = imgs["중간비"]
+                    else:
+                        img_url = imgs["약한비"]
 
                 d = {"지역": city + " " + district,
                       "이미지url": img_url,

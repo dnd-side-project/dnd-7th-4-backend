@@ -96,12 +96,12 @@ class MainView(APIView):
         today_comments_detail = dict()
         today_comments_detail["메인"] = today_comment(region, self.today_windchill)
         today_comments_detail["습도"] = humidity(REH)  # 습도
-        today_comments_detail["습도"]["이미지url"] = humidity_img(REH)  # 습도 이미지
+        # today_comments_detail["습도"]["이미지url"] = humidity_img(REH)  # 습도 이미지
         today_comments_detail["강수"] = precipication(RN1)  # 강수
         today_comments_detail["강수"]["이미지url"] = precipication_img(SKY, PTY, RN1)  # 강수 이미지
 
         today_comments_detail["바람"] = wind(WSD)  # 바람
-        today_comments_detail["바람"]["이미지url"] = wind_img(WSD)  # 바람 이미지
+        # today_comments_detail["바람"]["이미지url"] = wind_img(WSD)  # 바람 이미지
         ## 이 부분 밑에 추가해주시면 될 것 같아요!!
         ########
 
@@ -168,15 +168,12 @@ class MainView(APIView):
         tomorrow_comments_detail = dict()
         tomorrow_comments_detail["메인"] = tomorrow_comment(region, self.tomorrow_windchill)
         tomorrow_comments_detail["습도"] = humidity(REH)  # 습도
-        tomorrow_comments_detail["습도"]["이미지url"] = humidity_img(REH)  # 습도 이미지
-        #tomorrow_comments_detail["습도이미지"] = humidity_img(REH)  # 습도 이미지
+        # tomorrow_comments_detail["습도"]["이미지url"] = humidity_img(REH)  # 습도 이미지
         tomorrow_comments_detail["강수"] = precipication(RN1)  # 강수
         tomorrow_comments_detail["강수"]["이미지url"] = precipication_img(SKY, PTY, RN1)  # 강수 이미지
-        #tomorrow_comments_detail["강수이미지"] = precipication_img(SKY, PTY, RN1)  # 강수 이미지
 
         tomorrow_comments_detail["바람"] = wind(WSD)  ## 바람
-        tomorrow_comments_detail["바람"]["이미지url"] = wind_img(WSD)  # 바람 이미지
-        #tomorrow_comments_detail["바람이미지"] = wind_img(WSD)  # 바람 이미지
+        # tomorrow_comments_detail["바람"]["이미지url"] = wind_img(WSD)  # 바람 이미지
 
 
         # 내일 00시 ~ 23시 정보

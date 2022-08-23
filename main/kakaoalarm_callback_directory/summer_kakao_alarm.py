@@ -1,3 +1,8 @@
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dnd_7th_4_backend.settings")
+import django
+django.setup()
+
 from django.shortcuts import render, get_list_or_404
 
 import random
@@ -5,7 +10,7 @@ from time import time
 from datetime import datetime
 
 from account.models import *
-from main.models import Region
+from main.models import *
 from dnd_7th_4_backend.settings.base import env
 
 
@@ -103,3 +108,27 @@ def get_alarm_info(region):
         field = f'info_{i}'
         data = (api3.serializable_value(field)).replace(" ", "").split('/')[4]
         afternoon = max(data, afternoon)
+
+
+# Region 객체 전달 시, 해당 지역의 당일 (오전 강수확률), (오후 강수확률) 반환하는 함수
+def precipitation_probability(region):
+    # region = Region.objects.get(id=2)  ## 임의 테스트코드
+    api3 = Api3.objects.get(region=region)
+
+    # 오전/오후별 : 강수확률
+    pop0 = []
+
+    for i in range(6, 12):  # 오전
+        li = ((api3.serializable_value(f'info_{i}')).replace(" ", "")).split('/')
+        pop0.append(li[4])
+
+    POP0_am = max(pop0)  # 오전 강수확률
+    pop0.clear()
+
+    for i in range(12, 22):  # 오후
+        li = ((api3.serializable_value(f'info_{i}')).replace(" ", "")).split('/')
+        pop0.append(li[4])
+
+    POP0_pm = max(pop0)  # 오후 강수확률
+
+    return POP0_am, POP0_pm  # 오전, 오후 강수 확률 반환
