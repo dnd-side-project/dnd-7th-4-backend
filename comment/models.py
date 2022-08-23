@@ -54,7 +54,7 @@ WINDCHILL_CHOICES = [
 # 강수 코멘트
 class Precipitation(models.Model):
     comment = models.TextField()
-    imageUrl = models.TextField(max_length=100)
+    imageUrl = models.TextField()
     standard = models.CharField(max_length=50, choices=PRECIPITATION_CHOICES)
 
     def __str__(self):
@@ -64,7 +64,7 @@ class Precipitation(models.Model):
 # 습도 코멘트
 class Humidity(models.Model):
     comment = models.TextField()
-    imageUrl = models.TextField(max_length=100)
+    imageUrl = models.TextField()
     standard = models.CharField(max_length=50, choices=HUMIDITY_CHOICES)
 
     def __str__(self):
@@ -74,7 +74,7 @@ class Humidity(models.Model):
 # 바람 코멘트
 class Wind(models.Model):
     comment = models.TextField()
-    imageUrl = models.TextField(max_length=100)
+    imageUrl = models.TextField()
     standard = models.CharField(max_length=50, choices=WIND_CHOICES)
 
     def __str__(self):
@@ -83,7 +83,7 @@ class Wind(models.Model):
 # 미세먼지 코멘트
 class Finedust(models.Model):
     comment = models.TextField()
-    imageUrl = models.TextField(max_length=100)
+    imageUrl = models.TextField()
     standard = models.CharField(max_length=50, choices=FINEDUST_CHOICES)
 
     def __str__(self):
@@ -92,7 +92,7 @@ class Finedust(models.Model):
 # 체감온도 코멘트
 class Windchill(models.Model):
     comment = models.TextField()
-    imageUrl = models.TextField(max_length=100)
+    imageUrl = models.TextField()
     standard = models.CharField(max_length=50, choices=WINDCHILL_CHOICES)
 
     def __str__(self):
