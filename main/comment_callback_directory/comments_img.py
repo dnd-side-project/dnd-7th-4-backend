@@ -10,39 +10,40 @@ from datetime import datetime
 
 current = datetime.now()
 
+# 세부정보별 -> "강수" 이미지
 prec_dic = {
-    "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EA%B0%95%EC%88%98%EB%9F%89/%EB%A7%91%EC%9D%8C.png",
-    "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EA%B0%95%EC%88%98%EB%9F%89/%EA%B5%AC%EB%A6%84%EB%A7%8E%EC%9D%8C.png",
-    "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EA%B0%95%EC%88%98%EB%9F%89/%ED%9D%90%EB%A6%BC.png",
+    "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/강수량/맑음.png",
+    "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/강수량/구름많음.png",
+    "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/강수량/흐림.png",
 
-    "약한비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EA%B0%95%EC%88%98%EB%9F%89/%EC%95%BD%ED%95%9C%EB%B9%84.png",
-    "보통비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EA%B0%95%EC%88%98%EB%9F%89/%EB%B3%B4%ED%86%B5%EB%B9%84.png",
-    "강한비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EA%B0%95%EC%88%98%EB%9F%89/%EA%B0%95%ED%95%9C%EB%B9%84.png",
-    "매우강한비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EA%B0%95%EC%88%98%EB%9F%89/%EB%A7%A4%EC%9A%B0%EA%B0%95%ED%95%9C%EB%B9%84.png"
+    "약한비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/강수량/약한비.png",
+    "보통비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/강수량/보통비.png",
+    "강한비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/강수량/강한비.png",
+    "매우강한비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/강수량/매우강한비.png"
 }
 
 # 시간대별 이미지
 time_dic = {
-    "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%A7%91%EC%9D%8C.png",
-    "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EA%B5%AC%EB%A6%84%EB%A7%8E%EC%9D%8C.png",
-    "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%ED%9D%90%EB%A6%BC.png",
-    "비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%B9%84.png"
+    "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/시간대별 날씨/맑음.png",
+    "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/시간대별 날씨/구름많음.png",
+    "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/시간대별 날씨/흐림.png",
+    "비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/시간대별 날씨/비.png"
 }
 
 # 이번주날씨 이미지
 weekend_dic = {
-    "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%A7%91%EC%9D%8C.png",
-    "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EA%B5%AC%EB%A6%84%EB%A7%8E%EC%9D%8C.png",
-    "구름많고 비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-    "구름많고 눈": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-    "구름많고 비/눈": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-    "구름많고 소나기": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-    "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%ED%9D%90%EB%A6%BC.png",
-    "흐리고 비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-    "흐리고 눈": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-    "흐리고 비/눈": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-    "흐리고 소나기": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-    "소나기": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%9D%B4%EB%B2%88%EC%A3%BC+%EB%82%A0%EC%94%A8/%EB%B9%84.png"
+    "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/맑음.png",
+    "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/구름많음.png",
+    "구름많고 비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/비.png",
+    "구름많고 눈": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/비.png",
+    "구름많고 비/눈": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/비.png",
+    "구름많고 소나기": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/비.png",
+    "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/흐림.png",
+    "흐리고 비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/비.png",
+    "흐리고 눈": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/비.png",
+    "흐리고 비/눈": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/비.png",
+    "흐리고 소나기": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/비.png",
+    "소나기": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/아이콘/이번주 날씨/비.png"
 }
 
 
