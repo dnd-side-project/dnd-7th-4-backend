@@ -138,7 +138,7 @@ def humidity(self):  # 습도
 
 def precipication(self):  # 강수
     prec = str(self)
-    if prec == "강수없음":  # "강수없음" 문자열일때 예외처리
+    if prec == "강수없음" or prec == "없음":  # "강수없음" 문자열일때 예외처리
         stand = 1
 
     else:
