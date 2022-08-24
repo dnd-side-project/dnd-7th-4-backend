@@ -406,10 +406,10 @@ class SearchView(APIView):
 
     def post(self, request):
         imgs = {
-            "비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%B9%84.png",
-            "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EB%A7%91%EC%9D%8C.png",
-            "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%EA%B5%AC%EB%A6%84%EB%A7%8E%EC%9D%8C.png",
-            "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/%EC%95%84%EC%9D%B4%EC%BD%98/%EC%8B%9C%EA%B0%84%EB%8C%80%EB%B3%84+%EB%82%A0%EC%94%A8/%ED%9D%90%EB%A6%BC.png"
+            "비": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/지역검색시 날씨일러스트/비.png",
+            "맑음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/지역검색시 날씨일러스트/맑음.png",
+            "구름많음": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/지역검색시 날씨일러스트/구름많음.png",
+            "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/지역검색시 날씨일러스트/흐림.png"
         }
 
         str = request.data["data"]
