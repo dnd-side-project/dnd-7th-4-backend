@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/api9/', views.api_9),
 
     path('search', views.SearchView.as_view()),  # 검색,
+    path('find/region', views.FindRegionView.as_view()), # 행정구역반환
 ]

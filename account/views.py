@@ -41,7 +41,6 @@ def front(request):
     )
 
 
-
 # 백엔드 처리부분
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -65,7 +64,7 @@ def back(request):
     token_req_json = token_req.json()
 
     kakao_access_token = token_req_json.get("access_token")
-    print(kakao_access_token)
+
     kakao_api_response = requests.post(
         "https://kapi.kakao.com/v2/user/me",
         headers={
@@ -74,9 +73,11 @@ def back(request):
         },
     )
     kakao_api_response = kakao_api_response.json()
+  
     kakao_id = kakao_api_response["id"]
     nickname = kakao_api_response["properties"]["nickname"]
     profile_image = kakao_api_response["properties"]["profile_image"]
+    phone_number = kakao_api_response["kakao_account"]["phone_number"]
 
     profile = Profile.objects.filter(kakao_id=str(kakao_id))
 
@@ -87,10 +88,10 @@ def back(request):
         print("새로운 유저")
         user = User.objects.create(username=str(kakao_id))  # unique 값으로 username 넣어야함
         user.save()
-        profile = Profile.objects.create(user=user, kakao_id=str(kakao_id), nickname=nickname, profile_image=str(profile_image))
+        profile = Profile.objects.create(user=user, kakao_id=str(kakao_id), nickname=nickname, profile_image=str(profile_image), phone_number=str(phone_number))
         profile.save()
 
-    return Response({"nickname": nickname, "kakao_access_token": kakao_access_token, "django_token": get_tokens_for_user(user)})
+    return Response({"nickname": nickname,"profile_img": profile_image, "kakao_access_token": kakao_access_token, "django_token": get_tokens_for_user(user)})
 
 
 # 연결 끊기 -> 로컬 테스트용
@@ -176,7 +177,7 @@ class RegionView(APIView):
 
     # 도착한 city, district를 사용자 지역으로 생성
     def post(self, request):
-        print('account/region : POST ——————————————')
+        print('/account/region : POST ——————————————')
         # 받은 데이터
         city = request.data["city"]  # 시
         district = request.data["district"]  # 군, 구
@@ -201,7 +202,7 @@ class RegionView(APIView):
 
     # 도착한 city, district를 사용자 지역 목록에서 삭제
     def delete(self, request):
-        print('/region : DELETE ——————————————')
+        print('/account/region : DELETE ——————————————')
         # 받은 데이터
         city = request.GET.get('city', '')  # 시
         district = request.GET.get('district', '')  # 군, 구

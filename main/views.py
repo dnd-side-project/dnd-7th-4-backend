@@ -5,6 +5,8 @@ from drf_yasg.utils import swagger_auto_schema
 
 from datetime import datetime
 import collections
+import requests
+import json
 
 from rest_framework import permissions, status
 from rest_framework.views import APIView
@@ -14,6 +16,7 @@ from rest_framework.permissions import AllowAny
 from main.models import *
 from account.models import *
 from .serializers import *
+from dnd_7th_4_backend.settings.base import env
 
 from .api_test.api_6 import api_6
 from .api_test.api_7 import api_7
@@ -450,3 +453,55 @@ class SearchView(APIView):
             d[key] = {"이미지url": img_url, "기온": tem}
 
         return Response({"data": d}, status=status.HTTP_200_OK)
+
+
+# 경도, 위도 요청시, 카카오 로컬 API를 이용하여 행정구역 데이터 반환하는 API
+class FindRegionView(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        longitude = request.data["longitude"] # 경도
+        latitude = request.data["latitude"] # 위도
+        print(f'/find/region : GET {longitude} {latitude} ——————————————')
+
+        city, distinct = self.get_region_data(longitude, latitude)
+        data = {
+            'city': city,
+            'distinct': distinct
+        }
+        return Response({"data": data}, status=status.HTTP_200_OK)
+
+    # 위도, 경도에 대한 행정구역 정보를 kakao API로 요청하는 함수
+    def get_region_data(self, longitude, latitude):
+        url = 'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json'
+
+        # request 요청하기
+        ## header 생성하기
+        rest_api_key = env('kakao_client_id')
+        headers={
+            "Authorization": f"KakaoAK {rest_api_key}",
+        }
+
+        ## 요청할 데이터 구성하기
+        params = {
+            'x': longitude,
+            'y': latitude,
+            'input_coord': 'WGS84',
+            'output_coord': 'WGS84'
+        }
+
+        try:
+            response = requests.get(url, params=params, headers=headers)
+
+            # 응답처리하기
+            possible_data = set()
+            for ele in response.json()['documents']:
+                possible_data.add((ele['region_1depth_name'], ele['region_2depth_name']))
+            ## possible_data가 0일 때, 그리고 Region에 없을 떄 처리하기
+            return list(possible_data)[0]
+
+        except requests.Timeout:
+            print(f'api_10: Timeout: -----------------------------')
+        except requests.ConnectionError:
+            print(f'api_10: ConnectionError: -----------------------------')
+
