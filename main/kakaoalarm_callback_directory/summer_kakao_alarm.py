@@ -4,10 +4,12 @@ import django
 django.setup()
 
 from django.shortcuts import render, get_list_or_404
+from django.http import HttpResponse
 
 import random
 from time import time
 from datetime import datetime
+from collections import defaultdict
 
 from account.models import *
 from main.models import *
@@ -15,37 +17,48 @@ from dnd_7th_4_backend.settings.base import env
 
 
 # 날씨 상태에 따른 템플릿 정보
-TEMPLEATE_INFO = {
+TRUE_PRECIPITATION_TEMPLEATE_INFO = {
     '맑음': ['sunny_1', 'sunny_2', 'sunny_3'],
     '구름많음' : ['mostly_cloudy_1', 'mostly_cloudy_2', 'mostly_cloudy_3'],
     '흐림' : ['cloudy_1', 'cloudy_2', 'cloudy_3']
 }
 
-current = datetime.now()
+FALSE_PRECIPITATION_TEMPLEATE_INFO = {
+    '맑음': ['sunny_1', 'sunny_2', 'sunny_3'],
+    '구름많음' : ['mostly_cloudy_1', 'mostly_cloudy_2', 'mostly_cloudy_3'],
+    '흐림' : ['cloudy_1', 'cloudy_2', 'cloudy_3']
+}
+
+CURRENT = datetime.now()
 
 # 카카오톡 알림을 보내는 
-def send_kakao_alarm():
-    people = get_list_or_404(Profile, kakao_alarm =True)
-    url = "https://sens.apigw.ntruss.com/alimtalk/v2/services/"+env('KAKAO_serviceId')+"/messages"
-
-    # 날씨 기준으로 사용자 나누기
-    user_data = {'맑음' : [], '구름많음': [], '흐림': []}
-    for p in people:
-        region = p.kakao_region
-        weather, max_tem, min_tem = get_alarm_info(region)
-        user_data[weather].append((p, max_tem, min_tem))
+def send_kakao_alarm(requests):
+    people = Profile.objects.filter(kakao_alarm = True)
     
-    for weather, user_info in user_data.items():
+    # 날씨 기준으로 사용자 나누기
+    user_data = defaultdict(list) # {(하늘상태, 강수유무): [profile 객체, 오전강수확률, 오후강수확률, 최고기온, 최저기온], }
+    for p in people:
+        # 알림을 받을 지역이나 핸드폰 번호가 저장되어 있지 않는 경우
+        if not p.kakao_region or not p.phone_number: 
+           continue 
 
-        # 요청 데이터 생성하기
-        ## 헤더 생성하기
+        region = p.kakao_region
+        morinig_precpitation, afternoon_precpitation, max_tem, min_tem, sky_status, is_precpitation = get_alarm_info(region)
+        user_data[(sky_status, is_precpitation)].append((p, morinig_precpitation, afternoon_precpitation, max_tem, min_tem))
+        
+    """
+    # 알림톡 내용 구성하기
+    url = "https://sens.apigw.ntruss.com/alimtalk/v2/services/"+env('KAKAO_serviceId')+"/messages"
+    for weather, user_info in user_data.items():
+        ## 요청 데이터 생성하기
+        ### 헤더 생성하기
         header = {}
         header['Content-Type'] = 'application/json; charset=utf-8'
         header['x-ncp-apigw-timestamp'] = time()
         header['x-ncp-iam-access-key'] = env('KAKAO_Sub_Account_Access_Key')
         header['x-ncp-apigw-signature-v2'] = env('KAKAO_API_Gateway_Signature')
 
-        ## 바디 생성하기
+        ### 바디 생성하기
         body = {}
         body['plusFriendId'] = env('KAKAO_plusFriendId')
         body['templateCode'] = random.sample(TEMPLEATE_INFO[weather], 1)
@@ -62,7 +75,7 @@ def send_kakao_alarm():
             body_messages_data['content'] = f'최고기온, 최저기온 {user[1]}/{user[2]}'
             
             
-            ### 링크
+            #### 링크
             body_buttons = {}
             body_buttons['type'] = 'WL'
             body_buttons['name'] = '자세한 내용을 확인하러 가기'
@@ -83,37 +96,42 @@ def send_kakao_alarm():
             print(f'resopnse kakao alalrm: Timeout: {local}-----------------------------')
         except requests.ConnectionError:
             print(f'resopnse kakao alalrm: ConnectionError: {local}-----------------------------')
-    
-
+    """
+    return HttpResponse("kakao alarm test  -----------------------------")
 
 # 알람에 필요한 정보를 가져오는 함수
 def get_alarm_info(region):
-    hour = int(current.strftime("%H"))
+    h = int(CURRENT.strftime("%H"))
 
-    # API 객체 가져오기
+    # 데이터 불러오기
+    api2 = Api2.objects.get(region=region)
     api3 = Api3.objects.get(region=region)
-    
+
     # 하단 코멘트 데이터
     ## 강수 예보 확률
-    ### 오전
-    morning = 0
-    for i in range(h, h+6):
-        field = f'info_{i}'
-        data = (api3.serializable_value(field)).replace(" ", "").split('/')[4]
-        morning = max(data, morning)
-    
-    ### 오후
-    afternoon
-    for i in range(h+6, h+18):
-        field = f'info_{i}'
-        data = (api3.serializable_value(field)).replace(" ", "").split('/')[4]
-        afternoon = max(data, afternoon)
+    morning_precpitation, afternoon_precpitation = precipitation_probability(api3)
+
+    ## 최고/최저 기온
+    max_tem = api3.info_day0_MAX  # 오늘 최고기온
+    min_tem = api3.info_day0_MIN  # 오늘 최저기온
+
+    # 썸네일 데이터 REVIEW
+    ## 하늘상태
+    field = f'info_{h}'
+    str = (api2.serializable_value(field)).replace(" ", "")  # 나중엔 없앨 공백 제거 코드
+    f_list = str.split('/')
+    sky_status = f_list[1]  # 현재 하늘 상태
+
+    ## 강수
+    is_precpitation = False
+    if morning_precpitation > 40 or afternoon_precpitation > 40:
+        is_precpitation = True
+    return morning_precpitation, afternoon_precpitation, max_tem, min_tem, sky_status, is_precpitation
 
 
 # Region 객체 전달 시, 해당 지역의 당일 (오전 강수확률), (오후 강수확률) 반환하는 함수
-def precipitation_probability(region):
+def precipitation_probability(api3):
     # region = Region.objects.get(id=2)  ## 임의 테스트코드
-    api3 = Api3.objects.get(region=region)
 
     # 오전/오후별 : 강수확률
     pop0 = []
@@ -131,4 +149,4 @@ def precipitation_probability(region):
 
     POP0_pm = max(pop0)  # 오후 강수확률
 
-    return POP0_am, POP0_pm  # 오전, 오후 강수 확률 반환
+    return int(POP0_am), int(POP0_pm)  # 오전, 오후 강수 확률 반환
