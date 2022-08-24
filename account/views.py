@@ -91,7 +91,7 @@ def back(request):
         profile = Profile.objects.create(user=user, kakao_id=str(kakao_id), nickname=nickname, profile_image=str(profile_image), phone_number=str(phone_number))
         profile.save()
 
-    return Response({"nickname": nickname, "kakao_access_token": kakao_access_token, "django_token": get_tokens_for_user(user)})
+    return Response({"nickname": nickname,"profile_img": profile_image, "kakao_access_token": kakao_access_token, "django_token": get_tokens_for_user(user)})
 
 
 # 연결 끊기 -> 로컬 테스트용
