@@ -115,7 +115,7 @@ def tomorrow_comment(region, windchill):
         queryset = list(Today.objects.filter(first_standard=5).filter(second_standard=sky))
         comm = random.sample(queryset, 1)
         tomorrow_comment = comm[0].comment
-        caption = sky0
+        caption = sky
 
     return {'코멘트': tomorrow_comment, '캡션': caption}
 
