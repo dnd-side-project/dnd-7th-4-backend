@@ -459,9 +459,9 @@ class SearchView(APIView):
 class FindRegionView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request):
-        longitude = request.GET.get('longitude', '') # 경도
-        latitude = request.GET.get('latitude', '') # 위도
+    def post(self, request):
+        longitude = request.data["longitude"] # 경도
+        latitude = request.data["latitude"] # 위도
         print(f'/find/region : GET {longitude} {latitude} ——————————————')
 
         city, distinct = self.get_region_data(longitude, latitude)
