@@ -6,7 +6,11 @@ django.setup()
 from django.shortcuts import render, get_list_or_404
 from django.http import HttpResponse
 
+import hmac
+import base64
 import random
+import hashlib
+import requests
 from time import time
 from datetime import datetime
 from collections import defaultdict
@@ -17,87 +21,116 @@ from dnd_7th_4_backend.settings.base import env
 
 
 # 날씨 상태에 따른 템플릿 정보
-TRUE_PRECIPITATION_TEMPLEATE_INFO = {
-    '맑음': ['sunny_1', 'sunny_2', 'sunny_3'],
-    '구름많음' : ['mostly_cloudy_1', 'mostly_cloudy_2', 'mostly_cloudy_3'],
-    '흐림' : ['cloudy_1', 'cloudy_2', 'cloudy_3']
+TRUE_PRECIPITATION_TEMPLATE_INFO = {
+    '맑음': ['sunnyTest1'],
+    '구름많음' : ['MCloudyT1'],
+    '흐림' : ['cloudyT1']
 }
 
-FALSE_PRECIPITATION_TEMPLEATE_INFO = {
-    '맑음': ['sunny_1', 'sunny_2', 'sunny_3'],
-    '구름많음' : ['mostly_cloudy_1', 'mostly_cloudy_2', 'mostly_cloudy_3'],
-    '흐림' : ['cloudy_1', 'cloudy_2', 'cloudy_3']
+FALSE_PRECIPITATION_TEMPLATE_INFO = {
+    '맑음': ['XsunnyTest1'],
+    '구름많음' : ['XMCloudyT1'],
+    '흐림' : ['XcloudyT1']
 }
 
 CURRENT = datetime.now()
 
 # 카카오톡 알림을 보내는 
-def send_kakao_alarm(requests):
+def send_kakao_alarm(request):
     people = Profile.objects.filter(kakao_alarm = True)
     
     # 날씨 기준으로 사용자 나누기
     user_data = defaultdict(list) # {(하늘상태, 강수유무): [profile 객체, 오전강수확률, 오후강수확률, 최고기온, 최저기온], }
     for p in people:
         # 알림을 받을 지역이나 핸드폰 번호가 저장되어 있지 않는 경우
-        if not p.kakao_region or not p.phone_number: 
+        if not p.kakao_region or not p.phone_number or p.phone_number[:3] != "+82" and p.nickname == '이동현': 
            continue 
 
         region = p.kakao_region
         morinig_precpitation, afternoon_precpitation, max_tem, min_tem, sky_status, is_precpitation = get_alarm_info(region)
         user_data[(sky_status, is_precpitation)].append((p, morinig_precpitation, afternoon_precpitation, max_tem, min_tem))
-        
-    """
-    # 알림톡 내용 구성하기
-    url = "https://sens.apigw.ntruss.com/alimtalk/v2/services/"+env('KAKAO_serviceId')+"/messages"
-    for weather, user_info in user_data.items():
-        ## 요청 데이터 생성하기
-        ### 헤더 생성하기
-        header = {}
-        header['Content-Type'] = 'application/json; charset=utf-8'
-        header['x-ncp-apigw-timestamp'] = time()
-        header['x-ncp-iam-access-key'] = env('KAKAO_Sub_Account_Access_Key')
-        header['x-ncp-apigw-signature-v2'] = env('KAKAO_API_Gateway_Signature')
 
-        ### 바디 생성하기
+    # 알림톡 내용 구성하기 
+    ## 헤더 생성하기
+    header = {}
+    header['Content-Type'] = 'application/json; charset=utf-8'
+    header['x-ncp-apigw-timestamp'] = str(int(time() * 1000))
+    header['x-ncp-iam-access-key'] = env('KAKAO_Sub_Account_Access_Key')
+    header['x-ncp-apigw-signature-v2'] = make_signature()
+    print(header)
+    url = "https://sens.apigw.ntruss.com/alimtalk/v2/services/"+env('KAKAO_serviceId')+"/messages"
+    for key_data, user_info in user_data.items():
+        print(key_data)
+        print(user_info)
+
+        ## 템플릿 설정하기
+        template = FALSE_PRECIPITATION_TEMPLATE_INFO[key_data[0]]
+        if key_data[1]:
+            template = TRUE_PRECIPITATION_TEMPLATE_INFO[key_data[0]]
+
+        ## 바디 생성하기
         body = {}
-        body['plusFriendId'] = env('KAKAO_plusFriendId')
-        body['templateCode'] = random.sample(TEMPLEATE_INFO[weather], 1)
-        body['reserveTime'] = datetime.today().strftime("%Y-%m-%d 08:00") # 지금은 현재로!!
+        body['plusFriendId'] = "한줄날씨"
+        body['templateCode'] = random.sample(template, 1)[0]
+        body['reserveTime'] = datetime.today().strftime("%Y-%m-%d 07:20")
         body['reserveTimeZone'] = 'Asia/Seoul'
+        body['scheduleCode'] = 'every8'
         body['messages'] = []
         cnt = 1
+   
         while user_info:
-            user = user_info.pop()
-            region = user[0].kakao_alarm_region
+            ### 데이터 가져오기
+            user, morinig_precpitation, afternoon_precpitation, max_tem, min_tem = user_info.pop()
+            region = user.kakao_region
+
+            ### 알림톡 내용 넣기 
             body_messages_data = {}
             body_messages_data['countryCode'] = '82'
-            body_messages_data['to'] = user[0].phone_number
-            body_messages_data['content'] = f'최고기온, 최저기온 {user[1]}/{user[2]}'
-            
-            
+            body_messages_data['to'] = user.phone_number
+            body_messages_data['content'] = f"""오전 최대 강수 확률이 {morinig_precpitation}% 이고, 오후 최대 강수 확률이 {afternoon_precpitation}%
+최고 기온 {max_tem}도, 최저 기온 {min_tem}도"""
+
             #### 링크
             body_buttons = {}
             body_buttons['type'] = 'WL'
-            body_buttons['name'] = '자세한 내용을 확인하러 가기'
-            body_buttons['linkMobile'] = f'http://localhost:8000/main?city={region.city}&district={region.distinct}'
-            body_buttons['linkPc'] = f'http://localhost:8000/main?city={region.city}&district={region.distinct}'
-            body_messages_data['buttons'] = body_buttons
+            body_buttons['name'] = '자세히'
+            body_buttons['linkMobile'] = f'https://www.weathercomment.com/'
+            body_buttons['linkPc'] = f'https://www.weathercomment.com/'
+            body_messages_data['buttons'] = [body_buttons]
 
             body['messages'].append(body_messages_data)
-        try:
+
+        try: #TEST
             cnt += 1
             # 100명이 되었을 경우
             if cnt >= 100 or not user_info:
                 cnt = 1
+                print(body)
                 response = requests.post(url = url, headers = header, data = body)
-                pring(f'resopnse kakao alalrm {response.text} ----------------------')
+                print(response.json())
+                print(f'resopnse kakao alalrm {response.text} ----------------------')
 
         except requests.Timeout:
-            print(f'resopnse kakao alalrm: Timeout: {local}-----------------------------')
+            print(f'resopnse kakao alalrm: Timeout: {user} alarm -----------------------------')
         except requests.ConnectionError:
-            print(f'resopnse kakao alalrm: ConnectionError: {local}-----------------------------')
-    """
-    return HttpResponse("kakao alarm test  -----------------------------")
+            print(f'resopnse kakao alalrm: ConnectionError: {user} alarm -----------------------------')
+
+    return HttpResponse(body)
+
+# x-ncp-apigw-signature-v2 헤더의 값을 생성하는 함수
+def	make_signature():
+    timestamp = str(int(time() * 1000))
+    access_key = env('KAKAO_Sub_Account_Access_Key')
+    secret_key = env('KAKAO_API_Gateway_Signature')
+    secret_key = bytes(secret_key, 'UTF-8')
+
+    method = "GET"
+    uri = "/photos/puppy.jpg?query1=&query2"
+
+    message = method + " " + uri + "\n" + timestamp + "\n" + access_key
+    message = bytes(message, 'UTF-8')
+    signingKey = base64.b64encode(hmac.new(secret_key, message, digestmod=hashlib.sha256).digest())
+    return signingKey
 
 # 알람에 필요한 정보를 가져오는 함수
 def get_alarm_info(region):
@@ -149,4 +182,4 @@ def precipitation_probability(api3):
 
     POP0_pm = max(pop0)  # 오후 강수확률
 
-    return int(POP0_am), int(POP0_pm)  # 오전, 오후 강수 확률 반환
+    return float(POP0_am), float(POP0_pm)  # 오전, 오후 강수 확률 반환
