@@ -34,9 +34,12 @@ FALSE_PRECIPITATION_TEMPLATE_INFO = {
 }
 
 CURRENT = datetime.now()
+TIMESTAMP = str(int(time() * 1000))
+
 
 # 카카오톡 알림을 보내는 
 def send_kakao_alarm(request):
+    reset_variable()
     people = Profile.objects.filter(kakao_alarm = True)
     
     # 날씨 기준으로 사용자 나누기
@@ -54,7 +57,7 @@ def send_kakao_alarm(request):
     ## 헤더 생성하기
     header = {}
     header['Content-Type'] = 'application/json; charset=utf-8'
-    header['x-ncp-apigw-timestamp'] = str(int(time() * 1000))
+    header['x-ncp-apigw-timestamp'] = TIMESTAMP
     header['x-ncp-iam-access-key'] = env('KAKAO_Sub_Account_Access_Key')
     header['x-ncp-apigw-signature-v2'] = make_signature()
     print(header)
@@ -70,11 +73,10 @@ def send_kakao_alarm(request):
 
         ## 바디 생성하기
         body = {}
-        body['plusFriendId'] = "한줄날씨"
+        body['plusFriendId'] = "@한줄날씨"
         body['templateCode'] = random.sample(template, 1)[0]
-        body['reserveTime'] = datetime.today().strftime("%Y-%m-%d 07:20")
+        body['reserveTime'] = datetime.today().strftime("%Y-%m-%d 12:50")
         body['reserveTimeZone'] = 'Asia/Seoul'
-        body['scheduleCode'] = 'every8'
         body['messages'] = []
         cnt = 1
    
@@ -86,7 +88,7 @@ def send_kakao_alarm(request):
             ### 알림톡 내용 넣기 
             body_messages_data = {}
             body_messages_data['countryCode'] = '82'
-            body_messages_data['to'] = user.phone_number
+            body_messages_data['to'] = '0'+user.phone_number[4:].replace('-', '')
             body_messages_data['content'] = f"""오전 최대 강수 확률이 {morinig_precpitation}% 이고, 오후 최대 강수 확률이 {afternoon_precpitation}%
 최고 기온 {max_tem}도, 최저 기온 {min_tem}도"""
 
@@ -119,18 +121,22 @@ def send_kakao_alarm(request):
 
 # x-ncp-apigw-signature-v2 헤더의 값을 생성하는 함수
 def	make_signature():
-    timestamp = str(int(time() * 1000))
     access_key = env('KAKAO_Sub_Account_Access_Key')
     secret_key = env('KAKAO_API_Gateway_Signature')
     secret_key = bytes(secret_key, 'UTF-8')
 
-    method = "GET"
-    uri = "/photos/puppy.jpg?query1=&query2"
+    method = "POST"
+    uri = "alimtalk/v2/services/"+env('KAKAO_serviceId')+"/messages"
 
-    message = method + " " + uri + "\n" + timestamp + "\n" + access_key
+    message = method + " " + uri + "\n" + TIMESTAMP + "\n" + access_key
     message = bytes(message, 'UTF-8')
     signingKey = base64.b64encode(hmac.new(secret_key, message, digestmod=hashlib.sha256).digest())
     return signingKey
+
+# 변수들 현재 시간 기준으로 리 세팅하는 함수
+def reset_variable():
+    CURRENT = datetime.now()
+    TIMESTAMP = str(int(time() * 1000))
 
 # 알람에 필요한 정보를 가져오는 함수
 def get_alarm_info(region):
