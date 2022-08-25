@@ -180,7 +180,7 @@ class KakaoRegionView(APIView):
                 data['등록된지역'] = RegionSeriallizer(user.kakao_region).data
                 return Response({"data": data}, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f'/account/alarm/regio : Error {e} -----------------------------')
+            print(f'/account/alarm/region : Error {e} -----------------------------')
             return Response({"message": "요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -218,7 +218,7 @@ class RegionView(APIView):
                 data['지역'] = RegionSeriallizer(region).data
                 return Response({"data": data}, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f'/account/alarm/regio : Error {e} -----------------------------')
+            print(f'/account/region : Error {e} -----------------------------')
             return Response({"message": "요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -243,7 +243,7 @@ class RegionView(APIView):
                 return Response({'data': '', 'message': f'{city}, {district}에 대한 자원이 존재하지 않습니다. '}, status=status.HTTP_204_NO_CONTENT)
 
         except Exception as e:
-            print(f'/account/alarm/regio : Error {e} -----------------------------')
+            print(f'/account/region : Error {e} -----------------------------')
             return Response({"message": "요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
 
