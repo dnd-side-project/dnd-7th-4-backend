@@ -24,14 +24,14 @@ from dnd_7th_4_backend.settings.base import env
 
 # 날씨 상태에 따른 템플릿 정보
 TRUE_PRECIPITATION_TEMPLATE_INFO = {
-    '맑음': ['sunnyTest1'],
-    '구름많음' : ['MCloudyT1'],
-    '흐림' : ['cloudyT1']
+    '맑음': ['SUOSunny1', 'SUOSunny2'],
+    '구름많음' : ['SUOMostly1', 'SUOMostly2'], # CHECK
+    '흐림' : ['cloudyT1'] # TODO
 }
 
 FALSE_PRECIPITATION_TEMPLATE_INFO = {
-    '맑음': ['XsunnyTest1'],
-    '구름많음' : ['XMCloudyT1'],
+    '맑음': ['sunnyTest1'],
+    '구름많음' : ['MCloudyT1'],
     '흐림' : ['XcloudyT1']
 }
 
@@ -53,7 +53,7 @@ def send_kakao_alarm(request):
 
         region = p.kakao_region
         morinig_precpitation, afternoon_precpitation, max_tem, min_tem, sky_status, is_precpitation = get_alarm_info(region)
-        user_data[(sky_status, is_precpitation)].append((p, morinig_precpitation, afternoon_precpitation, max_tem, min_tem))
+        user_data[(sky_status, is_precpitation)].append((p, str(morinig_precpitation), str(afternoon_precpitation), str(max_tem), str(min_tem)))
 
     # 알림톡 내용 구성하기 
     ## 헤더 생성하기
@@ -77,7 +77,7 @@ def send_kakao_alarm(request):
         data = {}
         data['plusFriendId'] = "@한줄날씨"
         data['templateCode'] = random.sample(template, 1)[0]
-        data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 15:45")
+        data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 16:17")
         data['reserveTimeZone'] = "Asia/Seoul"
         data['messages'] = []
         cnt = 1
@@ -91,7 +91,7 @@ def send_kakao_alarm(request):
             body_messages_data = {}
             body_messages_data['countryCode'] = "82"
             body_messages_data['to'] = '0'+user.phone_number[4:].replace('-', '')
-            body_messages_data['content'] = f"오전 최대 강수 확률이 {morinig_precpitation}% 이고, 오후 최대 강수 확률이 {afternoon_precpitation}%/n최고 기온 {max_tem}도, 최저 기온 {min_tem}도"
+            body_messages_data['content'] = "오전 최대 강수 확률이 #{" + morinig_precpitation + "}% 이고, 오후 최대 강수 확률이 #{" + afternoon_precpitation + "}%/n최고 기온 #{" + max_tem + "}도, 최저 기온 {#{" + min_tem+ "}도"
 
             #### 링크
             body_buttons = {}
