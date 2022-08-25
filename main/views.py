@@ -18,11 +18,7 @@ from account.models import *
 from .serializers import *
 from dnd_7th_4_backend.settings.base import env
 
-from .api_test.api_6 import api_6
-from .api_test.api_7 import api_7
-from .api_test.api_8 import api_8
-from .api_test.api_9 import api_9
-from .api_test.api_10 import api_10
+from .kakaoalarm_callback_directory.summer_kakao_alarm import send_kakao_alarm
 
 from .comment_callback_directory.comments import *
 from .comment_callback_directory.comments_img import *
@@ -92,8 +88,6 @@ class MainView(APIView):
                 today_weather_state = "중간 비"
             else:  # 3 미만
                 today_weather_state = "약한 비"
-        #######
-
 
         ## 코멘트 부분 추가 -> 이미지도 업로드 할 것!
         today_comments_detail = dict()
@@ -105,8 +99,6 @@ class MainView(APIView):
 
         today_comments_detail["바람"] = wind(WSD)  # 바람
         # today_comments_detail["바람"]["이미지url"] = wind_img(WSD)  # 바람 이미지
-        ## 이 부분 밑에 추가해주시면 될 것 같아요!!
-        ########
 
         d1 = dict()
         for i in range(h, h + 6):  # 현재 시각 ~ 6 시간의 정보
@@ -135,9 +127,8 @@ class MainView(APIView):
         # 딕셔너리 합치기 d1 = d1 + d2
         d1.update(d2)
 
-        ##
-        ## 내일
-        # 내일 특정 h 시간에 대한 정보 제공
+        # 내일
+        ## 내일 특정 h 시간에 대한 정보 제공
         tomm_li = ((api3.serializable_value(f'info_{h}')).replace(" ", "")).split('/')
         T1H = tomm_li[0]  # 기온 - 0
         REH = tomm_li[2]  # 습도 - 2
@@ -164,8 +155,6 @@ class MainView(APIView):
                 tommorrow_weather_state = "중간 비"
             else:  # 3 미만
                 tommorrow_weather_state = "약한 비"
-        #######
-
 
         ## 코멘트 부분 추가
         tomorrow_comments_detail = dict()
@@ -313,7 +302,6 @@ class MainView(APIView):
         print(region.api6_id)
         data['미세먼지'] = region.api6_id.pm10Grade1h
         self.today_finedust = data['미세먼지']
-
 
         # api7
         data['일몰일출'] = MainApi7TodaySerializer(region.api7).data
