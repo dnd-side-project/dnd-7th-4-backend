@@ -1,21 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
-import requests
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import authenticate, get_user_model
+
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from dnd_7th_4_backend.settings.base import env
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth import authenticate, get_user_model
+
+import requests
 from datetime import datetime
 
 from .models import Profile
 from .serializers import *
 from main.serializers import *
+from dnd_7th_4_backend.settings.base import env
 
 
 # JWT 발급 함수
@@ -132,17 +133,21 @@ class KakaoAlarmView(APIView):
     # 만약 사용자의 alarm이 on -> off로 off 였으면 on으로 변경
     def post(self, request):
         print('/accout/kakao_alarm : GET -----------------------------')
-        # 받은 데이터
-        user = request.user.profile
-        
-        # 카카오톡 알림 설정하기
-        if user.kakao_alarm:
-            user.kakao_alarm = False
-        else:
-            user.kakao_alarm = True
-        user.save()
+        try:
+            # 받은 데이터
+            user = request.user.profile
+            
+            # 카카오톡 알림 설정하기
+            if user.kakao_alarm:
+                user.kakao_alarm = False
+            else:
+                user.kakao_alarm = True
+            user.save()
 
-        return Response({"data": ProfileKakaoAlarmSerializers(user).data}, status=status.HTTP_200_OK)
+            return Response({"data": ProfileKakaoAlarmSerializers(user).data}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f'/accout/kakao_alarm : Error {e} -----------------------------')
+            return Response({"message": "요청을 샐패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 카카오톡 지역 설정
@@ -150,25 +155,32 @@ class KakaoRegionView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
-        print('account/alarm/region : POST ——————————————')
+        try:
+            print('/account/alarm/region : POST ——————————————')
 
-        # 받은 데이터
-        city = request.data["city"]  # 시
-        district = request.data["district"]  # 군, 구
-        user = request.user.profile # 사용자
-        region = get_object_or_404(Region, city=city, district=district)
+            # 받은 데이터
+            city = request.data["city"]  # 시
+            district = request.data["district"]  # 군, 구
+            user = request.user.profile # 사용자
+            region = Region.objects.get(city=city, district=district)
+            
+            if not region:
+                return Response({'data': '', 'message': f'{city} , {region}에 대한 자원이 존재하지 않습니다.'}, status=status.HTTP_204_NO_CONTENT)
 
-        if user.kakao_region == region:
-            return Response({"text": "이미 설정된 지역입니다."}, status=status.HTTP_409_CONFLICT)
-        else:
-            # 알림 지역 갱신하기
-            user.kakao_region = region
-            user.save()
+            if user.kakao_region == region:
+                return Response({"message": "이미 저장된 데이터 요청이 들어왔습니다."}, status=status.HTTP_409_CONFLICT)
+            else:
+                # 알림 지역 갱신하기
+                user.kakao_region = region
+                user.save()
 
-            data = {}
-            data['사용자id'] = user.id
-            data['등록된지역'] = RegionSeriallizer(user.kakao_region).data
-            return Response({"data": data}, status=status.HTTP_200_OK)
+                data = {}
+                data['사용자id'] = user.id
+                data['등록된지역'] = RegionSeriallizer(user.kakao_region).data
+                return Response({"data": data}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f'/account/alarm/regio : Error {e} -----------------------------')
+            return Response({"message": "요청을 샐패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 사용자 지역 생성 및 삭제
