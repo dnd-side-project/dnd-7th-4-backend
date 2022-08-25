@@ -485,7 +485,7 @@ class FindRegionView(APIView):
             possible_data = set()
             for ele in response.json()['documents']:
                 possible_data.add((ele['region_1depth_name'], ele['region_2depth_name']))
-            ## possible_data가 0일 때, 그리고 Region에 없을 떄 처리하기
+            ## NOTE possible_data가 0일 때, 그리고 Region에 없을 떄 처리하기 
             return list(possible_data)[0]
 
         except requests.Timeout:
