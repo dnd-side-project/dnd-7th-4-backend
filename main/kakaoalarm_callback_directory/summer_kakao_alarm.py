@@ -23,16 +23,16 @@ from dnd_7th_4_backend.settings.base import env
 
 
 # 날씨 상태에 따른 템플릿 정보
-TRUE_PRECIPITATION_TEMPLATE_INFO = {
+TRUE_PRECIPITATION_TEMPLATE_INFO = { 
     '맑음': ['SUOSunny1', 'SUOSunny2'],
-    '구름많음' : ['SUOMostly1', 'SUOMostly2'], # CHECK
-    '흐림' : ['cloudyT1'] # TODO
+    '구름많음' : ['SUOMostly1', 'SUOMostly2'],
+    '흐림' : ['SUOCloudy1', 'SUOCloudy3']
 }
 
 FALSE_PRECIPITATION_TEMPLATE_INFO = {
-    '맑음': ['sunnyTest1'],
-    '구름많음' : ['MCloudyT1'],
-    '흐림' : ['XcloudyT1']
+    '맑음': ['SUXSunny1', 'SUXSunny2'],
+    '구름많음' : ['SUXMostly1', 'SUXMostly2'],
+    '흐림' : ['SUXCloudy1', 'SUXCloudy2']
 }
 
 CURRENT = datetime.now()
@@ -48,7 +48,7 @@ def send_kakao_alarm(request):
     user_data = defaultdict(list) # {(하늘상태, 강수유무): [profile 객체, 오전강수확률, 오후강수확률, 최고기온, 최저기온], }
     for p in people:
         # 알림을 받을 지역이나 핸드폰 번호가 저장되어 있지 않는 경우
-        if not p.kakao_region or not p.phone_number or p.phone_number[:3] != "+82" and p.kakao_id == 2400917243: 
+        if not p.kakao_region or not p.phone_number or p.phone_number[:3] != "+82": 
            continue 
 
         region = p.kakao_region
@@ -76,7 +76,9 @@ def send_kakao_alarm(request):
         ## 바디 생성하기
         data = {}
         data['plusFriendId'] = "@한줄날씨"
-        data['templateCode'] = random.sample(template, 1)[0]
+        #data['templateCode'] = random.sample(template, 1)[0] 
+        data['templateCode'] ='SUOCloudy2' #CHECK -> 수정본으로 검수 완료 후, 변경될 예정
+        ### 예약 시간 지정하기
         data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 16:17")
         data['reserveTimeZone'] = "Asia/Seoul"
         data['messages'] = []
@@ -91,7 +93,7 @@ def send_kakao_alarm(request):
             body_messages_data = {}
             body_messages_data['countryCode'] = "82"
             body_messages_data['to'] = '0'+user.phone_number[4:].replace('-', '')
-            body_messages_data['content'] = "오전 최대 강수 확률이 #{" + morinig_precpitation + "}% 이고, 오후 최대 강수 확률이 #{" + afternoon_precpitation + "}%/n최고 기온 #{" + max_tem + "}도, 최저 기온 {#{" + min_tem+ "}도"
+            body_messages_data['content'] = f'오전 최대 강수 확률이 {morinig_precpitation}% 이고, 오후 최대 강수 확률이 {afternoon_precpitation}%\n최고 기온 {max_tem}도, 최저 기온 {min_tem}도'
 
             #### 링크
             body_buttons = {}
@@ -108,6 +110,7 @@ def send_kakao_alarm(request):
             # 100명이 되었을 경우
             if cnt >= 100 or not user_info:
                 cnt = 1
+                print(data)
                 response = requests.post(url = url, headers = header, data = json.dumps(data))
                 print(f'resopnse kakao alalrm {response.text} ----------------------')
 
