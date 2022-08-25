@@ -123,6 +123,21 @@ class MainView(APIView):
                 new_li.append(time_img(li[3], li[1]))  # 이미지 추가
                 d2[i] = new_li
 
+        ## 최소 12개 시간대 날씨 보여주기
+        if len(d1)+len(d2) < 12:
+            for i in range(25, 25+(12-len(d1)-len(d2))):
+                field = f'info_{i}'
+                str = (api3.serializable_value(field)).replace(" ", "")
+                li = str.split('/')
+                new_li = []
+                new_li.append(li[0])  # 기온
+                new_li.append(li[1])  # 하늘 상태
+                new_li.append(li[3])  # 강수 형태
+                new_li.append(li[5])  # 1시간 강수량
+                new_li.append(time_img(li[3], li[1]))  # 이미지 추가
+                d2[i] = new_li
+        #########################
+
         # 딕셔너리 합치기 d1 = d1 + d2
         d1.update(d2)
 
