@@ -28,6 +28,22 @@ def get_tokens_for_user(user):
     }
 
 
+# 로컬 개발용
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def managerLogin(request, format=None):
+    try:
+        username = request.data['username']
+        password = request.data['password']
+        user = User.objects.get(username=username)
+        if check_password(password, user.password):
+            user = authenticate(username=username, password=password)
+            data = {'username': username, 'django_token': get_tokens_for_user(user)}
+            return Response(data, status=200)
+    except:
+        return Response({"message": "error"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 # 프론트 요청부분
 @api_view(['GET'])
 @permission_classes([AllowAny])
