@@ -136,18 +136,18 @@ def humidity(self):  # 습도
     return d
 
 
-def precipication(self):  # 강수
-    prec = str(self)
-    if prec == "강수없음":  # "강수없음" 문자열일때 예외처리
+def precipication(sky, pty, rn1):   # sky: 하늘상태, pty: 강수형태, rn1: 1시간강수량
+    if pty == "강수없음" or pty == "없음":  # 강수없음인 경우 -> 맑음, 구름많음, 흐림
         stand = 1
 
-    else:
-        prec = float(prec.replace("mm", ""))  # 단위 없애기
-        if prec < 3:
+    else:  # 강수있음인 경우 -> 약한비, 보통비, 강한비, 매우강한비
+        rn1 = rn1.replace("mm", "")
+        rn1 = float(rn1)  # data-type 맞추기
+        if rn1 < 3:
             stand = 2
-        elif 3 <= prec < 15:
+        elif 3 <= rn1 < 15:
             stand = 3
-        elif 15 <= prec < 30:
+        elif 15 <= rn1 < 30:
             stand = 4
         else:
             stand = 5

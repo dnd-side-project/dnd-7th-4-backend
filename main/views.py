@@ -78,27 +78,22 @@ class MainView(APIView):
 
 
         ## 메인 백그라운드 이미지 데이터 -> 맑음 / 구름많음 / 흐림 / ( 약한비 / 중간비 / 강한비 )
-        rn1 = float(RN1)
-        if rn1 == 0:  # 1시간 강수량이 0일때 -> 맑음, 구름많음, 흐림으로 판별
-            today_weather_state = SKY
-        else:
-            if rn1 >= 15:
-                today_weather_state = "강한 비"
-            elif 3 <= rn1 < 15:
-                today_weather_state = "중간 비"
-            else:  # 3 미만
-                today_weather_state = "약한 비"
+        today_weather_state = background_img(SKY, PTY, RN1)
+        #######
+
 
         ## 코멘트 부분 추가 -> 이미지도 업로드 할 것!
         today_comments_detail = dict()
         today_comments_detail["메인"] = today_comment(region, self.today_windchill)
         today_comments_detail["습도"] = humidity(REH)  # 습도
         # today_comments_detail["습도"]["이미지url"] = humidity_img(REH)  # 습도 이미지
-        today_comments_detail["강수"] = precipication(RN1)  # 강수
+        today_comments_detail["강수"] = precipication(SKY, PTY, RN1)  # 강수
         today_comments_detail["강수"]["이미지url"] = precipication_img(SKY, PTY, RN1)  # 강수 이미지
 
         today_comments_detail["바람"] = wind(WSD)  # 바람
         # today_comments_detail["바람"]["이미지url"] = wind_img(WSD)  # 바람 이미지
+        ## 이 부분 밑에 추가해주시면 될 것 같아요!!
+        ########
 
         d1 = dict()
         for i in range(h, h + 6):  # 현재 시각 ~ 6 시간의 정보
@@ -124,6 +119,21 @@ class MainView(APIView):
                 new_li.append(time_img(li[3], li[1]))  # 이미지 추가
                 d2[i] = new_li
 
+        ## 최소 12개 시간대 날씨 보여주기
+        if len(d1)+len(d2) < 12:
+            for i in range(24, 24+(12-len(d1)-len(d2))):
+                field = f'info_{i}'
+                str = (api3.serializable_value(field)).replace(" ", "")
+                li = str.split('/')
+                new_li = []
+                new_li.append(li[0])  # 기온
+                new_li.append(li[1])  # 하늘 상태
+                new_li.append(li[3])  # 강수 형태
+                new_li.append(li[5])  # 1시간 강수량
+                new_li.append(time_img(li[3], li[1]))  # 이미지 추가
+                d2[i] = new_li
+        #########################
+
         # 딕셔너리 합치기 d1 = d1 + d2
         d1.update(d2)
 
@@ -145,23 +155,16 @@ class MainView(APIView):
 
 
         ## 메인 백그라운드 이미지 데이터 -> 맑음 / 구름많음 / 흐림 / ( 약한비 / 중간비 / 강한비 )
-        if RN1 == "강수없음":  # 1시간 강수량이 0일때 -> 맑음, 구름많음, 흐림으로 판별
-            tommorrow_weather_state = SKY
-        else:
-            rn1 = float(RN1.replace("mm", ""))
-            if rn1 >= 15:
-                tommorrow_weather_state = "강한 비"
-            elif 3 <= rn1 < 15:
-                tommorrow_weather_state = "중간 비"
-            else:  # 3 미만
-                tommorrow_weather_state = "약한 비"
+        tommorrow_weather_state = background_img(SKY, PTY, RN1)
+        #######
+
 
         ## 코멘트 부분 추가
         tomorrow_comments_detail = dict()
         tomorrow_comments_detail["메인"] = tomorrow_comment(region, self.tomorrow_windchill)
         tomorrow_comments_detail["습도"] = humidity(REH)  # 습도
         # tomorrow_comments_detail["습도"]["이미지url"] = humidity_img(REH)  # 습도 이미지
-        tomorrow_comments_detail["강수"] = precipication(RN1)  # 강수
+        tomorrow_comments_detail["강수"] = precipication(SKY, PTY, RN1)  # 강수
         tomorrow_comments_detail["강수"]["이미지url"] = precipication_img(SKY, PTY, RN1)  # 강수 이미지
 
         tomorrow_comments_detail["바람"] = wind(WSD)  ## 바람
