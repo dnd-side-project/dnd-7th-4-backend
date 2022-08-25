@@ -82,16 +82,7 @@ class MainView(APIView):
 
 
         ## 메인 백그라운드 이미지 데이터 -> 맑음 / 구름많음 / 흐림 / ( 약한비 / 중간비 / 강한비 )
-        rn1 = float(RN1)
-        if rn1 == 0:  # 1시간 강수량이 0일때 -> 맑음, 구름많음, 흐림으로 판별
-            today_weather_state = SKY
-        else:
-            if rn1 >= 15:
-                today_weather_state = "강한 비"
-            elif 3 <= rn1 < 15:
-                today_weather_state = "중간 비"
-            else:  # 3 미만
-                today_weather_state = "약한 비"
+        today_weather_state = background_img(SKY, PTY, RN1)
         #######
 
 
@@ -154,16 +145,7 @@ class MainView(APIView):
 
 
         ## 메인 백그라운드 이미지 데이터 -> 맑음 / 구름많음 / 흐림 / ( 약한비 / 중간비 / 강한비 )
-        if RN1 == "강수없음":  # 1시간 강수량이 0일때 -> 맑음, 구름많음, 흐림으로 판별
-            tommorrow_weather_state = SKY
-        else:
-            rn1 = float(RN1.replace("mm", ""))
-            if rn1 >= 15:
-                tommorrow_weather_state = "강한 비"
-            elif 3 <= rn1 < 15:
-                tommorrow_weather_state = "중간 비"
-            else:  # 3 미만
-                tommorrow_weather_state = "약한 비"
+        tommorrow_weather_state = background_img(SKY, PTY, RN1)
         #######
 
 

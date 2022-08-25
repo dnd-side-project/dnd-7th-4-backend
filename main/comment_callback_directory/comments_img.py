@@ -94,6 +94,23 @@ def precipication_img(sky, pty, rn1):  # sky: 하늘상태, pty: 강수형태, r
     return img_url
 
 
+# 배경 이미지
+def background_img(sky, pty, rn1):
+    if pty == "없음" or pty == "강수없음":  # 강수없음인 경우 -> 맑음, 구름많음, 흐림
+        back_img = sky
+    else:  # 강수있음인 경우 -> 약한비, 보통비, 강한비, 매우강한비
+        rn1 = rn1.replace("mm", "")
+        rn1 = float(rn1)  # data-type 맞추기
+        if rn1 >= 15:
+            back_img = "강한 비"
+        elif 3 <= rn1 < 15:
+            back_img = "중간 비"
+        else:
+            back_img = "약한 비"
+
+    return back_img
+
+
 # 시간대별 이미지
 def time_img(pty, sky):  # pty: 강수형태, sky: 하늘상태
     if pty == "없음":  # 강수없음 -> 맑음, 구름많음, 흐림
