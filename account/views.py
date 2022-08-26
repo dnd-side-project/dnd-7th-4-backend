@@ -62,59 +62,57 @@ def front(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def back(request):
-    try:
-        code = request.GET.get('code', None)
+    code = request.GET.get('code', None)
 
-        headers = {
-            'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-        }
-        data = {
-            'grant_type': 'authorization_code',
-            'client_id': env('kakao_client_id'),
-            'redirect_uri': env('kakao_redirect_uri'),
-            'code': code
-        }
+    headers = {
+        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+    }
+    data = {
+        'grant_type': 'authorization_code',
+        'client_id': env('kakao_client_id'),
+        'redirect_uri': env('kakao_redirect_uri'),
+        'code': code
+    }
 
-        url = 'https://kauth.kakao.com/oauth/token'
+    url = 'https://kauth.kakao.com/oauth/token'
 
-        token_req = requests.post(url, headers=headers, data=data)
-        token_req_json = token_req.json()
+    token_req = requests.post(url, headers=headers, data=data)
+    token_req_json = token_req.json()
 
-        kakao_access_token = token_req_json.get("access_token")
+    kakao_access_token = token_req_json.get("access_token")
 
-        kakao_api_response = requests.post(
-            "https://kapi.kakao.com/v2/user/me",
-            headers={
-                "Authorization": f"Bearer {kakao_access_token}",
-                "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-            },
-        )
-        kakao_api_response = kakao_api_response.json()
+    kakao_api_response = requests.post(
+        "https://kapi.kakao.com/v2/user/me",
+        headers={
+            "Authorization": f"Bearer {kakao_access_token}",
+            "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+    )
+    kakao_api_response = kakao_api_response.json()
 
-        kakao_id = kakao_api_response["id"]
-        nickname = kakao_api_response["properties"]["nickname"]
-        profile_image = kakao_api_response["properties"]["profile_image"]
-        phone_number = kakao_api_response["kakao_account"]["phone_number"]
+    kakao_id = kakao_api_response["id"]
+    nickname = kakao_api_response["properties"]["nickname"]
+    profile_image = kakao_api_response["properties"]["profile_image"]
+    phone_number = kakao_api_response["kakao_account"]["phone_number"]
 
-        profile = Profile.objects.filter(kakao_id=str(kakao_id))
+    profile = Profile.objects.filter(kakao_id=str(kakao_id))
 
-        if profile.exists():
-            print("기존 유저")
-            user = User.objects.get(username=str(kakao_id))
-        else:
-            print("새로운 유저")
-            user = User.objects.create(username=str(kakao_id))  # unique 값으로 username 넣어야함
-            user.save()
-            profile = Profile.objects.create(user=user, kakao_id=str(kakao_id), nickname=nickname,
-                                             profile_image=str(profile_image), phone_number=str(phone_number))
-            profile.save()
+    if profile.exists():
+        print("기존 유저")
+        user = User.objects.get(username=str(kakao_id))
+    else:
+        print("새로운 유저")
+        user = User.objects.create(username=str(kakao_id))  # unique 값으로 username 넣어야함
+        user.save()
+        profile = Profile.objects.create(user=user, kakao_id=str(kakao_id), nickname=nickname,
+                                         profile_image=str(profile_image), phone_number=str(phone_number))
+        profile.save()
 
-            data = {"nickname": nickname, "profile_img": profile_image, "kakao_access_token": kakao_access_token,
-                         "django_token": get_tokens_for_user(user)}
+    data = {"nickname": nickname, "profile_img": profile_image, "kakao_access_token": kakao_access_token,
+            "django_token": get_tokens_for_user(user)}
 
-        return Response({"data": data}, status=status.HTTP_200_OK)
-    except:
-        Response({"message": "요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"data": data}, status=status.HTTP_200_OK)
+
 
 
 
