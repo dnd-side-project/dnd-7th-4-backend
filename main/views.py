@@ -24,7 +24,6 @@ from .comment_callback_directory.comments import *
 from .comment_callback_directory.comments_img import *
 
 from .api_test.api_10 import api_10
-from .api_test.test_share_fucn import *
 
 
 pty = {'0': '없음', '1': '비', '2': '비/눈', '5': '빗방울',  # 강수형태코드
