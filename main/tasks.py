@@ -99,6 +99,6 @@ def api_9():
         print('api_9: update -----------------------------')
         update_api_9()
 
-# @shared_task
-# def kakao_alarm():
-#     send_kakao_alarm()
+@shared_task
+def kakao_alarm():
+    send_kakao_alarm()
