@@ -173,7 +173,6 @@ class KakaoRegionView(APIView):
     def post(self, request):
         try:
             print('/account/alarm/region : POST ——————————————')
-
             # 받은 데이터
             city = request.data["city"]  # 시
             district = request.data["district"]  # 군, 구
@@ -211,12 +210,17 @@ class RegionView(APIView):
             # 받은 데이터
             city = request.data["city"]  # 시
             district = request.data["district"]  # 군, 구
-            user = request.user.profile
+        except Exception as e:
+            print(f'/account/alarm/regio : Error {e} -----------------------------')
+            return Response({"message": "1-1 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        try:
+            user = request.user.profile # 사용자
             region = Region.objects.filter(city=city, district=district)
 
         except Exception as e:
             print(f'/account/alarm/regio : Error {e} -----------------------------')
-            return Response({"message": "1 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "1-2 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             
