@@ -79,7 +79,7 @@ def send_kakao_alarm(request):
         #data['templateCode'] = random.sample(template, 1)[0] 
         data['templateCode'] ='SUOCloudy2' #CHECK -> 수정본으로 검수 완료 후, 변경될 예정
         ### 예약 시간 지정하기
-        data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 16:17")
+        data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 07:00")
         data['reserveTimeZone'] = "Asia/Seoul"
         data['messages'] = []
         cnt = 1
@@ -156,7 +156,7 @@ def get_alarm_info(region):
     max_tem = api3.info_day0_MAX  # 오늘 최고기온
     min_tem = api3.info_day0_MIN  # 오늘 최저기온
 
-    # 썸네일 데이터 REVIEW
+    # 썸네일 데이터
     ## 하늘상태
     field = f'info_{h}'
     str = (api2.serializable_value(field)).replace(" ", "")  # 나중엔 없앨 공백 제거 코드
