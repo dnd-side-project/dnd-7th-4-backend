@@ -235,7 +235,7 @@ class RegionView(APIView):
                 return Response({"data": data}, status=status.HTTP_200_OK)
         except Exception as e:
             print(f'/account/region : Error {e} -----------------------------')
-            return Response({"message": "요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "{e}요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
 
     # 도착한 city, district를 사용자 지역 목록에서 삭제
