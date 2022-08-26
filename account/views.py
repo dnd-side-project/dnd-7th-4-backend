@@ -213,14 +213,19 @@ class RegionView(APIView):
         except Exception as e:
             print(f'/account/alarm/regio : Error {e} -----------------------------')
             return Response({"message": "1-1 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
-            
+
         try:
             user = request.user.profile # 사용자
+        except Exception as e:
+            print(f'/account/alarm/regio : Error {e} -----------------------------')
+            return Response({"message": "1-2-1 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
             region = Region.objects.filter(city=city, district=district)
 
         except Exception as e:
             print(f'/account/alarm/regio : Error {e} -----------------------------')
-            return Response({"message": "1-2 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "1-2-2 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             
@@ -228,12 +233,6 @@ class RegionView(APIView):
                 return Response({'data': '', 'message': f'{city}, {district}에 대한 자원이 존재하지 않습니다.'}, status=status.HTTP_204_NO_CONTENT)
             region = region[0]
             
-
-        except Exception as e:
-            print(f'/account/alarm/regio : Error {e} -----------------------------')
-            return Response({"message": "2 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
             try:
                 # 이미 user와 region에 대한 데이터가 존재하는 경우
                 user_region = User_Region.objects.get(region=region, user=user)
@@ -250,7 +249,7 @@ class RegionView(APIView):
                 return Response({"data": data}, status=status.HTTP_200_OK)
         except Exception as e:
             print(f'/account/alarm/regio : Error {e} -----------------------------')
-            return Response({"message": "3 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "2 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
     # 도착한 city, district를 사용자 지역 목록에서 삭제
     def delete(self, request):
