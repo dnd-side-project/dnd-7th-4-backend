@@ -207,27 +207,46 @@ class RegionView(APIView):
     # 도착한 city, district를 사용자 지역으로 생성
     def post(self, request):
         print('/account/region : POST ——————————————')
-        # 받은 데이터
-        city = request.data["city"]  # 시
-        district = request.data["district"]  # 군, 구
-        user = request.user.profile
-        region = get_object_or_404(Region, city=city, district=district)
+        try:
+            # 받은 데이터
+            city = request.data["city"]  # 시
+            district = request.data["district"]  # 군, 구
+            user = request.user.profile
+            region = Region.objects.filter(city=city, district=district)
+
+        except Exception as e:
+            print(f'/account/alarm/regio : Error {e} -----------------------------')
+            return Response({"message": "1 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            
+            if len(region) == 0:
+                return Response({'data': '', 'message': f'{city}, {district}에 대한 자원이 존재하지 않습니다.'}, status=status.HTTP_204_NO_CONTENT)
+            region = region[0]
+            
+
+        except Exception as e:
+            print(f'/account/alarm/regio : Error {e} -----------------------------')
+            return Response({"message": "2 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # 이미 user와 region에 대한 데이터가 존재하는 경우
-            user_region = User_Region.objects.get(region=region, user=user)
-            return Response({"message": "이미 저장된 데이터 요청이 들어왔습니다."}, status=status.HTTP_409_CONFLICT)
-        except User_Region.DoesNotExist:
+            try:
+                # 이미 user와 region에 대한 데이터가 존재하는 경우
+                user_region = User_Region.objects.get(region=region, user=user)
+                return Response({"message": "이미 저장된 데이터 요청이 들어왔습니다."}, status=status.HTTP_409_CONFLICT)
+            except User_Region.DoesNotExist:
 
-            # user_region 데이터 생성
-            user_region = User_Region(user=user, region=region)
-            user_region.save()
+                # user_region 데이터 생성
+                user_region = User_Region(user=user, region=region)
+                user_region.save()
 
-            data = {}
-            data['사용자id'] = user.id
-            data['지역'] = RegionSeriallizer(region).data
-            return Response({"data": data}, status=status.HTTP_200_OK)
-
+                data = {}
+                data['사용자id'] = user.id
+                data['지역'] = RegionSeriallizer(region).data
+                return Response({"data": data}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f'/account/alarm/regio : Error {e} -----------------------------')
+            return Response({"message": "3 요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
     # 도착한 city, district를 사용자 지역 목록에서 삭제
     def delete(self, request):
