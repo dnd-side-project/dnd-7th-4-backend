@@ -31,5 +31,5 @@
 
 | EC2                                                      | ELB                                                      | Django                                                         | Nginx                                                        |gunicorn|
 |----------------------------------------------------------|----------------------------------------------------------|----------------------------------------------------------------|--------------------------------------------------------------|---|
-| <img src="./images/ec2.png" width="50px"  title="EC2" /> | <img src="./images/elb.png" width="50px"  title="ELB" /> | <img src="./images/django.png" width="50px"  title="Django" /> | <img src="./images/nginx.png" width="50px"  title="Nginx" /> |<img src="./images/gunicorn.png" width="70px"  title="gunicorn" />
+|  <img src="./images/ec2.png" width="50px"  title="EC2" /> | <img src="./images/elb.png" width="50px"  title="ELB" /> | <img src="./images/django.png" width="50px"  title="Django" /> | <img src="./images/nginx.png" width="50px"  title="Nginx" /> |<img src="./images/gunicorn.png" width="70px"  title="gunicorn" />
 

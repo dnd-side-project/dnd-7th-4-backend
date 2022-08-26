@@ -8,6 +8,7 @@ urlpatterns = [
     path('kakao/logout', views.logout),
 
     path('login', views.login),  # 백엔드 테스트용
+    path('manager', views.managerLogin),  # 프론트 개발용
 
     # 유저 관련 기능들
     path('region', views.RegionView.as_view()),  # 사용자의 지역 생성, 삭제
