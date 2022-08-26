@@ -6,7 +6,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.prod
-    command: gunicorn dnd_7th_4_backend.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn dnd_7th_4_backend.wsgi:application --bind 0.0.0.0:8000 --timeout=120
     environment:
       DJANGO_SETTINGS_MODULE: dnd_7th_4_backend.settings.prod
       TZ: "Asia/Seoul"
