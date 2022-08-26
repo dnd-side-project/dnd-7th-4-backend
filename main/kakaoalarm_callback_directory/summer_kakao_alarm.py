@@ -40,7 +40,7 @@ CURRENT = datetime.now()
 
 
 # 카카오톡 알림을 보내는 
-def send_kakao_alarm(request):
+def send_kakao_alarm(request): #CHECK tasks 등록 시, request 파라미터 제거
     reset_variable()
     people = Profile.objects.filter(kakao_alarm = True)
     data = {}
