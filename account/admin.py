@@ -3,7 +3,7 @@ from .models import *
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['id', 'nickname', 'kakao_alarm', 'kakao_region']
+    list_display = ['id', 'nickname', 'kakao_alarm', 'kakao_region', 'kakao_id']
 
 
 @admin.register(User_Region)
