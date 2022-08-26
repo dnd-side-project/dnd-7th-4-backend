@@ -212,12 +212,7 @@ class RegionView(APIView):
             city = request.data["city"]  # 시
             district = request.data["district"]  # 군, 구
             user = request.user.profile
-            region = Region.objects.filter(city=city, district=district)
-            
-            if len(region) == 0:
-                return Response({'data': '', 'message': f'{city}, {district}에 대한 자원이 존재하지 않습니다.'}, status=status.HTTP_204_NO_CONTENT)
-            region = region[0]
-            
+            region = get_object_or_404(Region, city=city, district=district)
 
             try:
                 # 이미 user와 region에 대한 데이터가 존재하는 경우
@@ -235,7 +230,7 @@ class RegionView(APIView):
                 return Response({"data": data}, status=status.HTTP_200_OK)
         except Exception as e:
             print(f'/account/region : Error {e} -----------------------------')
-            return Response({"message": "{e}요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
 
     # 도착한 city, district를 사용자 지역 목록에서 삭제
