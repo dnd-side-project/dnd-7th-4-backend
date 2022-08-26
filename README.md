@@ -25,7 +25,7 @@
 
 | MySQL                                                        | RDS                                                     |S3|
 |--------------------------------------------------------------|---------------------------------------------------------|---|
-| <img src="./images/mysql.png" width="50px"  title= "MySQL"/> | <img src="./images/rds.png" width="50px"  title="RDS"/> |<img src="./images/s3.png" width="50px"  title="S3" />
+|  <img src="./images/mysql.png" width="50px"  title= "MySQL"/> | <img src="./images/rds.png" width="50px"  title="RDS"/> |<img src="./images/s3.png" width="50px"  title="S3" />
 
 ### ✔️ Web Server
 
