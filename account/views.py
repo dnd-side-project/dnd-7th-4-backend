@@ -97,6 +97,9 @@ def back(request):
 
     profile = Profile.objects.filter(kakao_id=str(kakao_id))
 
+    # Default 지역 설정하기
+    region = Region.objects.get(div_code=1168000000)
+
     if profile.exists():
         print("기존 유저")
         user = User.objects.get(username=str(kakao_id))
@@ -105,16 +108,13 @@ def back(request):
         user = User.objects.create(username=str(kakao_id))  # unique 값으로 username 넣어야함
         user.save()
         profile = Profile.objects.create(user=user, kakao_id=str(kakao_id), nickname=nickname,
-                                         profile_image=str(profile_image), phone_number=str(phone_number))
+                                         profile_image=str(profile_image), phone_number=str(phone_number), kakao_alarm=True, kakao_region=region)
         profile.save()
 
     data = {"nickname": nickname, "profile_img": profile_image, "kakao_access_token": kakao_access_token,
             "django_token": get_tokens_for_user(user)}
 
     return Response({"data": data}, status=status.HTTP_200_OK)
-
-
-
 
 
 # 연결 끊기 -> 로컬 테스트용
