@@ -413,47 +413,50 @@ class SearchView(APIView):
             "흐림": "https://weathercomment.s3.ap-northeast-2.amazonaws.com/지역검색시 날씨일러스트/흐림.png"
         }
 
-        str = request.data["data"]
-        words = str.split(" ")  # 공백을 기준으로 파싱하기
+        try:
+            str = request.data["data"]
+            words = str.split(" ")  # 공백을 기준으로 파싱하기
 
-        if len(words) == 1:  # city 또는 district 만 입력받은 경우
-            regions = Region.objects.filter(city__contains=words[0]).values()  # 검색한 것이 -> city 인 경우
+            if len(words) == 1:  # city 또는 district 만 입력받은 경우
+                regions = Region.objects.filter(city__contains=words[0]).values()  # 검색한 것이 -> city 인 경우
 
-            if len(regions) == 0:
-                regions = Region.objects.filter(district__contains=words[0]).values()  # 검색한 것이 -> district 인 경우
+                if len(regions) == 0:
+                    regions = Region.objects.filter(district__contains=words[0]).values()  # 검색한 것이 -> district 인 경우
 
-        elif len(words) > 1:  # city, district 모두 입력받은 경우 (공백 기준 문자열 2개일 경우)
-            regions = Region.objects.filter(city__contains=words[0]).filter(district__contains=words[1]).values()
-        else:
-            return Response({"data": ""}, status=status.HTTP_200_OK)
-
-        # 해당 objs의 기온과 하늘상태 불러오기 // 기온 -> api2 이용
-        d = {}
-        h = int(datetime.now().strftime("%H"))
-        for region in regions:  # obj는 Region 객체
-            print(region)
-            key = region["city"] + " " + region["district"]
-            print(key)
-            api1 = Api1.objects.get(region=region["id"])
-            tem = api1.T1H  # 현재 기온
-            pty = api1.PTY  # 강수 형태 (코드값으로 받음)
-
-            # 강수 형태 -> 없음 (맑음, 구름많음, 흐림) // 있음 -> 비 기준으로 1차 판별
-
-            # 강수 형태 "없음" -> "하늘상태"로 판별
-            if pty == "0":
-                api2 = Api2.objects.get(region=region["id"])
-                field = f'info_{h}'
-                sky = (((api2.serializable_value(field)).replace(" ", "")).split('/'))[1]  # 하늘상태
-                img_url = imgs[sky]
-
-            # 강수 형태 있음 -> "비"로 판단
+            elif len(words) > 1:  # city, district 모두 입력받은 경우 (공백 기준 문자열 2개일 경우)
+                regions = Region.objects.filter(city__contains=words[0]).filter(district__contains=words[1]).values()
             else:
-                img_url = imgs["비"]
+                return Response({"data": ""}, status=status.HTTP_200_OK)
 
-            d[key] = {"이미지url": img_url, "기온": tem}
+            # 해당 objs의 기온과 하늘상태 불러오기 // 기온 -> api2 이용
+            d = {}
+            h = int(datetime.now().strftime("%H"))
+            for region in regions:  # obj는 Region 객체
+                print(region)
+                key = region["city"] + " " + region["district"]
+                print(key)
+                api1 = Api1.objects.get(region=region["id"])
+                tem = api1.T1H  # 현재 기온
+                pty = api1.PTY  # 강수 형태 (코드값으로 받음)
 
-        return Response({"data": d}, status=status.HTTP_200_OK)
+                # 강수 형태 -> 없음 (맑음, 구름많음, 흐림) // 있음 -> 비 기준으로 1차 판별
+
+                # 강수 형태 "없음" -> "하늘상태"로 판별
+                if pty == "0":
+                    api2 = Api2.objects.get(region=region["id"])
+                    field = f'info_{h}'
+                    sky = (((api2.serializable_value(field)).replace(" ", "")).split('/'))[1]  # 하늘상태
+                    img_url = imgs[sky]
+
+                # 강수 형태 있음 -> "비"로 판단
+                else:
+                    img_url = imgs["비"]
+
+                d[key] = {"이미지url": img_url, "기온": tem}
+
+            return Response({"data": d}, status=status.HTTP_200_OK)
+        except:
+            return Response({"message": "요청을 실패하였습니다"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 경도, 위도 요청시, 카카오 로컬 API를 이용하여 행정구역 데이터 반환하는 API

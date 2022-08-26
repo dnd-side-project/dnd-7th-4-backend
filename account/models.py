@@ -8,7 +8,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     kakao_id = models.CharField(max_length=50)  # 카카오 id
     nickname = models.CharField(max_length=50)  # 카카오 닉네임
-    profile_image = models.TextField(null=True, default='')  # 카카오 프로필 이미지
+    profile_image = models.TextField(null=True, default="https://weathercomment.s3.ap-northeast-2.amazonaws.com/대표이미지/1.png")  # 카카오 프로필 이미지
     kakao_alarm = models.BooleanField(default=0)  # 카카오 알람
     kakao_region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True, default='') # 카카오 알림 지역
     phone_number = models.CharField(max_length=50, null=True)  # 카카오 핸드폰 번호
