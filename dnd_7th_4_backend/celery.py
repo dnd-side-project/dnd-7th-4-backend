@@ -63,5 +63,10 @@ app.conf.beat_schedule = {
         'task': 'main.tasks.api_9',
         'schedule': crontab(minute=0, hour='6, 18'), # 6시, 18시에 호출
     },
+    'add-every-at-06-kakao_alarm': {
+        'task': 'main.tasks.kakao_alarm',
+        'schedule': crontab(minute=0, hour=6), # 6시 마다 호출
+    },
+
 
 } 

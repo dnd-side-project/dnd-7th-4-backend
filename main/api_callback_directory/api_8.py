@@ -99,7 +99,7 @@ def update_api_8():
             print(f'api_8: Timeout: -----------------------------')
         except requests.ConnectionError:
             print(f'api_8: ConnectionError:-----------------------------')
-        except request.JSONDecodeError:
+        except requests.JSONDecodeError:
             print(f'api_8: JSONDecodeError:-----------------------------')
 
 # OpenAPI 에러 처리
