@@ -109,7 +109,7 @@ def back(request):
                                              profile_image=str(profile_image), phone_number=str(phone_number))
             profile.save()
 
-            data = {"nickname": nickname, "profile_img": profile_image, "kakao_access_token": kakao_access_token,
+        data = {"nickname": nickname, "profile_img": profile_image, "kakao_access_token": kakao_access_token,
                          "django_token": get_tokens_for_user(user)}
 
         return Response({"data": data}, status=status.HTTP_200_OK)
