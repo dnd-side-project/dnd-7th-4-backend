@@ -26,12 +26,13 @@ from dnd_7th_4_backend.settings.base import env
 TRUE_PRECIPITATION_TEMPLATE_INFO = { 
     '맑음': ['SUOSunny1', 'SUOSunny2'],
     '구름많음' : ['SUOMostly1', 'SUOMostly2'],
-    '흐림' : ['SUOCloudy1', 'SUOCloudy3']
+    '흐림' : ['SUOCloudy4',]
+    #'흐림' : ['SUOCloudy4', 'SUOCloudy5'] CHECK 검수 완료 시, 변경 예정
 }
 
 FALSE_PRECIPITATION_TEMPLATE_INFO = {
     '맑음': ['SUXSunny1', 'SUXSunny2'],
-    '구름많음' : ['SUXMostly1', 'SUXMostly2'],
+    '구름많음' : ['SUXMostly1', 'SUXMostly3'],
     '흐림' : ['SUXCloudy1', 'SUXCloudy2']
 }
 
@@ -76,10 +77,9 @@ def send_kakao_alarm(request):
         ## 바디 생성하기
         data = {}
         data['plusFriendId'] = "@한줄날씨"
-        #data['templateCode'] = random.sample(template, 1)[0] 
-        data['templateCode'] ='SUOCloudy2' #CHECK -> 수정본으로 검수 완료 후, 변경될 예정
+        data['templateCode'] = random.sample(template, 1)[0] 
         ### 예약 시간 지정하기
-        data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 07:00")
+        data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 19:00")
         data['reserveTimeZone'] = "Asia/Seoul"
         data['messages'] = []
         cnt = 1
@@ -93,7 +93,7 @@ def send_kakao_alarm(request):
             body_messages_data = {}
             body_messages_data['countryCode'] = "82"
             body_messages_data['to'] = '0'+user.phone_number[4:].replace('-', '')
-            body_messages_data['content'] = f'오전 최대 강수 확률이 {morinig_precpitation}% 이고, 오후 최대 강수 확률이 {afternoon_precpitation}%\n최고 기온 {max_tem}도, 최저 기온 {min_tem}도'
+            body_messages_data['content'] = f'"- 최대 강수 확률 오전 {morinig_precpitation}% / 오후 {afternoon_precpitation}%\n- 최고 기온 {max_tem}도 / 최저 기온 {min_tem}도'
 
             #### 링크
             body_buttons = {}
@@ -110,7 +110,6 @@ def send_kakao_alarm(request):
             # 100명이 되었을 경우
             if cnt >= 100 or not user_info:
                 cnt = 1
-                print(data)
                 response = requests.post(url = url, headers = header, data = json.dumps(data))
                 print(f'resopnse kakao alalrm {response.text} ----------------------')
 
@@ -172,8 +171,6 @@ def get_alarm_info(region):
 
 # Region 객체 전달 시, 해당 지역의 당일 (오전 강수확률), (오후 강수확률) 반환하는 함수
 def precipitation_probability(api3):
-    # region = Region.objects.get(id=2)  ## 임의 테스트코드
-
     # 오전/오후별 : 강수확률
     pop0 = []
 
