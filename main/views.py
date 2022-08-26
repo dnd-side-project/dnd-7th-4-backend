@@ -472,6 +472,8 @@ class FindRegionView(APIView):
 
             # 시, 군구 찾기
             city, district = self.get_region_data(longitude, latitude)
+            ## district 띄어쓰기가 있는 경우 없애기
+            district = district.replace(' ', '')
             print(city, district)
 
             # 존재하는 지역인지 확인하기
