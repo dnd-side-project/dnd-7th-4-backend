@@ -32,7 +32,8 @@ TRUE_PRECIPITATION_TEMPLATE_INFO = {
 
 FALSE_PRECIPITATION_TEMPLATE_INFO = {
     '맑음': ['SUXSunny1', 'SUXSunny2'],
-    '구름많음' : ['SUXMostly1', 'SUXMostly3'],
+    #'구름많음' : ['SUXMostly1', 'SUXMostly3'], CHECK 검수 완료 시, 변경 예정
+    '구름많음' : ['SUXMostly1'],
     '흐림' : ['SUXCloudy1', 'SUXCloudy2']
 }
 
@@ -79,8 +80,8 @@ def send_kakao_alarm(request): #CHECK tasks 등록 시, request 파라미터 제
         data['plusFriendId'] = "@한줄날씨"
         data['templateCode'] = random.sample(template, 1)[0] 
         ### 예약 시간 지정하기
-        data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 19:00")
-        data['reserveTimeZone'] = "Asia/Seoul"
+        # data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 19:00")
+        # data['reserveTimeZone'] = "Asia/Seoul"
         data['messages'] = []
         cnt = 1
    
@@ -93,7 +94,7 @@ def send_kakao_alarm(request): #CHECK tasks 등록 시, request 파라미터 제
             body_messages_data = {}
             body_messages_data['countryCode'] = "82"
             body_messages_data['to'] = '0'+user.phone_number[4:].replace('-', '')
-            body_messages_data['content'] = f'"- 최대 강수 확률 오전 {morinig_precpitation}% / 오후 {afternoon_precpitation}%\n- 최고 기온 {max_tem}도 / 최저 기온 {min_tem}도'
+            body_messages_data['content'] = f'- 최대 강수 확률 오전 {morinig_precpitation}% / 오후 {afternoon_precpitation}%\n- 최고 기온 {max_tem}도 / 최저 기온 {min_tem}도'
 
             #### 링크
             body_buttons = {}
@@ -110,6 +111,7 @@ def send_kakao_alarm(request): #CHECK tasks 등록 시, request 파라미터 제
             # 100명이 되었을 경우
             if cnt >= 100 or not user_info:
                 cnt = 1
+                print(data)
                 response = requests.post(url = url, headers = header, data = json.dumps(data))
                 print(f'resopnse kakao alalrm {response.text} ----------------------')
 
@@ -118,7 +120,7 @@ def send_kakao_alarm(request): #CHECK tasks 등록 시, request 파라미터 제
         except requests.ConnectionError:
             print(f'resopnse kakao alalrm: ConnectionError: {user} alarm -----------------------------')
 
-    return HttpResponse(data)
+    return HttpResponse(response)
 
 # x-ncp-apigw-signature-v2 헤더의 값을 생성하는 함수
 def	make_signature(timestamp):
