@@ -15,7 +15,7 @@ def func5():
     base_date = current.strftime("%Y%m%d")
     base_time = current.strftime("%H%M")
     tmFc = str(base_date) + str(base_time) + "00"  # 배포용
-    tmFc = "202208250600"  # 테스트용
+    tmFc = "202208270600"  # 테스트용
 
     districtCode = ["11B10101", "11B20201", "11B20601", "11B20305", "11D10301", "11D10401",
                     "11D20501", "11C20401", "11C20101", "11C20404", "11C10301", "11G00201",
