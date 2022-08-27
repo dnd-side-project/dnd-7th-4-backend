@@ -10,20 +10,9 @@ assignees: ''
 ## 증상
 - 
 
-## 시나리오
+## 원인
 
-## screenshot
+## 해결법
 
-## response
-```
+## 해결 완료 스크린샷
 
-```
-
-## sever log
-```
-
-```
-
-## 실행 환경
-- OS:
-- Brower:
