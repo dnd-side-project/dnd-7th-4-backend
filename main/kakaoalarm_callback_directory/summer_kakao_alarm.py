@@ -80,8 +80,8 @@ def send_kakao_alarm():
         data['plusFriendId'] = "@한줄날씨"
         data['templateCode'] = random.sample(template, 1)[0] 
         ### 예약 시간 지정하기 CHECK 나중에 사용자가 많아지면 사용할 예정
-        #data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 07:00")
-        #data['reserveTimeZone'] = "Asia/Seoul"
+        data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 07:00")
+        data['reserveTimeZone'] = "Asia/Seoul"
         data['messages'] = []
         cnt = 1
    
