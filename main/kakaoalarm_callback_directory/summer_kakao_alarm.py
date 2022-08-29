@@ -26,14 +26,12 @@ from dnd_7th_4_backend.settings.base import env
 TRUE_PRECIPITATION_TEMPLATE_INFO = { 
     '맑음': ['SUOSunny1', 'SUOSunny2'],
     '구름많음' : ['SUOMostly1', 'SUOMostly2'],
-    '흐림' : ['SUOCloudy4',]
-    #'흐림' : ['SUOCloudy4', 'SUOCloudy5'] CHECK 검수 완료 시, 변경 예정
+    '흐림' : ['SUOCloudy4', 'SUOCloudy5']
 }
 
 FALSE_PRECIPITATION_TEMPLATE_INFO = {
     '맑음': ['SUXSunny1', 'SUXSunny2'],
-    #'구름많음' : ['SUXMostly1', 'SUXMostly3'], CHECK 검수 완료 시, 변경 예정
-    '구름많음' : ['SUXMostly1'],
+    '구름많음' : ['SUXMostly1', 'SUXMostly3'],
     '흐림' : ['SUXCloudy1', 'SUXCloudy2']
 }
 
