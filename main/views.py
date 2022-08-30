@@ -288,14 +288,14 @@ class MainView(APIView):
 
             # 데이터 넣기
             ## API1 - 5까지의 오늘 데이터 넣기
-            response_today = {"배경이미지": today_weather_state, "현재": d, "시간별정보": d1, "세부코멘트": today_comments_detail}
+            response_today = {"배경이미지": today_weather_state.replace(' ', ''), "현재": d, "시간별정보": d1, "세부코멘트": today_comments_detail}
             ## API6 - 10까지의 오늘 데이터 넣기
             response_today.update(self.today(region).items())
             ### 코멘트 넣기
             response_today['세부코멘트'].update(self.today_comment())
 
             ## API1 - 5까지의 내일 데이터 넣기
-            response_tomorrow = {"배경이미지": tommorrow_weather_state, "현재": d3, "시간별정보": d4, "세부코멘트": tomorrow_comments_detail}
+            response_tomorrow = {"배경이미지": tommorrow_weather_state.replace(' ', ''), "현재": d3, "시간별정보": d4, "세부코멘트": tomorrow_comments_detail}
             ## API6 - 10까지의 내일 데이터 넣기
             response_tomorrow.update(self.tomorrow(region).items())
             ### 코멘트 넣기
