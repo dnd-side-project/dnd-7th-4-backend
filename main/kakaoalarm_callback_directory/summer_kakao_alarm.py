@@ -39,7 +39,7 @@ CURRENT = datetime.now()
 
 
 # 카카오톡 알림을 보내는 
-def send_kakao_alarm():
+def send_kakao_alarm(request):
     reset_variable()
     people = Profile.objects.filter(kakao_alarm = True)
     data = {}
@@ -80,6 +80,7 @@ def send_kakao_alarm():
         ### 예약 시간 지정하기 CHECK 나중에 사용자가 많아지면 사용할 예정
         data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 07:00")
         data['reserveTimeZone'] = "Asia/Seoul"
+        #data['scheduleCode'] = "every8"
         data['messages'] = []
         cnt = 1
    
