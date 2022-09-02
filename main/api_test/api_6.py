@@ -46,11 +46,11 @@ def call_api_6():
 
                     # 측정 불가 데이터 처리
                     for i in range(4):
-                        if pm_data[i] == 1:
+                        if pm_data[i] == '1':
                             pm_data[i] = '좋음'
-                        elif pm_data[i] == 2:
+                        elif pm_data[i] == '2':
                             pm_data[i] = '보통'
-                        elif pm_data[i] == 3:
+                        elif pm_data[i] == '3':
                             pm_data[i] = '나쁨'
                         else:
                             pm_data[i] = '매우나쁨'
@@ -104,11 +104,11 @@ def update_api_6():
                     
                     # 측정 불가 데이터 처리
                     for i in range(4):
-                        if pm_data[i] == 1:
+                        if pm_data[i] == '1':
                             pm_data[i] = '좋음'
-                        elif pm_data[i] == 2:
+                        elif pm_data[i] == '2':
                             pm_data[i] = '보통'
-                        elif pm_data[i] == 3:
+                        elif pm_data[i] == '3':
                             pm_data[i] = '나쁨'
                         else:
                             pm_data[i] = '매우나쁨'
