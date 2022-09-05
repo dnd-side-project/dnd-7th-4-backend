@@ -75,6 +75,10 @@ class MainView(APIView):
             MAX = api3.info_day0_MAX  # 오늘 최고기온
             MIN = api3.info_day0_MIN  # 오늘 최저기온
 
+            ## 1시간 강수량 데이터 단위 추가
+            if RN1 != "0":
+                RN1 += "mm"
+
             field = f'info_{h}'
             str = (api2.serializable_value(field)).replace(" ", "")  # 나중엔 없앨 공백 제거 코드
             f_list = str.split('/')
