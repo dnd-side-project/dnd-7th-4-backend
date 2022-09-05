@@ -339,7 +339,8 @@ class MainView(APIView):
 
         # api10
         today_tem = region.api1.T1H
-        yesterdat_tem = api_10()
+        #yesterdat_tem = api_10()
+        yesterdat_tem = region.api1.T1H
         data['전날기온차이'] = round((float(today_tem) - float(yesterdat_tem)), 2)
         return data
 
