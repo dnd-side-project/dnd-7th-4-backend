@@ -26,14 +26,12 @@ from dnd_7th_4_backend.settings.base import env
 TRUE_PRECIPITATION_TEMPLATE_INFO = { 
     '맑음': ['SUOSunny1', 'SUOSunny2'],
     '구름많음' : ['SUOMostly1', 'SUOMostly2'],
-    '흐림' : ['SUOCloudy4',]
-    #'흐림' : ['SUOCloudy4', 'SUOCloudy5'] CHECK 검수 완료 시, 변경 예정
+    '흐림' : ['SUOCloudy4', 'SUOCloudy5']
 }
 
 FALSE_PRECIPITATION_TEMPLATE_INFO = {
     '맑음': ['SUXSunny1', 'SUXSunny2'],
-    #'구름많음' : ['SUXMostly1', 'SUXMostly3'], CHECK 검수 완료 시, 변경 예정
-    '구름많음' : ['SUXMostly1'],
+    '구름많음' : ['SUXMostly1', 'SUXMostly3'],
     '흐림' : ['SUXCloudy1', 'SUXCloudy2']
 }
 
@@ -41,7 +39,7 @@ CURRENT = datetime.now()
 
 
 # 카카오톡 알림을 보내는 
-def send_kakao_alarm():
+def send_kakao_alarm(request):
     reset_variable()
     people = Profile.objects.filter(kakao_alarm = True)
     data = {}
@@ -79,9 +77,10 @@ def send_kakao_alarm():
         data = {}
         data['plusFriendId'] = "@한줄날씨"
         data['templateCode'] = random.sample(template, 1)[0] 
-        ### 예약 시간 지정하기
+        ### 예약 시간 지정하기 CHECK 나중에 사용자가 많아지면 사용할 예정
         data['reserveTime'] = datetime.today().strftime("%Y-%m-%d 07:00")
         data['reserveTimeZone'] = "Asia/Seoul"
+        #data['scheduleCode'] = "every8"
         data['messages'] = []
         cnt = 1
    

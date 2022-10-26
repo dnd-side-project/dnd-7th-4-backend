@@ -75,6 +75,10 @@ class MainView(APIView):
             MAX = api3.info_day0_MAX  # 오늘 최고기온
             MIN = api3.info_day0_MIN  # 오늘 최저기온
 
+            ## 1시간 강수량 데이터 단위 추가
+            if RN1 != "0":
+                RN1 += "mm"
+
             field = f'info_{h}'
             str = (api2.serializable_value(field)).replace(" ", "")  # 나중엔 없앨 공백 제거 코드
             f_list = str.split('/')
@@ -288,14 +292,14 @@ class MainView(APIView):
 
             # 데이터 넣기
             ## API1 - 5까지의 오늘 데이터 넣기
-            response_today = {"배경이미지": today_weather_state, "현재": d, "시간별정보": d1, "세부코멘트": today_comments_detail}
+            response_today = {"배경이미지": today_weather_state.replace(' ', ''), "현재": d, "시간별정보": d1, "세부코멘트": today_comments_detail}
             ## API6 - 10까지의 오늘 데이터 넣기
             response_today.update(self.today(region).items())
             ### 코멘트 넣기
             response_today['세부코멘트'].update(self.today_comment())
 
             ## API1 - 5까지의 내일 데이터 넣기
-            response_tomorrow = {"배경이미지": tommorrow_weather_state, "현재": d3, "시간별정보": d4, "세부코멘트": tomorrow_comments_detail}
+            response_tomorrow = {"배경이미지": tommorrow_weather_state.replace(' ', ''), "현재": d3, "시간별정보": d4, "세부코멘트": tomorrow_comments_detail}
             ## API6 - 10까지의 내일 데이터 넣기
             response_tomorrow.update(self.tomorrow(region).items())
             ### 코멘트 넣기
@@ -340,6 +344,7 @@ class MainView(APIView):
         # api10
         today_tem = region.api1.T1H
         yesterdat_tem = api_10()
+        #yesterdat_tem = region.api1.T1H
         data['전날기온차이'] = round((float(today_tem) - float(yesterdat_tem)), 2)
         return data
 
